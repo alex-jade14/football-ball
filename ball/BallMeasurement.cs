@@ -17,7 +17,7 @@ public partial class BallMeasurement
         get{
              return GetInertia();
         }
-        set{ }
+        set {}
     }
     private float _radius { 
         get{
@@ -50,7 +50,12 @@ public partial class BallMeasurement
         set { }
     }
 
-
+    public BallMeasurement(float mass,float radius, float diameter, float circumference){
+        SetMass(mass);
+        SetRadius(radius);
+        SetDiameter(diameter);
+        SetCircumference(circumference);
+    }
 
 
     public float GetMass(){
@@ -72,10 +77,6 @@ public partial class BallMeasurement
 
     public float GetInertia(){
         return _inertia;
-    }
-
-    public void SetInertia(float inertia){
-        _inertia = inertia;
     }
 
     public float GetRadius(){

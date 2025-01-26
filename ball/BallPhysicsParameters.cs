@@ -3,7 +3,14 @@ using System;
 
 public partial class BallPhysicsParameters
 {
-    private float _coefficientOfRestitution { get; set; }
+    private float _coefficientOfRestitution {
+        get{
+            return GetCoefficientOfRestitution();
+        }
+        set{
+            SetCoefficientOfRestitution(value);
+        }
+    }
     private float _frictionCoefficient {
         get{
             return GetFrictionCoefficient();
@@ -28,10 +35,18 @@ public partial class BallPhysicsParameters
             SetLiftCoefficient(value);
         }
     }
-    private float _terminalVelocity { get; set; }
+    private float _terminalVelocity {
+        get{
+            return GetTerminalVelocity();
+        }
+        set{}
+    }
     private float _angularDampingCoefficient {
         get{
             return GetAngularDampingCoefficient();
+        }
+        set{
+            SetAngularDampingCoefficient(value);
         }
     }
     private float _frictionForce {
@@ -47,6 +62,35 @@ public partial class BallPhysicsParameters
         set {
             SetNormalForce(value);
         }
+    }
+
+    private Environment _environment{
+        get{
+            return GetEnvironment();
+        }
+        set{
+            SetEnvironment(value);
+        }
+    }
+
+    public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient, float dragCoefficient,
+    float liftCoefficient, float angularDampingCoefficient, float mass, Environment environment){
+        SetCoefficientOfRestitution(coefficientOfRestitution);
+        SetFrictionCoefficient(frictionCoefficient);
+        SetDragCoefficient(dragCoefficient);
+        SetLiftCoefficient(liftCoefficient);
+        SetAngularDampingCoefficient(angularDampingCoefficient);
+        SetNormalForce(mass);
+        SetEnvironment(environment);
+    }
+
+    public float GetCoefficientOfRestitution(){
+        return _coefficientOfRestitution;
+    }
+
+    public void SetCoefficientOfRestitution(float coefficientOfRestitution){
+        _coefficientOfRestitution = coefficientOfRestitution;
+        UpdateValuesWhenFrictionIsUpdated();
     }
 
     public float GetFrictionCoefficient(){
@@ -74,8 +118,16 @@ public partial class BallPhysicsParameters
         _liftCoefficient = liftCoefficient;
     }
 
+    public float GetTerminalVelocity(){
+        return _terminalVelocity;
+    }
+
     public float GetAngularDampingCoefficient(){
         return _angularDampingCoefficient;
+    }
+
+    public void SetAngularDampingCoefficient(float angularDampingCoefficient){
+        _angularDampingCoefficient = angularDampingCoefficient;
     }
 
     public float GetFrictionForce(){
@@ -89,6 +141,14 @@ public partial class BallPhysicsParameters
     public void SetNormalForce(float mass){  
         _normalForce = NewtonsFirstLawHelper.CalculateNormalForce(mass);
         UpdateValuesWhenNormalForceIsUpdated();
+    }
+
+    public Environment GetEnvironment(){
+        return _environment;
+    }
+
+    public void SetEnvironment(Environment environment){
+        _environment = environment;
     }
 
     private void UpdateValuesWhenFrictionIsUpdated(){

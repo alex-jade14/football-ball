@@ -1,5 +1,8 @@
 using Godot;
+using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 public partial class BallBase : CharacterBody3D, IPrototype
 {
@@ -36,15 +39,23 @@ public partial class BallBase : CharacterBody3D, IPrototype
             CanResetBouncing(value);
         }
     }
-    private BallMeasurement _measurement {
+    protected BallMeasurement _measurement {
         get{
             return GetMeasurement();
         }
+        set {}
     }
-    private BallPhysicsParameters _physicsParameters {
+    protected BallPhysicsParameters _physicsParameters {
         get{
             return GetPhysicsParameters();
         }
+        set {}
+    }
+
+    public BallBase(BallInfo info){
+        _info = info;
+        _measurement = info.GetSize().GetMeasurement();
+        _physicsParameters = info.GetPhysicsParameters();
     }
 
     public Godot.Vector3 GetLinearVelocity(){
@@ -95,27 +106,27 @@ public partial class BallBase : CharacterBody3D, IPrototype
         );
     }
 
-    public bool WasOnFloor(){
+    protected bool WasOnFloor(){
         return _wasOnFloor;
     }
 
-    public void WasOnFloor(bool wasOnFloor){
+    protected void WasOnFloor(bool wasOnFloor){
         _wasOnFloor = wasOnFloor;
     }
-    public bool CanResetBouncing(){
+    protected bool CanResetBouncing(){
         return _canResetBouncing;
     }
 
-    public void CanResetBouncing(bool canResetBouncing){
+    protected void CanResetBouncing(bool canResetBouncing){
         _canResetBouncing = canResetBouncing;
     }
 
 
-    public BallMeasurement GetMeasurement(){
+    protected BallMeasurement GetMeasurement(){
         return _measurement;
     }
 
-    public BallPhysicsParameters GetPhysicsParameters(){
+    protected BallPhysicsParameters GetPhysicsParameters(){
         return _physicsParameters;
     }
 
@@ -129,7 +140,49 @@ public partial class BallBase : CharacterBody3D, IPrototype
         return clone;
     }
 
-    public void SimulatePhysics(){
+    public void ApplyCentralForces(Godot.Vector3[] forcesToApply){
+        SetLinearVelocity(
+            RigidBodyHelper.CalculateCentralForces(
+                forcesToApply,
+                GetMeasurement().GetMass(),
+                GetLinearVelocity()
+            )
+        );
+    }
+
+    public void ApplyForces(Godot.Vector3[] forcesToApply, Godot.Vector3 positionWhereForcesAreApplied){
+        (_linearVelocity, _angularVelocity) = RigidBodyHelper.CalculateForces(
+            forcesToApply,
+            positionWhereForcesAreApplied,
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetInertia(),
+            GetLinearVelocity(),
+            GetAngularVelocity()
+        );
+    }
+
+    public void ApplyCentralIMpulse(Godot.Vector3 impulse){
+        SetLinearVelocity(
+            RigidBodyHelper.CalculateCentralImpulse(
+                impulse, 
+                GetMeasurement().GetMass(),
+                GetLinearVelocity()
+            )
+        );
+    }
+
+    public void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
+        (_linearVelocity, _angularVelocity) = RigidBodyHelper.CalculateImpulse(
+            impulse,
+            positionWhereImpulseIsApplied,
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetInertia(),
+            GetLinearVelocity(),
+            GetAngularVelocity()
+        );
+    }
+
+    protected void SimulatePhysics(){
         CollisionResponse();
         AirConditions();
         AvoidCrossingTheFloor();
@@ -171,16 +224,28 @@ public partial class BallBase : CharacterBody3D, IPrototype
         }
     }
 
-    public void ApplyAirEffects(){
-        Godot.Vector3[] forcesToApply = Array.Empty<Godot.Vector3>();
-        //Godot.Vector3[] forcesFromAerodynamicEffects = 
-        AerodynamicHelper.AerodynamicEffectsOfASphereOnAir(
-            GetMeasurement().GetCrossSectionalArea(),
+    private void ApplyAirEffects(){
+        List<Godot.Vector3> forcesToApply = new List<Godot.Vector3>();
+        Godot.Vector3[] forcesFromAerodynamicEffects = AerodynamicHelper.AerodynamicEffectsOfASphereOnAir(
             GetPhysicsParameters().GetDragCoefficient(),
+            GetPhysicsParameters().GetEnvironment().GetDensityOfFluid(),
             GetPhysicsParameters().GetLiftCoefficient(),
+            GetMeasurement().GetCrossSectionalArea(),
             GetLinearVelocity(),
             GetAngularVelocity()
         );
+        for(int i = 0; i < forcesFromAerodynamicEffects.Length; i++){
+            forcesToApply.Add(forcesFromAerodynamicEffects[i]);
+        }
+        Godot.Vector3 forceFromGravity = PhysicsHelper.GetForceFromGravity(GetMeasurement().GetMass());
+        forcesToApply.Add(forceFromGravity);
+        ApplyCentralForces(forcesToApply.ToArray());
+        Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
+        auxLinearVelocity.Y = AerodynamicHelper.limitToTerminalVelocity(
+            GetPhysicsParameters().GetTerminalVelocity(),
+            auxLinearVelocity.Y
+        );
+        SetLinearVelocity(auxLinearVelocity);
     }
 
     private void ResetBouncing(){
