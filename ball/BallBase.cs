@@ -1,4 +1,5 @@
 using Godot;
+using Godot.NativeInterop;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -6,56 +7,54 @@ using System.Diagnostics.Metrics;
 
 public partial class BallBase : CharacterBody3D, IPrototype
 {
-    private BallInfo _info { get; set; }
-    private Godot.Vector3 _linearVelocity {
-        get{
-            return GetLinearVelocity();
-        }
-        set{
-            SetLinearVelocity(value);
-        }
-    }
-    private Godot.Vector3 _angularVelocity {
-        get{
-            return GetAngularVelocity();
-        }
-        set{
-            SetAngularVelocity(value);
-        }
-    }
-    private bool _wasOnFloor{
-        get{
-            return WasOnFloor();
-        }
-        set{
-            WasOnFloor(value);
-        }
-    }
-     private bool _canResetBouncing{
-        get{
-            return CanResetBouncing();
-        }
-        set{
-            CanResetBouncing(value);
-        }
-    }
-    protected BallMeasurement _measurement {
-        get{
-            return GetMeasurement();
-        }
-        set {}
-    }
-    protected BallPhysicsParameters _physicsParameters {
-        get{
-            return GetPhysicsParameters();
-        }
-        set {}
+    private BallInfo _info;
+    private ShadowBall _shadowBall;
+    private Godot.Vector3 _linearVelocity;
+    private Godot.Vector3 _angularVelocity;
+    private bool _wasOnFloor;
+    private bool _canResetBouncing;
+    protected BallModel _model;
+    protected BallMeasurement _measurement;
+    protected BallPhysicsParameters _physicsParameters;
+
+    public void create(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
+    float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
+    float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
+        _info = new BallInfo(
+            name,
+            pattern,
+            firstColor,
+            secondColor,
+            thirdColor,
+            mass,
+            circumference,
+            coefficientOfRestitution,
+            frictionCoefficient,
+            dragCoefficient,
+            liftCoefficient,
+            angularDampingCoefficient,
+            environment
+        );
+        _shadowBall = new();
+        _model = _info.GetModel();
+        _measurement = _info.GetMeasurement();
+        _physicsParameters = _info.GetPhysicsParameters();
     }
 
-    public BallBase(BallInfo info){
+    public BallInfo GetInfo(){
+        return _info;
+    }
+
+    public void SetInfo(BallInfo info){
         _info = info;
-        _measurement = info.GetSize().GetMeasurement();
-        _physicsParameters = info.GetPhysicsParameters();
+    }
+
+    public ShadowBall GetShadowBall(){
+        return _shadowBall;
+    }
+
+    public void SetShadowBall(ShadowBall shadowBall){
+        _shadowBall = shadowBall;
     }
 
     public Godot.Vector3 GetLinearVelocity(){
@@ -121,6 +120,9 @@ public partial class BallBase : CharacterBody3D, IPrototype
         _canResetBouncing = canResetBouncing;
     }
 
+    protected BallModel GetModel(){
+        return _model;
+    }
 
     protected BallMeasurement GetMeasurement(){
         return _measurement;
@@ -161,7 +163,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
         );
     }
 
-    public void ApplyCentralIMpulse(Godot.Vector3 impulse){
+    public void ApplyCentralImpulse(Godot.Vector3 impulse){
         SetLinearVelocity(
             RigidBodyHelper.CalculateCentralImpulse(
                 impulse, 

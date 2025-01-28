@@ -1,15 +1,12 @@
 using Godot;
 using System;
 
-public partial class Environment
+public class WorldEnvironment
 {
-    private float _densityOfFluid {
-        get{
-            return GetDensityOfFluid();
-        }
-        set{
-            SetDensityOfFluid(value);
-        }
+    private float _densityOfFluid;
+
+    public WorldEnvironment(float densityOfFluid){
+        _densityOfFluid = densityOfFluid;
     }
 
     public float GetDensityOfFluid(){

@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://bbhv0vcsrljqa"]
+
+[ext_resource type="Script" path="res://main/Main.cs" id="1_36iw2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p25v1"]
+size = Vector3(500, 1, 500)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_077lq"]
+albedo_color = Color(0.205117, 0.205117, 0.205117, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s4l27"]
+size = Vector3(500, 1, 500)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_82pvm"]
+
+[sub_resource type="Sky" id="Sky_dy8yq"]
+sky_material = SubResource("ProceduralSkyMaterial_82pvm")
+
+[sub_resource type="Environment" id="Environment_6ux2y"]
+background_mode = 2
+sky = SubResource("Sky_dy8yq")
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_36iw2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_p25v1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = SubResource("StandardMaterial3D_077lq")
+mesh = SubResource("BoxMesh_s4l27")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6ux2y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.176518, 0.984297, 0, -0.984297, 0.176518, 0, 283.493, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.999995, 0, 0.00317645, 0, 1, 0, -0.00317645, 0, -0.999995, 0.0203986, 1.17384, -4.00164)

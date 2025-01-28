@@ -1,41 +1,22 @@
 using Godot;
+using Godot.Collections;
 using System;
+using System.Collections.Generic;
 
 public partial class BallModel
 {
-    private String _pattern {
-        get{
-            return GetPattern();
-        }
-        set{
-            SetPattern(value);
-        }
-    }
-    private Color _firstColor {
-        get{
-            return GetFirstColor();
-        }
-        set{
-            SetFirstColor(value);
-        }
-    }
-    private Color _secondColor {
-        get{
-            return GetSecondColor();
-        }
-        set{
-            SetSecondColor(value);
-        }
-    }
-    private Color _thirdColor {
-        get{
-            return GetThirdColor();
-        }
-        set{
-            SetThirdColor(value);
-        }
-    }
+    private String _pattern;
+    private Color _firstColor;
+    private Color _secondColor;
+    private Color _thirdColor;
 
+    public BallModel(String pattern, Color firstColor, Color secondColor, Color thirdColor){
+        _pattern = pattern;
+        _firstColor = firstColor;
+        _secondColor = secondColor;
+        _thirdColor = thirdColor;
+    }
+    
     public String GetPattern(){
         return _pattern;
     }
@@ -53,7 +34,7 @@ public partial class BallModel
     }
 
     public Color GetSecondColor(){
-        return _firstColor;
+        return _secondColor;
     }
 
     public void SetSecondColor(Color secondColor){
@@ -61,7 +42,7 @@ public partial class BallModel
     }
 
     public Color GetThirdColor(){
-        return _firstColor;
+        return _thirdColor;
     }
 
     public void SetThirdColor(Color thirdColor){

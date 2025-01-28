@@ -1,47 +1,38 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Security.Cryptography.X509Certificates;
 
 public partial class BallInfo
 {
-    private String _name {
-        get{
-            return GetName();
-        }
-        set{
-            SetName(value);
-        }
-    }
-    private BallModel _model{
-        get{
-            return GetModel();
-        }
-        set{
-            SetModel(value);
-        }
-    }
-    private BallSize _size {
-        get{
-            return GetSize();
-        }
-        set{
-            SetSize(value);
-        }
-    }
-    private BallPhysicsParameters _physicsParameters {
-        get{
-            return GetPhysicsParameters();
-        }
-        set{
-            SetPhysicsParameters(value);
-        }
-    }
+    private String _name;
+    private BallModel _model;
+    private BallMeasurement _measurement;
+    private BallPhysicsParameters _physicsParameters;
 
-    public BallInfo(String name, BallModel model, BallSize size, BallPhysicsParameters physicsParameters){
+    public BallInfo(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
+    float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
+    float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _name = name;
-        _model = model;
-        _size = size;
-        _physicsParameters = physicsParameters;
+        _model = new BallModel(
+            pattern,
+            firstColor,
+            secondColor,
+            thirdColor
+        );
+        _measurement = new BallMeasurement(
+            mass,
+            circumference
+        );
+        _physicsParameters = new BallPhysicsParameters(
+            coefficientOfRestitution,
+            frictionCoefficient,
+            dragCoefficient,
+            liftCoefficient,
+            angularDampingCoefficient,
+            mass,
+            environment
+        );
     }
 
     public String GetName(){
@@ -64,12 +55,12 @@ public partial class BallInfo
         _model = model;
     }
 
-    public BallSize GetSize(){
-        return _size;
+    public BallMeasurement GetMeasurement(){
+        return _measurement;
     }
 
-    public void SetSize(BallSize size){
-        _size = size;
+    public void SetMeasurement(BallMeasurement measurement){
+        _measurement = measurement;
     }
 
     public BallPhysicsParameters GetPhysicsParameters(){

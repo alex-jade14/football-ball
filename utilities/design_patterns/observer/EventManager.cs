@@ -8,6 +8,8 @@ public partial class EventManager : ISubject
     public GodotObject data { get; set; }
     private List<IObserver> _observers = new List<IObserver>();
 
+    public EventManager(){}
+
     public void Attach(IObserver observer){
         _observers.Add(observer);
     }

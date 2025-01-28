@@ -5,58 +5,17 @@ using System.Data;
 
 public partial class BallMeasurement
 {
-    private float _mass {
-        get{
-            return GetMass();
-        }
-        set{
-            SetMass(value);
-        }
-    }
-    private float _inertia {
-        get{
-             return GetInertia();
-        }
-        set {}
-    }
-    private float _radius { 
-        get{
-            return GetRadius();
-        }
-        set{
-            SetRadius(value);
-        } 
-    }
-    private float _diameter {
-        get{
-            return GetDiameter();
-        }
-        set{
-            SetDiameter(value);
-        }
-    }
-    private float _circumference {
-        get{
-            return GetCircumference();
-        }
-        set{
-            SetCircumference(value);
-        }
-    }
-    private float _crossSectionalArea {
-        get{
-            return GetCrossSectionalArea();
-        }
-        set { }
-    }
+    private float _mass;
+    private float _inertia;
+    private float _radius;
+    private float _diameter;
+    private float _circumference;
+    private float _crossSectionalArea;
 
-    public BallMeasurement(float mass,float radius, float diameter, float circumference){
-        SetMass(mass);
-        SetRadius(radius);
-        SetDiameter(diameter);
-        SetCircumference(circumference);
+    public BallMeasurement(float mass, float circumference){
+        SetMassInGrams(mass);
+        SetCircumferenceInCentemeters(circumference);
     }
-
 
     public float GetMass(){
         return _mass;

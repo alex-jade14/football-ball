@@ -42,4 +42,8 @@ public partial class AerodynamicHelper : PhysicsHelper
         return yVelocityComponent;
     }
 
+    public static float CalculateTerminalVelocity(float crossSectionalArea, float mass, float dragCoefficient, float densityOfFluid){
+        return Mathf.Sqrt((2 * mass * gravity) / (densityOfFluid * dragCoefficient * crossSectionalArea));
+    }
+
 }
