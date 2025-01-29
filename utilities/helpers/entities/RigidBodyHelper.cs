@@ -14,14 +14,11 @@ public partial class RigidBodyHelper
         return linearVelocity;
     }
 
-    public static (Godot.Vector3 linearVelocity, Godot.Vector3 angularVelocity) CalculateForces(Godot.Vector3[] forcesToApply, Godot.Vector3 positionWhereForcesAreApplied, float mass, float inertia,
-    Godot.Vector3 linearVelocity, Godot.Vector3 angularVelocity){
+    public static Godot.Vector3 CalculateForces(Godot.Vector3[] forcesToApply, Godot.Vector3 positionWhereForcesAreApplied, float mass, float inertia,
+    Godot.Vector3 linearVelocity){
         Godot.Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForcesInVectorForm(forcesToApply, mass);
         linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(linearAcceleration, PhysicsServerHelper.deltaFromPhysicsProcess);
-        Godot.Vector3 torque = RotationalMotionHelper.CalculateTorqueWithManyForces(positionWhereForcesAreApplied, forcesToApply);
-        Godot.Vector3 angularAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(torque, inertia);
-        angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration, PhysicsServerHelper.deltaFromPhysicsProcess);
-        return (linearVelocity, angularVelocity);
+        return linearVelocity;
     }
 
     public static Godot.Vector3 CalculateCentralImpulse(Godot.Vector3 impulse, float mass, Godot.Vector3 linearVelocity){
@@ -34,6 +31,7 @@ public partial class RigidBodyHelper
     Godot.Vector3 positionWhereImpulseIsApplied, float mass, float inertia, Godot.Vector3 linearVelocity, Godot.Vector3 angularVelocity){
         Godot.Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(impulse, mass);
         linearVelocity += linearAcceleration;
+        //positionWhereImpulseIsApplied * 2 -> 2 value is a magic number
         Godot.Vector3 torque = RotationalMotionHelper.CalculateTorque(positionWhereImpulseIsApplied * 2, impulse);
         Godot.Vector3 angularAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(torque, inertia);
         angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration, PhysicsServerHelper.deltaFromPhysicsProcess);

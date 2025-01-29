@@ -15,7 +15,8 @@ public partial class BallPhysicsParameters
     private WorldEnvironment _environment;
 
     public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient, float dragCoefficient,
-    float liftCoefficient, float angularDampingCoefficient, float mass, WorldEnvironment environment){
+    float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
+    WorldEnvironment environment){
         SetCoefficientOfRestitution(coefficientOfRestitution);
         SetFrictionCoefficient(frictionCoefficient);
         SetDragCoefficient(dragCoefficient);
@@ -23,6 +24,7 @@ public partial class BallPhysicsParameters
         SetAngularDampingCoefficient(angularDampingCoefficient);
         SetNormalForce(mass);
         SetEnvironment(environment);
+        UpdateTerminalVelocity(crossSectionalArea, mass);
     }
 
     public float GetCoefficientOfRestitution(){
@@ -96,6 +98,10 @@ public partial class BallPhysicsParameters
         CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
 
+     private void UpdateTerminalVelocity(float crossSectionalArea, float mass){
+        CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
+    }
+
     private void UpdateValuesWhenNormalForceIsUpdated(){
         CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
@@ -105,6 +111,6 @@ public partial class BallPhysicsParameters
     }
 
     private void CalculateTerminalVelocity(float crossSectionalArea, float mass, float dragCoefficient, float densityOfFluid){
-        AerodynamicHelper.CalculateTerminalVelocity(crossSectionalArea, mass, dragCoefficient, densityOfFluid);
+        _terminalVelocity = AerodynamicHelper.CalculateTerminalVelocity(crossSectionalArea, mass, dragCoefficient, densityOfFluid);
     }
 }

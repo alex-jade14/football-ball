@@ -30,7 +30,8 @@ public partial class BallInfo
             dragCoefficient,
             liftCoefficient,
             angularDampingCoefficient,
-            mass,
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetCrossSectionalArea(),
             environment
         );
     }

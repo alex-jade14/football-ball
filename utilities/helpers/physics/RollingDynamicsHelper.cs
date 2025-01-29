@@ -13,16 +13,8 @@ public partial class RollingDynamicsHelper{
             NewtonsSecondLawHelper.CalculateAccelerationWithForce(force.Z, mass)
         );
         linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(acceleration, delta);
-        float interpolationCoefficient = 0.05f;
-        float magicNumber = 2;
-        Godot.Vector3 newAngularVelocity = (((linearVelocity/circumference) * (2 * Mathf.Pi)).Cross(collisionPosition * magicNumber));
-        if (linearVelocity.Length() > 0.1){
-            angularVelocity = angularVelocity * (1.0f - interpolationCoefficient) + newAngularVelocity * interpolationCoefficient;
-        }
-        else{
-            angularVelocity = newAngularVelocity;
-        }
-
+        Godot.Vector3 newAngularVelocity = (((linearVelocity/circumference) * (2 * Mathf.Pi)).Cross(collisionPosition));
+        angularVelocity = newAngularVelocity;
         return (linearVelocity, angularVelocity);
     }
 

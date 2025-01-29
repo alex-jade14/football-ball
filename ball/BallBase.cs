@@ -153,13 +153,14 @@ public partial class BallBase : CharacterBody3D, IPrototype
     }
 
     public void ApplyForces(Godot.Vector3[] forcesToApply, Godot.Vector3 positionWhereForcesAreApplied){
-        (_linearVelocity, _angularVelocity) = RigidBodyHelper.CalculateForces(
-            forcesToApply,
-            positionWhereForcesAreApplied,
-            GetMeasurement().GetMass(),
-            GetMeasurement().GetInertia(),
-            GetLinearVelocity(),
-            GetAngularVelocity()
+        SetLinearVelocity(
+            RigidBodyHelper.CalculateForces(
+                forcesToApply,
+                positionWhereForcesAreApplied,
+                GetMeasurement().GetMass(),
+                GetMeasurement().GetInertia(),
+                GetLinearVelocity()
+            )
         );
     }
 
@@ -212,6 +213,18 @@ public partial class BallBase : CharacterBody3D, IPrototype
             else if (IsOnFloor()){
                 // Ball collides with the floor
                 ApplyFloorEffect(collision.GetPosition());
+                if(!WasOnFloor() && !CanResetBouncing()){
+                    ApplyCoefficientOfRestitution(
+                        GetLinearVelocity(),
+                        collision
+                    );
+                    WasOnFloor(true);
+                    if(GetLinearVelocity().Y <= 0.4){
+                        CanResetBouncing(true);
+                    }
+                    GD.Print("Hola");
+                }
+                
             }
         }
     }
@@ -250,6 +263,15 @@ public partial class BallBase : CharacterBody3D, IPrototype
         SetLinearVelocity(auxLinearVelocity);
     }
 
+    private void ApplyCoefficientOfRestitution(Godot.Vector3 linearVelocity, KinematicCollision3D collision){
+        Godot.Vector3 impulse = CollisionHelper.CalculateImpulseFromCoefficientOfRestitution(
+            GetPhysicsParameters().GetCoefficientOfRestitution(),
+            GetMeasurement().GetMass(),
+            linearVelocity
+        );
+        ApplyImpulse(impulse, ToLocal(collision.GetPosition()));
+    }
+
     private void ResetBouncing(){
         Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
         auxLinearVelocity.Y = 0;
@@ -285,7 +307,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
 
     private void ApplyFloorEffect(Vector3 collisionPosition){
         Godot.Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
-        ApplyRollingWithoutSlipping(frictionForce, collisionPosition);
+        ApplyRollingWithoutSlipping(frictionForce, ToLocal(collisionPosition));
         Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
         if (Mathf.Abs(GetLinearVelocity().X) < 0.1){
             auxLinearVelocity.X = 0;

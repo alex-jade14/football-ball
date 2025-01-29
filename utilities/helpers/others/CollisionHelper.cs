@@ -3,9 +3,10 @@ using System;
 
 public partial class CollisionHelper
 {
-    public static Godot.Vector3 CalculateForceFromCoefficientOfRestitution(float coefficientOfRestitution,
-    Godot.Vector3 collisionNormal, float mass, Godot.Vector3 linearVelocity){
-        Godot.Vector3 newLinearVelocity = -coefficientOfRestitution * collisionNormal * linearVelocity;
+    public static Godot.Vector3 CalculateImpulseFromCoefficientOfRestitution(float coefficientOfRestitution,
+    float mass, Godot.Vector3 linearVelocity){
+        float newYLinearVelocity =  coefficientOfRestitution * Mathf.Abs(linearVelocity.Y);
+        Godot.Vector3 newLinearVelocity = new(linearVelocity.X, newYLinearVelocity, linearVelocity.Z);
         Godot.Vector3 newAcceleration = newLinearVelocity - linearVelocity;
         Godot.Vector3 newForce = new Godot.Vector3(
             NewtonsSecondLawHelper.CalculateForceWithAcceleration(mass, newAcceleration.X),
