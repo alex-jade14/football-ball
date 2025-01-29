@@ -29,6 +29,7 @@
             },
             "physics_parameters": {
                 "coefficient_of_restitution": 0.67,
+                "rotational_coefficient_of_restitution": 0.5,
                 "friction_coefficient": 0.62,
                 "drag_coefficient": 0.47,
                 "lift_coefficient": 0.25,

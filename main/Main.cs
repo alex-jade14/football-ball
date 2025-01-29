@@ -42,6 +42,7 @@ public partial class Main : Node3D
             (float) measurement["mass"],
             (float) measurement["circumference"],
             (float) physicsParameters["coefficient_of_restitution"],
+            (float) physicsParameters["rotational_coefficient_of_restitution"],
             (float) physicsParameters["friction_coefficient"],
             (float) physicsParameters["drag_coefficient"],
             (float) physicsParameters["lift_coefficient"],

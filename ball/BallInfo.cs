@@ -11,8 +11,8 @@ public partial class BallInfo
     private BallPhysicsParameters _physicsParameters;
 
     public BallInfo(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
-    float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
-    float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
+    float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution,
+    float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _name = name;
         _model = new BallModel(
             pattern,
@@ -26,6 +26,7 @@ public partial class BallInfo
         );
         _physicsParameters = new BallPhysicsParameters(
             coefficientOfRestitution,
+            rotationalCoefficientOfRestitution,
             frictionCoefficient,
             dragCoefficient,
             liftCoefficient,

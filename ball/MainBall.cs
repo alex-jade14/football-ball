@@ -21,7 +21,7 @@ public partial class MainBall : BallBase
         firstMaterial.SetAlbedo(GetModel().GetFirstColor());
         secondMaterial.SetAlbedo(GetModel().GetSecondColor());
         thirdMaterial.SetAlbedo(GetModel().GetThirdColor());
-        ApplyImpulse(new Vector3(-10, 5, 10), new Vector3(0, -GetMeasurement().GetRadius(), GetMeasurement().GetRadius()));
+        ApplyImpulse(new Vector3(-10, 6, 10), new Vector3(0, -GetMeasurement().GetRadius(), GetMeasurement().GetRadius()));
     }
 
     public override void _PhysicsProcess(double delta)

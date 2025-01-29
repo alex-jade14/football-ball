@@ -13,12 +13,13 @@ public partial class BallBase : CharacterBody3D, IPrototype
     private Godot.Vector3 _angularVelocity;
     private bool _wasOnFloor;
     private bool _canResetBouncing;
+    private bool _canRoll;
     protected BallModel _model;
     protected BallMeasurement _measurement;
     protected BallPhysicsParameters _physicsParameters;
 
     public void create(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
-    float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
+    float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _info = new BallInfo(
             name,
@@ -29,6 +30,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
             mass,
             circumference,
             coefficientOfRestitution,
+            rotationalCoefficientOfRestitution,
             frictionCoefficient,
             dragCoefficient,
             liftCoefficient,
@@ -118,6 +120,14 @@ public partial class BallBase : CharacterBody3D, IPrototype
 
     protected void CanResetBouncing(bool canResetBouncing){
         _canResetBouncing = canResetBouncing;
+    }
+
+     protected bool CanRoll(){
+        return _canRoll;
+    }
+
+    protected void CanRoll(bool canRoll){
+        _canRoll = canRoll;
     }
 
     protected BallModel GetModel(){
@@ -212,19 +222,17 @@ public partial class BallBase : CharacterBody3D, IPrototype
             }
             else if (IsOnFloor()){
                 // Ball collides with the floor
-                ApplyFloorEffect(collision.GetPosition());
                 if(!WasOnFloor() && !CanResetBouncing()){
                     ApplyCoefficientOfRestitution(
-                        GetLinearVelocity(),
-                        collision
+                        collision.GetNormal()
                     );
                     WasOnFloor(true);
                     if(GetLinearVelocity().Y <= 0.4){
                         CanResetBouncing(true);
                     }
-                    GD.Print("Hola");
-                }
-                
+                    
+                }         
+                ApplyFloorEffect(collision.GetPosition());
             }
         }
     }
@@ -236,6 +244,13 @@ public partial class BallBase : CharacterBody3D, IPrototype
         }
         else if(CanResetBouncing()){
             ResetBouncing();
+        }
+
+        if(Mathf.Abs(GetLinearVelocity().Y) <= 0.4){
+            CanRoll(true);
+        }
+        else{
+            CanRoll(false);
         }
     }
 
@@ -263,13 +278,16 @@ public partial class BallBase : CharacterBody3D, IPrototype
         SetLinearVelocity(auxLinearVelocity);
     }
 
-    private void ApplyCoefficientOfRestitution(Godot.Vector3 linearVelocity, KinematicCollision3D collision){
-        Godot.Vector3 impulse = CollisionHelper.CalculateImpulseFromCoefficientOfRestitution(
+    private void ApplyCoefficientOfRestitution(Godot.Vector3 collisionNormal){
+        (_linearVelocity, _angularVelocity) = CollisionHelper.CalculateNewVelocityFromCoefficientOfRestitution(
             GetPhysicsParameters().GetCoefficientOfRestitution(),
+            GetPhysicsParameters().GetRotationalCoefficientOfRestitution(),
             GetMeasurement().GetMass(),
-            linearVelocity
+            collisionNormal,
+            GetLinearVelocity(),
+            GetAngularVelocity()
         );
-        ApplyImpulse(impulse, ToLocal(collision.GetPosition()));
+
     }
 
     private void ResetBouncing(){
@@ -320,8 +338,11 @@ public partial class BallBase : CharacterBody3D, IPrototype
 
     private void ApplyRollingWithoutSlipping(Godot.Vector3 force, Godot.Vector3 collisionPosition){
         (_linearVelocity, _angularVelocity) = RollingDynamicsHelper.CalculateRollingWithoutSlipping(
-            force, collisionPosition, GetMeasurement().GetMass(), GetMeasurement().GetCircumference(),
-            GetLinearVelocity(), GetAngularVelocity()
+            force, collisionPosition, 
+            GetMeasurement().GetMass(), 
+            GetMeasurement().GetRadius(),
+            GetLinearVelocity(), GetAngularVelocity(),
+            CanRoll()
         );
     }
 }

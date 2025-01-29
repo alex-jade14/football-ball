@@ -4,6 +4,7 @@ using System;
 public partial class BallPhysicsParameters
 {
     private float _coefficientOfRestitution;
+    private float _rotationalCoefficientOfRestitution;
     private float _frictionCoefficient;
     private float _dragCoefficient;
     private float _liftCoefficient;
@@ -14,10 +15,11 @@ public partial class BallPhysicsParameters
 
     private WorldEnvironment _environment;
 
-    public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient, float dragCoefficient,
-    float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
+    public BallPhysicsParameters(float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
+    float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
     WorldEnvironment environment){
         SetCoefficientOfRestitution(coefficientOfRestitution);
+        SetRotationalCoefficientOfRestitution(rotationalCoefficientOfRestitution);
         SetFrictionCoefficient(frictionCoefficient);
         SetDragCoefficient(dragCoefficient);
         SetLiftCoefficient(liftCoefficient);
@@ -34,6 +36,14 @@ public partial class BallPhysicsParameters
     public void SetCoefficientOfRestitution(float coefficientOfRestitution){
         _coefficientOfRestitution = coefficientOfRestitution;
         UpdateValuesWhenFrictionIsUpdated();
+    }
+
+    public float GetRotationalCoefficientOfRestitution(){
+        return _rotationalCoefficientOfRestitution;
+    }
+
+    public void SetRotationalCoefficientOfRestitution(float rotationalCoefficientOfRestitution){
+        _rotationalCoefficientOfRestitution = rotationalCoefficientOfRestitution;
     }
 
     public float GetFrictionCoefficient(){
