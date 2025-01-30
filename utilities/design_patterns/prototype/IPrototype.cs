@@ -4,5 +4,5 @@ using System;
 public interface IPrototype
 {
     GodotObject ShallowCopy();
-    GodotObject DeepCopy();
+    GodotObject DeepCopy(ShadowBall shadowBall);
 }

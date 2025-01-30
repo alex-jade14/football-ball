@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public partial class EventManager : ISubject
 {
-    public int state { get; set; }
-    public GodotObject data { get; set; }
+    public int state { get; set; } = 1;
+    public Godot.Collections.Dictionary data { get; set; }
     private List<IObserver> _observers = new List<IObserver>();
 
     public EventManager(){}
@@ -18,7 +18,7 @@ public partial class EventManager : ISubject
         _observers.Remove(observer);
     }
 
-    public void Notify(GodotObject data){
+    public void Notify(Godot.Collections.Dictionary data){
         this.data = data;
         foreach(IObserver observer in _observers){
             observer.Update(this);

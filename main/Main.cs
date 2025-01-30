@@ -9,7 +9,25 @@ using Array = System.Array;
 public partial class Main : Node3D
 {
     public override void _Ready(){
-       
+        Dictionary loadedData = GetContentFromJson();
+        WorldEnvironment environment = GetWorldEnvironment(loadedData);
+        MainBall mainBall = GetMainBall(loadedData, environment);
+        PackedScene ballScene = (PackedScene) GD.Load("res://ball/shadow_ball.tscn");
+		ShadowBall shadowBall = (ShadowBall) ballScene.Instantiate();
+        shadowBall = (ShadowBall) mainBall.DeepCopy(shadowBall);
+        AddChild(shadowBall);
+        mainBall.events.Attach(shadowBall);
+        mainBall.ApplyImpulse(
+            new Vector3(-10, 6, 10),
+            new Vector3(
+                0, 
+                -mainBall.GetInfo().GetMeasurement().GetRadius(), 
+                mainBall.GetInfo().GetMeasurement().GetRadius()
+            )
+        );
+    }
+
+    public Dictionary GetContentFromJson(){
         String filePath = "info.JSON";
         String jsonAsText = File.ReadAllText(filePath);
         Json json = new Json();
@@ -17,28 +35,31 @@ public partial class Main : Node3D
         if(error != Error.Ok){
             GD.Print(error);
         }
+        return (Dictionary) json.Data;
+    }
 
-        Dictionary loadedData = (Dictionary) json.Data;
+    public WorldEnvironment GetWorldEnvironment(Dictionary loadedData){
         Dictionary environmentData = (Dictionary) loadedData["environment"];
         WorldEnvironment environment = new(
             (float) environmentData["density_of_fluid"]
         );
+        return environment;
+    }
+
+    public MainBall GetMainBall(Dictionary loadedData, WorldEnvironment environment){
         Dictionary ballInfo = (Dictionary) loadedData["ball"];
         Dictionary info = (Dictionary) ballInfo["info"];
-        Dictionary modelData = (Dictionary) info["model"];
-        Dictionary firstColor = (Dictionary) modelData["firstColor"];
-        Dictionary secondColor = (Dictionary) modelData["secondColor"];
-        Dictionary thirdColor = (Dictionary) modelData["thirdColor"];
+        Dictionary model = (Dictionary) info["model"];
         Dictionary measurement = (Dictionary) info["measurement"];
         Dictionary physicsParameters = (Dictionary) info["physics_parameters"];
-        PackedScene ballScene = (PackedScene) GD.Load("res://ball/ball.tscn");
+        PackedScene ballScene = (PackedScene) GD.Load("res://ball/main_ball.tscn");
         MainBall ball = (MainBall) ballScene.Instantiate();
         ball.create(
             (String) info["name"],
-            (String) modelData["pattern"],
-            new Color((float) firstColor["r"] / 255, (float) firstColor["g"] / 255, (float) firstColor["b"] / 255, (float) firstColor["a"] / 255),
-            new Color((float) secondColor["r"] / 255, (float) secondColor["g"] / 255, (float) secondColor["b"] / 255, (float) firstColor["a"] / 255),
-            new Color((float) thirdColor["r"] / 255, (float) thirdColor["g"] / 255, (float) thirdColor["b"] / 255, (float) firstColor["a"] / 255),
+            (String) model["pattern"],
+            ColorHelper.GetColor((Dictionary) model["firstColor"]),
+            ColorHelper.GetColor((Dictionary) model["secondColor"]),
+            ColorHelper.GetColor((Dictionary) model["thirdColor"]),
             (float) measurement["mass"],
             (float) measurement["circumference"],
             (float) physicsParameters["coefficient_of_restitution"],
@@ -50,6 +71,8 @@ public partial class Main : Node3D
             environment
         );
         AddChild(ball);
-
+        return ball;
     }
+
+
 }

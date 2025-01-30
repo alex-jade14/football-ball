@@ -17,7 +17,7 @@ public partial class RollingDynamicsHelper{
             // (linearVelocity / 4) -> 4 is a magic number
             Godot.Vector3 newAngularVelocity = collisionPosition.Cross(linearVelocity / 4) / Mathf.Pow(collisionPosition.Length(), 2);
             if (linearVelocity.Length() > 0.1){
-                float interpolationCoefficient = 0.025f;
+                float interpolationCoefficient = 0.1f;
                 angularVelocity = angularVelocity * (1.0f - interpolationCoefficient) + newAngularVelocity * interpolationCoefficient;
             }
             else{

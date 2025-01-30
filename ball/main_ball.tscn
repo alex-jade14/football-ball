@@ -1,22 +1,22 @@
 [gd_scene load_steps=4 format=3 uid="uid://r4elrimt52n"]
 
-[ext_resource type="Script" path="res://ball/MainBall.cs" id="1_dl2cj"]
-[ext_resource type="ArrayMesh" uid="uid://bcm16awrm7fib" path="res://ball/ball_model.res" id="1_ffysc"]
+[ext_resource type="ArrayMesh" uid="uid://bcm16awrm7fib" path="res://ball/ball_model.res" id="1_ltmia"]
+[ext_resource type="Script" path="res://ball/MainBall.cs" id="1_xlpkp"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_0fyo6"]
 radius = 1.0
 
-[node name="Ball" type="CharacterBody3D"]
+[node name="MainBall" type="CharacterBody3D"]
 slide_on_ceiling = false
 floor_block_on_wall = false
 floor_max_angle = 1.5708
-script = ExtResource("1_dl2cj")
+script = ExtResource("1_xlpkp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_0fyo6")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = ExtResource("1_ffysc")
+mesh = ExtResource("1_ltmia")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999999, 0.000377934, -0.00105102, 0, 0.941011, 0.338377, 0.0011169, 0.338376, -0.94101, -0.16448, 1.9589, -5.25575)

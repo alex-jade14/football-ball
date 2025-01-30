@@ -16,7 +16,7 @@ public static class UnitsConverterHelper
     }
 
     public static float ConvertKilogramToGram(float valueInKilogram){
-        return valueInKilogram / 1000f;
+        return valueInKilogram * 1000f;
     }
 
     public static float ConvertMetersToCentimeters(float valueInMeters){

@@ -5,28 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 
-public partial class BallBase : CharacterBody3D, IPrototype
+public partial class BallBase : CharacterBody3D
 {
-    private BallInfo _info;
-    private ShadowBall _shadowBall;
+    protected BallInfo _info;
     private Godot.Vector3 _linearVelocity;
     private Godot.Vector3 _angularVelocity;
     private bool _wasOnFloor;
     private bool _canResetBouncing;
     private bool _canRoll;
-    protected BallModel _model;
     protected BallMeasurement _measurement;
     protected BallPhysicsParameters _physicsParameters;
+    protected MeshInstance3D mesh;
+    protected CollisionShape3D collisionNode;
 
-    public void create(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
-    float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
+    public void create(float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _info = new BallInfo(
-            name,
-            pattern,
-            firstColor,
-            secondColor,
-            thirdColor,
             mass,
             circumference,
             coefficientOfRestitution,
@@ -37,11 +31,15 @@ public partial class BallBase : CharacterBody3D, IPrototype
             angularDampingCoefficient,
             environment
         );
-        _shadowBall = new();
-        _model = _info.GetModel();
         _measurement = _info.GetMeasurement();
         _physicsParameters = _info.GetPhysicsParameters();
     }
+    
+    public override void _Ready(){
+        ScaleMeshAndCollisionToRadius();
+        PlaceBallOverFloor();
+    }
+
 
     public BallInfo GetInfo(){
         return _info;
@@ -49,14 +47,6 @@ public partial class BallBase : CharacterBody3D, IPrototype
 
     public void SetInfo(BallInfo info){
         _info = info;
-    }
-
-    public ShadowBall GetShadowBall(){
-        return _shadowBall;
-    }
-
-    public void SetShadowBall(ShadowBall shadowBall){
-        _shadowBall = shadowBall;
     }
 
     public Godot.Vector3 GetLinearVelocity(){
@@ -130,26 +120,12 @@ public partial class BallBase : CharacterBody3D, IPrototype
         _canRoll = canRoll;
     }
 
-    protected BallModel GetModel(){
-        return _model;
-    }
-
     protected BallMeasurement GetMeasurement(){
         return _measurement;
     }
 
     protected BallPhysicsParameters GetPhysicsParameters(){
         return _physicsParameters;
-    }
-
-
-    public GodotObject ShallowCopy(){
-        return (BallBase) this.MemberwiseClone();
-    }
-
-    public GodotObject DeepCopy(){
-        BallBase clone = (BallBase) this.MemberwiseClone();
-        return clone;
     }
 
     public void ApplyCentralForces(Godot.Vector3[] forcesToApply){
@@ -184,7 +160,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
         );
     }
 
-    public void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
+    public virtual void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
         (_linearVelocity, _angularVelocity) = RigidBodyHelper.CalculateImpulse(
             impulse,
             positionWhereImpulseIsApplied,
@@ -227,7 +203,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
                         collision.GetNormal()
                     );
                     WasOnFloor(true);
-                    if(GetLinearVelocity().Y <= 0.4){
+                    if(GetLinearVelocity().Y <= 0.5){
                         CanResetBouncing(true);
                     }
                     
@@ -246,7 +222,7 @@ public partial class BallBase : CharacterBody3D, IPrototype
             ResetBouncing();
         }
 
-        if(Mathf.Abs(GetLinearVelocity().Y) <= 0.4){
+        if(Mathf.Abs(GetLinearVelocity().Y) <= 0.5){
             CanRoll(true);
         }
         else{
@@ -344,5 +320,17 @@ public partial class BallBase : CharacterBody3D, IPrototype
             GetLinearVelocity(), GetAngularVelocity(),
             CanRoll()
         );
+    }
+
+    private void ScaleMeshAndCollisionToRadius(){
+        mesh = (MeshInstance3D) GetNode("MeshInstance3D");
+        mesh.SetScale(new Vector3(1,1,1) * GetMeasurement().GetRadius());
+        collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
+        SphereShape3D collisionShape = (SphereShape3D) collisionNode.GetShape();
+        collisionShape.SetRadius(GetMeasurement().GetRadius());
+    }
+
+    private void PlaceBallOverFloor(){
+        SetGlobalPosition(new Vector3(GlobalPosition.X, GetMeasurement().GetRadius(), GlobalPosition.Z));
     }
 }

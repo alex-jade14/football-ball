@@ -2,41 +2,108 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class MainBall : BallBase
+public partial class MainBall : BallBase, IPrototype
 {
-    public EventManager events;
-    public MeshInstance3D mesh;
-    public CollisionShape3D collisionNode;
+	public EventManager events;
+	private String _name;
+	protected BallModel _model;
+	
 
-    public override void _Ready(){
-        SetGlobalPosition(new Vector3(GlobalPosition.X, GetMeasurement().GetRadius(), GlobalPosition.Z));
-        mesh = (MeshInstance3D) GetNode("MeshInstance3D");
-        mesh.SetScale(new Vector3(1,1,1) * GetMeasurement().GetRadius());
-        collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
-        SphereShape3D collisionShape = (SphereShape3D) collisionNode.GetShape();
-        collisionShape.SetRadius(GetMeasurement().GetRadius());
-        StandardMaterial3D firstMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(0);
-        StandardMaterial3D secondMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(1);
-        StandardMaterial3D thirdMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(2);
-        firstMaterial.SetAlbedo(GetModel().GetFirstColor());
-        secondMaterial.SetAlbedo(GetModel().GetSecondColor());
-        thirdMaterial.SetAlbedo(GetModel().GetThirdColor());
-        ApplyImpulse(new Vector3(-10, 6, 10), new Vector3(0, -GetMeasurement().GetRadius(), GetMeasurement().GetRadius()));
-    }
+	public override void _Ready(){
+		base._Ready();
+		ChangeColorToMesh();
+	}
 
-    public override void _PhysicsProcess(double delta)
-    {
-        SimulatePhysics();
-        ApplyAngularRotation();
+	public void create(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
+	float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution,
+	float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
+		base.create(
+			mass,
+			circumference,
+			coefficientOfRestitution,
+			rotationalCoefficientOfRestitution,
+			frictionCoefficient,
+			dragCoefficient,
+			liftCoefficient,
+			angularDampingCoefficient,
+			environment
+		);
+		_name = name;
+		_model = new BallModel(
+			pattern,
+			firstColor,
+			secondColor,
+			thirdColor
+		);
+		events = new EventManager();
+	}
+
+	public String GetName(){
+		return _name;
+	}
+
+	public void SetName(String name){
+		_name = name;
+	}
+
+	public BallModel GetModel(){
+		return _model;
+	}
+
+	public void SetModel(BallModel model){
+		_model = model;
+	}
+	
+	public GodotObject ShallowCopy(){
+		return (BallBase) this.MemberwiseClone();
+	}
+
+	public GodotObject DeepCopy(ShadowBall shadowBall){
+		shadowBall.create(
+			GetMeasurement().GetMassInGrams(),
+			GetMeasurement().GetCircumferenceInCentimeters(),
+			GetPhysicsParameters().GetCoefficientOfRestitution(),
+			GetPhysicsParameters().GetRotationalCoefficientOfRestitution(),
+			GetPhysicsParameters().GetFrictionCoefficient(),
+			GetPhysicsParameters().GetDragCoefficient(),
+			GetPhysicsParameters().GetLiftCoefficient(),
+			GetPhysicsParameters().GetAngularDampingCoefficient(),
+			GetPhysicsParameters().GetEnvironment()
+		);
+		return shadowBall;
+	}
+
+	private void ChangeColorToMesh(){
+		StandardMaterial3D firstMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(0);
+		StandardMaterial3D secondMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(1);
+		StandardMaterial3D thirdMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(2);
+		firstMaterial.SetAlbedo(GetModel().GetFirstColor());
+		secondMaterial.SetAlbedo(GetModel().GetSecondColor());
+		thirdMaterial.SetAlbedo(GetModel().GetThirdColor());
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		SimulatePhysics();
         MoveAndSlide();
-    }
+		ApplyAngularRotation();
+	}
 
-    public void ApplyAngularRotation(){
-        mesh.SetGlobalTransform(
-            RigidBodyHelper.CalculateAngularRotation(
-                GetAngularVelocity(),
-                mesh.GetGlobalTransform()
-            )
-        );
-    }
+	private void ApplyAngularRotation(){
+		mesh.SetGlobalTransform(
+			RigidBodyHelper.CalculateAngularRotation(
+				GetAngularVelocity(),
+				mesh.GetGlobalTransform()
+			)
+		);
+	}
+
+	public override void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
+		base.ApplyImpulse(impulse, positionWhereImpulseIsApplied);
+		events.Notify(new Godot.Collections.Dictionary{
+			{"impulse", impulse},
+			{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied}
+		});
+	}    
+	
 }
