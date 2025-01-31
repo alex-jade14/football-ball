@@ -1,0 +1,213 @@
+[gd_scene load_steps=3 format=3 uid="uid://7xtjqftsujfc"]
+
+[ext_resource type="Script" path="res://settings/Settings.cs" id="1_mth7d"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ior6u"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mth7d")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00868056
+anchor_top = 0.0154321
+anchor_right = 0.225694
+anchor_bottom = 0.362654
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+modulate = Color(1, 1, 1, 0.470588)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0401606
+anchor_top = 0.0444444
+anchor_right = 0.963855
+anchor_bottom = 0.146667
+offset_bottom = 0.102222
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="MarginContainer/Control/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Modelo"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03125
+anchor_top = 0.0469484
+anchor_right = 0.96875
+anchor_bottom = 0.953052
+offset_left = -0.000249863
+offset_top = 29.4836
+offset_right = 0.000259399
+offset_bottom = 1.51636
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Control/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Control/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Patrón:"
+
+[node name="OptionButton" type="OptionButton" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+material = SubResource("CanvasItemMaterial_ior6u")
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "Hexágonos y Pentágonos"
+popup/item_1/text = "Estrellas"
+popup/item_1/id = 1
+
+[node name="Label2" type="Label" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Primer color:"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label3" type="Label" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Segundo color:"
+
+[node name="ColorPickerButton2" type="ColorPickerButton" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Tercer color:"
+
+[node name="ColorPickerButton3" type="ColorPickerButton" parent="MarginContainer/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 0
+anchor_left = 0.00868056
+anchor_top = 0.378086
+anchor_right = 0.225694
+anchor_bottom = 0.725309
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="MarginContainer2"]
+modulate = Color(1, 1, 1, 0.470588)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer2"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer2/Control"]
+layout_mode = 2
+anchor_left = 0.0401606
+anchor_top = 0.0444444
+anchor_right = 0.963855
+anchor_bottom = 0.146667
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="MarginContainer2/Control/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Medidas"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer2/Control"]
+layout_mode = 2
+anchor_left = 0.04
+anchor_top = 0.177778
+anchor_right = 0.96
+anchor_bottom = 0.955556
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer2/Control/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2/Control/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Masa (Gramos):"
+
+[node name="SpinBox" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Circunferencia (Centímetros):"
+
+[node name="SpinBox2" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de restitución:"
+
+[node name="SpinBox3" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de restitución
+rotacional"
+
+[node name="SpinBox4" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de fricción:"
+
+[node name="SpinBox5" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de resistencia:"
+
+[node name="SpinBox6" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label7" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de sustentación:"
+
+[node name="SpinBox7" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label8" type="Label" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Coeficiente de
+amortiguamiento angular:
+"
+
+[node name="SpinBox8" type="SpinBox" parent="MarginContainer2/Control/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2

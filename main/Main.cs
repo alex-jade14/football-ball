@@ -1,10 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Array = System.Array;
 
 public partial class Main : Node3D
 {
@@ -12,19 +9,18 @@ public partial class Main : Node3D
         Dictionary loadedData = GetContentFromJson();
         WorldEnvironment environment = GetWorldEnvironment(loadedData);
         MainBall mainBall = GetMainBall(loadedData, environment);
-        PackedScene ballScene = (PackedScene) GD.Load("res://ball/shadow_ball.tscn");
-		ShadowBall shadowBall = (ShadowBall) ballScene.Instantiate();
-        shadowBall = (ShadowBall) mainBall.DeepCopy(shadowBall);
-        AddChild(shadowBall);
-        mainBall.events.Attach(shadowBall);
-        mainBall.ApplyImpulse(
-            new Vector3(-10, 6, 10),
-            new Vector3(
-                0, 
-                -mainBall.GetInfo().GetMeasurement().GetRadius(), 
-                mainBall.GetInfo().GetMeasurement().GetRadius()
-            )
-        );
+		ShadowBall shadowBall = GetShadowBall(mainBall);
+        SubscribeShadowBallToEvents(mainBall, shadowBall);
+        // mainBall.ApplyImpulse(
+        //     new Vector3(-10, 6, 10),
+        //     new Vector3(
+        //         0, 
+        //         -mainBall.GetInfo().GetMeasurement().GetRadius(), 
+        //         mainBall.GetInfo().GetMeasurement().GetRadius()
+        //     )
+        // );
+        
+        RenderDebugScreens(GetDebugSCreens(loadedData));
     }
 
     public Dictionary GetContentFromJson(){
@@ -52,9 +48,9 @@ public partial class Main : Node3D
         Dictionary model = (Dictionary) info["model"];
         Dictionary measurement = (Dictionary) info["measurement"];
         Dictionary physicsParameters = (Dictionary) info["physics_parameters"];
-        PackedScene ballScene = (PackedScene) GD.Load("res://ball/main_ball.tscn");
-        MainBall ball = (MainBall) ballScene.Instantiate();
-        ball.create(
+        PackedScene mainBallScene = (PackedScene) GD.Load("res://ball/main_ball.tscn");
+        MainBall mainBall = (MainBall) mainBallScene.Instantiate();
+        mainBall.create(
             (String) info["name"],
             (String) model["pattern"],
             ColorHelper.GetColor((Dictionary) model["firstColor"]),
@@ -70,9 +66,35 @@ public partial class Main : Node3D
             (float) physicsParameters["angular_damping_coefficient"],
             environment
         );
-        AddChild(ball);
-        return ball;
+        AddChild(mainBall);
+        return mainBall;
+    }
+    public ShadowBall GetShadowBall(MainBall mainBall){
+        PackedScene shadowBallScene = (PackedScene) GD.Load("res://ball/shadow_ball.tscn");
+        ShadowBall shadowBall = (ShadowBall) shadowBallScene.Instantiate();
+        shadowBall = (ShadowBall) mainBall.DeepCopy(shadowBall);
+        AddChild(shadowBall);
+        return shadowBall;
     }
 
+    public void SubscribeShadowBallToEvents(MainBall mainBall, ShadowBall shadowBall){
+        mainBall.events.Attach(shadowBall);
+    }
 
+    public void RenderDebugScreens(Godot.Collections.Array screens){
+        foreach(Dictionary screen in screens){
+            DebugInfo source = new DebugComponent();
+            source = new DebugDecorator(source);
+            AddChild(
+                source.DisplayDebugMenu(screen)
+            );
+        }
+        
+    }
+
+    public Godot.Collections.Array GetDebugSCreens(Dictionary loadedData){
+        Dictionary debugInfo = (Dictionary) loadedData["debug"];
+        var debugScreens = debugInfo["screens"];
+        return debugScreens.AsGodotArray();
+    }
 }

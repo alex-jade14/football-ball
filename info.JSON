@@ -39,6 +39,111 @@
     },
     "environment": {
         "density_of_fluid": 1.225
+    },
+    "debug": {
+        "screens": [
+            {
+                "name": "Modelo",
+                "horizontal_size": 240,
+                "vertical_size": 213,
+                "horizontal_position": 10,
+                "vertical_position": 10,
+                "content": [
+                    {
+                        "title": "Patrón",
+                        "type": "StringWithOptions",
+                        "options": ["hexagon-pentagon", "stars"] 
+                    },
+                    {
+                        "title": "Primer color",
+                        "type": "Color"
+                    },
+                    {
+                        "title": "Segundo color",
+                        "type": "Color"
+                    },
+                    {
+                        "title": "Tercer color",
+                        "type": "Color"
+                    }
+                ]
+            },
+            {
+                "name": "Medidas",
+                "horizontal_size": 240,
+                "vertical_size": 213,
+                "horizontal_position": 10,
+                "vertical_position": 240,
+                "content": [
+                    {
+                        "title": "Masa (Gramos)",
+                        "type": "FloatWithRange",
+                        "min_value": 410,
+                        "max_value": 450,
+                        "step": 0.5
+                    },
+                    {
+                        "title": "Circunferencia (Centímetros)",
+                        "type": "FloatWithRange",
+                        "min_value": 68,
+                        "max_value": 70,
+                        "step": 0.1
+                    }
+                ]
+            },
+            {
+                "name": "Parámetros físicos",
+                "horizontal_size": 240,
+                "vertical_size": 213,
+                "horizontal_position": 10,
+                "vertical_position": 470,
+                "content": [
+                    {
+                        "title": "Coeficiente de restitución",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 1,
+                        "step": 0.01
+                    },
+                    {
+                        "title": "Coeficiente de restitución rotacional",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 1,
+                        "step": 0.01
+                    },
+                    {
+                        "title": "Coeficiente de fricción",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 1,
+                        "step": 0.01
+                    },
+                    {
+                        "title": "Coeficiente de resistencia",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 2.5,
+                        "step": 0.01
+                    },
+                    {
+                        "title": "Coeficiente de sustentación",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 3,
+                        "step": 0.01
+                    },
+                    {
+                        "title": "Coeficiente de amortiguación angular",
+                        "type": "FloatWithRange",
+                        "min_value": 0,
+                        "max_value": 1,
+                        "step": 0.01
+                    }
+                ]
+            }
+        ]
     }
+        
 }
         

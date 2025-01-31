@@ -128,6 +128,8 @@ public partial class BallBase : CharacterBody3D
         return _physicsParameters;
     }
 
+    
+
     public void ApplyCentralForces(Godot.Vector3[] forcesToApply){
         SetLinearVelocity(
             RigidBodyHelper.CalculateCentralForces(
