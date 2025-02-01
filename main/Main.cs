@@ -82,14 +82,11 @@ public partial class Main : Node3D
     }
 
     public void RenderDebugScreens(Godot.Collections.Array screens){
-        foreach(Dictionary screen in screens){
-            DebugInfo source = new DebugComponent();
-            source = new DebugDecorator(source);
-            AddChild(
-                source.DisplayDebugMenu(screen)
-            );
-        }
-        
+        DebugInfo source = new DebugComponent();
+        source = new DebugDecorator(source);
+        PackedScene settingsScene = (PackedScene) GD.Load("res://settings/settings.tscn");
+        Settings settings = (Settings) settingsScene.Instantiate();
+        AddChild(settings);
     }
 
     public Godot.Collections.Array GetDebugSCreens(Dictionary loadedData){
