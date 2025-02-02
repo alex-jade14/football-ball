@@ -14,6 +14,5 @@ public partial class RigidBody3d : RigidBody3D
     {
         Godot.Vector3 ballPosition = GetGlobalPosition();
         camera.SetGlobalPosition(camera.GetGlobalPosition().Lerp(new Vector3(ballPosition.X, ballPosition.Y + 1.61f, ballPosition.Z - 3.609f), 0.9f));
-        GD.Print(GetGlobalPosition());
     }
 }

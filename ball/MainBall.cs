@@ -35,7 +35,6 @@ public partial class MainBall : BallBase, IPrototype
 			thirdColor
 		);
 		events = new EventManager();
-		GD.Print(GetMeasurement().GetInertia());
 	}
 
 	public BallModel GetModel(){
@@ -88,6 +87,7 @@ public partial class MainBall : BallBase, IPrototype
 				mesh.GetGlobalTransform()
 			)
 		);
+		ScaleMeshAndCollisionToRadius();
 	}
 
 	public override void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){

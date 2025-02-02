@@ -316,9 +316,9 @@ public partial class BallBase : CharacterBody3D
 
     private void ApplyRollingWithoutSlipping(Godot.Vector3 force, Godot.Vector3 collisionPosition){
         (_linearVelocity, _angularVelocity) = RollingDynamicsHelper.CalculateRollingWithoutSlipping(
-            force, collisionPosition, 
-            GetMeasurement().GetMass(), 
-            GetMeasurement().GetRadius(),
+            force, 
+            collisionPosition, 
+            GetMeasurement().GetMass(),
             GetLinearVelocity(), GetAngularVelocity(),
             CanRoll()
         );

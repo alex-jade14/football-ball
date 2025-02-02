@@ -44,7 +44,7 @@ public partial class Debug : Control
         _yInitialImpulseBox = (SpinBox) impulseContainer.GetNode("YInitialImpulseBox");
         _zInitialImpulseBox = (SpinBox) impulseContainer.GetNode("ZInitialImpulseBox");
         _xInitialImpulseBox.SetValueNoSignal(-10);
-        _yInitialImpulseBox.SetValueNoSignal(6);
+        _yInitialImpulseBox.SetValueNoSignal(0);
         _zInitialImpulseBox.SetValueNoSignal(10);
         
         HBoxContainer impulsePositionContainer = (HBoxContainer) interactionContainer.GetNode("ImpulsePositionContainer");
@@ -53,8 +53,8 @@ public partial class Debug : Control
         _zInitialImpulsePositionBox = (SpinBox) impulsePositionContainer.GetNode("ZInitialImpulsePositionBox");
         SetMinAndMaxRadiusValueForInitialImpulsePosition();
         _xInitialImpulsePositionBox.SetValueNoSignal(0);
-        _yInitialImpulsePositionBox.SetValueNoSignal(-_mainBall.GetMeasurement().GetRadius());
-        _zInitialImpulsePositionBox.SetValueNoSignal(_mainBall.GetMeasurement().GetRadius());
+        _yInitialImpulsePositionBox.SetValueNoSignal(0);
+        _zInitialImpulsePositionBox.SetValueNoSignal(0);
 
         HBoxContainer impulseFactorontainer = (HBoxContainer) interactionContainer.GetNode("ImpulseFactorContainer");
         _impulseFactorBox = (SpinBox) impulseFactorontainer.GetNode("ImpulseFactorBox");
