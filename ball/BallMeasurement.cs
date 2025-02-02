@@ -31,7 +31,7 @@ public partial class BallMeasurement
     }
 
     public void SetMassInGrams(float mass){
-        _mass = UnitsConverterHelper.ConvertGramToKilogram(mass);
+        SetMass(UnitsConverterHelper.ConvertGramToKilogram(mass));
     }
 
     public float GetInertia(){
@@ -69,8 +69,7 @@ public partial class BallMeasurement
     }
 
     public void SetDiameterInCentemeters(float diameter){
-        _diameter = UnitsConverterHelper.ConvertCentimetersToMeters(diameter);
-
+        SetDiameter(UnitsConverterHelper.ConvertCentimetersToMeters(diameter));
     }
 
     public float GetCircumference(){
@@ -103,7 +102,7 @@ public partial class BallMeasurement
     }
 
     private void CalculateInertia(){
-        _inertia = RotationalMotionHelper.CalculateInertiaFromSphere(_mass, _radius);
+        _inertia = SphereHelper.CalculateInertiaFromSphere(_mass, _radius);
     }
 
     private void CalculateDiameterFromRadius(){

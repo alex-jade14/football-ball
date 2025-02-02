@@ -13,6 +13,6 @@ public partial class CollisionHelper
     }
 
     public static Godot.Vector3 BounceVelocity(Godot.Vector3 linearVelocity, float coefficientOfRestitution, Godot.Vector3 collisionNormal){
-        return linearVelocity.Bounce(coefficientOfRestitution * collisionNormal);
+        return (linearVelocity * coefficientOfRestitution).Bounce(collisionNormal);
     }
 }

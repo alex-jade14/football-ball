@@ -18,7 +18,7 @@ public partial class BallBase : CharacterBody3D
     protected MeshInstance3D mesh;
     protected CollisionShape3D collisionNode;
 
-    public void create(float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
+    public void Create(float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _info = new BallInfo(
             mass,
@@ -120,11 +120,11 @@ public partial class BallBase : CharacterBody3D
         _canRoll = canRoll;
     }
 
-    protected BallMeasurement GetMeasurement(){
+    public BallMeasurement GetMeasurement(){
         return _measurement;
     }
 
-    protected BallPhysicsParameters GetPhysicsParameters(){
+    public BallPhysicsParameters GetPhysicsParameters(){
         return _physicsParameters;
     }
 
@@ -324,7 +324,7 @@ public partial class BallBase : CharacterBody3D
         );
     }
 
-    private void ScaleMeshAndCollisionToRadius(){
+    public void ScaleMeshAndCollisionToRadius(){
         mesh = (MeshInstance3D) GetNode("MeshInstance3D");
         mesh.SetScale(new Vector3(1,1,1) * GetMeasurement().GetRadius());
         collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");

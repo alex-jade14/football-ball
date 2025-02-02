@@ -6,64 +6,43 @@ using System.IO;
 public partial class Main : Node3D
 {
     public override void _Ready(){
-        Dictionary loadedData = GetContentFromJson();
-        WorldEnvironment environment = GetWorldEnvironment(loadedData);
-        MainBall mainBall = GetMainBall(loadedData, environment);
+        WorldEnvironment environment = GetWorldEnvironment();
+        MainBall mainBall = GetMainBall(environment);
 		ShadowBall shadowBall = GetShadowBall(mainBall);
         SubscribeShadowBallToEvents(mainBall, shadowBall);
-        // mainBall.ApplyImpulse(
-        //     new Vector3(-10, 6, 10),
-        //     new Vector3(
-        //         0, 
-        //         -mainBall.GetInfo().GetMeasurement().GetRadius(), 
-        //         mainBall.GetInfo().GetMeasurement().GetRadius()
-        //     )
-        // );
-        
-        RenderDebugScreens(GetDebugSCreens(loadedData));
+        Debug debug = GetDebugScreen(mainBall, shadowBall);
+        debug.SetInitialDebugData();
     }
 
-    public Dictionary GetContentFromJson(){
-        String filePath = "info.JSON";
-        String jsonAsText = File.ReadAllText(filePath);
-        Json json = new Json();
-        Error error = json.Parse(jsonAsText);
-        if(error != Error.Ok){
-            GD.Print(error);
-        }
-        return (Dictionary) json.Data;
-    }
-
-    public WorldEnvironment GetWorldEnvironment(Dictionary loadedData){
-        Dictionary environmentData = (Dictionary) loadedData["environment"];
+    public WorldEnvironment GetWorldEnvironment(){
+        Dictionary environmentData = GetEnvironmentData();
         WorldEnvironment environment = new(
-            (float) environmentData["density_of_fluid"]
+            (float) environmentData["densityOfFluid"]
         );
         return environment;
     }
 
-    public MainBall GetMainBall(Dictionary loadedData, WorldEnvironment environment){
-        Dictionary ballInfo = (Dictionary) loadedData["ball"];
-        Dictionary info = (Dictionary) ballInfo["info"];
+    public MainBall GetMainBall(WorldEnvironment environment){
+        Dictionary ballData = GetBallData();
+        Dictionary info = (Dictionary) ballData["info"];
         Dictionary model = (Dictionary) info["model"];
         Dictionary measurement = (Dictionary) info["measurement"];
-        Dictionary physicsParameters = (Dictionary) info["physics_parameters"];
+        Dictionary physicsParameters = (Dictionary) info["physicsParameters"];
         PackedScene mainBallScene = (PackedScene) GD.Load("res://ball/main_ball.tscn");
         MainBall mainBall = (MainBall) mainBallScene.Instantiate();
-        mainBall.create(
-            (String) info["name"],
+        mainBall.Create(
             (String) model["pattern"],
             ColorHelper.GetColor((Dictionary) model["firstColor"]),
             ColorHelper.GetColor((Dictionary) model["secondColor"]),
             ColorHelper.GetColor((Dictionary) model["thirdColor"]),
             (float) measurement["mass"],
             (float) measurement["circumference"],
-            (float) physicsParameters["coefficient_of_restitution"],
-            (float) physicsParameters["rotational_coefficient_of_restitution"],
-            (float) physicsParameters["friction_coefficient"],
-            (float) physicsParameters["drag_coefficient"],
-            (float) physicsParameters["lift_coefficient"],
-            (float) physicsParameters["angular_damping_coefficient"],
+            (float) physicsParameters["coefficientOfRestitution"],
+            (float) physicsParameters["rotationalCoefficientOfRestitution"],
+            (float) physicsParameters["frictionCoefficient"],
+            (float) physicsParameters["dragCoefficient"],
+            (float) physicsParameters["liftCoefficient"],
+            (float) physicsParameters["angularDampingCoefficient"],
             environment
         );
         AddChild(mainBall);
@@ -81,17 +60,139 @@ public partial class Main : Node3D
         mainBall.events.Attach(shadowBall);
     }
 
-    public void RenderDebugScreens(Godot.Collections.Array screens){
-        DebugInfo source = new DebugComponent();
-        source = new DebugDecorator(source);
-        PackedScene settingsScene = (PackedScene) GD.Load("res://settings/settings.tscn");
-        Settings settings = (Settings) settingsScene.Instantiate();
-        AddChild(settings);
+    public Debug GetDebugScreen(MainBall mainBall, ShadowBall shadowBall){
+        PackedScene debugScene = (PackedScene) GD.Load("res://debug/Debug.tscn");
+        Debug debug = (Debug) debugScene.Instantiate();
+        debug.Create(mainBall, shadowBall);
+        AddChild(debug);
+        return debug;
     }
 
-    public Godot.Collections.Array GetDebugSCreens(Dictionary loadedData){
-        Dictionary debugInfo = (Dictionary) loadedData["debug"];
-        var debugScreens = debugInfo["screens"];
-        return debugScreens.AsGodotArray();
+    public Dictionary GetBallData(){
+        return new Dictionary{
+            {
+                "info", new Dictionary {
+                    {"name", "Official Ball"},
+                    {
+                        "model", new Dictionary{
+                            {"pattern", "hexagon-pentagon"},
+                            {
+                                "firstColor", new Dictionary{
+                                    {"r", 231},
+                                    {"g", 89},
+                                    {"b", 39},
+                                    {"a", 255}
+                                }
+                            },
+                            {
+                                "secondColor", new Dictionary{
+                                    {"r", 231},
+                                    {"g", 231},
+                                    {"b", 231},
+                                    {"a", 255}
+                                }
+                            },
+                            {
+                                "thirdColor", new Dictionary{
+                                    {"r", 35},
+                                    {"g", 35},
+                                    {"b", 35},
+                                    {"a", 255}
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "measurement", new Dictionary{
+                            {"mass", 450},
+                            {"circumference", 69.12}
+                        }
+                    },
+                    {
+                        "physicsParameters", new Dictionary{
+                            {"coefficientOfRestitution", 0.67f},
+                            {"rotationalCoefficientOfRestitution", 0.6f},
+                            {"frictionCoefficient", 0.62f},
+                            {"dragCoefficient", 0.47f},
+                            {"liftCoefficient", 0.25f},
+                            {"angularDampingCoefficient", 0.25f}
+                        }
+                    }
+                }
+            }
+        };
     }
+
+    public Dictionary GetEnvironmentData(){
+        return new Dictionary{
+            {"densityOfFluid", 1.225f}
+        };
+    }
+
+    // public Dictionary GetInitialDebugData(MainBall mainBall, ShadowBall shadowBall){
+	// 	return new Dictionary{
+	// 		{
+	// 			"interaction", new Dictionary{
+	// 				{"initialPosition", mainBall.GetGlobalPosition()},
+	// 				{"initialImpulse", new Vector3(-10, 6, 10)},
+	// 				{"positionWhereImpulseIsApplied", new Vector3(
+    //                         0,
+    //                         -mainBall.GetMeasurement().GetRadius(),
+    //                         mainBall.GetMeasurement().GetRadius()
+    //                     )
+    //                 },
+	// 				{"impulseFactor", 2}
+	// 			}
+	// 		},
+	// 		{
+	// 			"parameters", new Dictionary{
+	// 				{
+	// 					"measurement", new Dictionary{
+	// 						{"mass", mainBall.GetMeasurement().GetMass()},
+	// 						{"circumference", mainBall.GetMeasurement().GetCircumference()},
+	// 					}
+	// 				},
+	// 				{
+	// 					"physicsParameters", new Dictionary{
+	// 						{"coefficientOfRestitution", mainBall.GetPhysicsParameters().GetCoefficientOfRestitution()},
+    //                         {"rotationalCoefficientOfRestitution", mainBall.GetPhysicsParameters().GetCoefficientOfRestitution()},
+    //                         {"frictionCoefficient", mainBall.GetPhysicsParameters().GetFrictionCoefficient()},
+    //                         {"dragCoefficient", mainBall.GetPhysicsParameters().GetDragCoefficient()},
+    //                         {"liftCoefficient", mainBall.GetPhysicsParameters().GetLiftCoefficient()},
+    //                         {"angularDampingCoefficient", mainBall.GetPhysicsParameters().GetAngularDampingCoefficient()}
+	// 					}
+	// 				}
+	// 			}
+	// 		},
+    //         {
+    //             "additional", new Dictionary{
+    //                 {
+    //                     "physics", new Dictionary{
+    //                         {"airResistance", true},
+    //                         {"magnusEffect", true}
+    //                     }
+    //                 },
+    //                 {
+    //                     "environment", new Dictionary{
+    //                         {"airDensity", mainBall.GetPhysicsParameters().GetEnvironment().GetDensityOfFluid()},
+    //                         {"rotationReductionFactor", 4},
+    //                         {"interpolationCoefficient", 0.1}
+    //                     }
+    //                 },
+    //                 {
+    //                     "shadowBall", new Dictionary{
+    //                         {"shadowBall", false}
+    //                     }
+    //                 }
+    //             }
+    //         },
+    //         {
+    //             "model", new Dictionary{
+    //                 "pattern", 
+    //             }
+    //         }
+	// 	};
+	// }
+
+
 }

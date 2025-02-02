@@ -1,11 +1,11 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Collections.Generic;
 
 public partial class MainBall : BallBase, IPrototype
 {
 	public EventManager events;
-	private String _name;
 	protected BallModel _model;
 	
 
@@ -14,10 +14,10 @@ public partial class MainBall : BallBase, IPrototype
 		ChangeColorToMesh();
 	}
 
-	public void create(String name, String pattern, Color firstColor, Color secondColor, Color thirdColor,
+	public void Create(String pattern, Color firstColor, Color secondColor, Color thirdColor,
 	float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution,
 	float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
-		base.create(
+		base.Create(
 			mass,
 			circumference,
 			coefficientOfRestitution,
@@ -28,7 +28,6 @@ public partial class MainBall : BallBase, IPrototype
 			angularDampingCoefficient,
 			environment
 		);
-		_name = name;
 		_model = new BallModel(
 			pattern,
 			firstColor,
@@ -36,14 +35,7 @@ public partial class MainBall : BallBase, IPrototype
 			thirdColor
 		);
 		events = new EventManager();
-	}
-
-	public String GetName(){
-		return _name;
-	}
-
-	public void SetName(String name){
-		_name = name;
+		GD.Print(GetMeasurement().GetInertia());
 	}
 
 	public BallModel GetModel(){
@@ -59,7 +51,7 @@ public partial class MainBall : BallBase, IPrototype
 	}
 
 	public GodotObject DeepCopy(ShadowBall shadowBall){
-		shadowBall.create(
+		shadowBall.Create(
 			GetMeasurement().GetMassInGrams(),
 			GetMeasurement().GetCircumferenceInCentimeters(),
 			GetPhysicsParameters().GetCoefficientOfRestitution(),
@@ -104,6 +96,5 @@ public partial class MainBall : BallBase, IPrototype
 			{"impulse", impulse},
 			{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied}
 		});
-	}    
-	
+	}	
 }

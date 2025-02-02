@@ -16,7 +16,4 @@ public partial class RotationalMotionHelper
         }
         return position.Cross(forcesAmount);
     }
-    public static float CalculateInertiaFromSphere(float mass, float radius){
-        return 0.4f * mass * Mathf.Pow(radius, 2f);
-    }
 }

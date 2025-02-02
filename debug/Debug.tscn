@@ -1,30 +1,28 @@
 [gd_scene load_steps=2 format=3 uid="uid://7xtjqftsujfc"]
 
-[ext_resource type="Script" path="res://settings/Settings.cs" id="1_mth7d"]
+[ext_resource type="Script" path="res://debug/Debug.cs" id="1_a38dr"]
 
-[node name="Settings" type="Control"]
+[node name="Debug" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_mth7d")
+script = ExtResource("1_a38dr")
 
 [node name="TabContainer" type="TabContainer" parent="."]
-visible = false
 layout_mode = 2
 anchor_left = 0.00868056
 anchor_top = 0.0154321
 anchor_right = 0.293403
-anchor_bottom = 0.0632716
-offset_right = -0.000244141
-offset_bottom = 244.0
+anchor_bottom = 0.439815
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Interacción" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -53,135 +51,159 @@ layout_mode = 2
 layout_mode = 2
 text = "Posición inicial (m):"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="PositionContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "X:"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="XInitialPositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -500.0
+max_value = 500.0
+step = 0.001
 
-[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Y:"
 horizontal_alignment = 1
 
-[node name="SpinBox2" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="YInitialPositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -500.0
+max_value = 500.0
+step = 0.001
 
-[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Z:"
 horizontal_alignment = 1
 
-[node name="SpinBox3" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ZInitialPositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/PositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -500.0
+max_value = 500.0
+step = 0.001
 
 [node name="Label4" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Impulso inicial (km/h):"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="ImpulseContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "X:"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="XInitialImpulseBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -150.0
+max_value = 150.0
+step = 0.001
 
-[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Y:"
 horizontal_alignment = 1
 
-[node name="SpinBox2" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="YInitialImpulseBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -150.0
+max_value = 150.0
+step = 0.001
 
-[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Z:"
 horizontal_alignment = 1
 
-[node name="SpinBox3" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="ZInitialImpulseBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+min_value = -150.0
+max_value = 150.0
+step = 0.001
 
 [node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Posición del impulso inicial (m):"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="ImpulsePositionContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "X:"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="XInitialImpulsePositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+step = 0.001
 
-[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Y:"
 horizontal_alignment = 1
 
-[node name="SpinBox2" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="YInitialImpulsePositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+step = 0.001
 
-[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Z:"
 horizontal_alignment = 1
 
-[node name="SpinBox3" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="ZInitialImpulsePositionBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulsePositionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+step = 0.001
 
 [node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Factor de impulso:"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="ImpulseFactorContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="Label3" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseFactorContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="Label2" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseFactorContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseFactorContainer"]
 layout_mode = 2
 text = "x"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="ImpulseFactorBox" type="SpinBox" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ImpulseFactorContainer"]
 layout_mode = 2
+min_value = 1.0
+max_value = 5.0
+step = 0.1
+value = 1.0
 
 [node name="Parámetros" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -216,15 +238,23 @@ layout_mode = 2
 layout_mode = 2
 text = "Masa (g):"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="MassBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+min_value = 410.0
+max_value = 450.0
+step = 0.001
+value = 410.0
 
 [node name="Label3" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Circunferencia (cm):"
 
-[node name="SpinBox2" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="CircumferenceBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+min_value = 68.0
+max_value = 70.0
+step = 0.001
+value = 68.0
 
 [node name="Label13" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -240,15 +270,19 @@ layout_mode = 2
 layout_mode = 2
 text = "Coeficiente de restitución:"
 
-[node name="SpinBox3" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="CoefficientOfRestitutionBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 1.0
+step = 0.01
 
 [node name="Label6" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Coeficiente de restitución rotacional:"
 
-[node name="SpinBox4" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="RotationalCoefficientOfRestitutionBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 1.0
+step = 0.01
 
 [node name="Label14" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -264,8 +298,10 @@ layout_mode = 2
 layout_mode = 2
 text = "Coeficiente de fricción:"
 
-[node name="SpinBox5" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="FrictionCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 1.0
+step = 0.01
 
 [node name="Label15" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -281,23 +317,29 @@ layout_mode = 2
 layout_mode = 2
 text = "Coeficiente de resistencia:"
 
-[node name="SpinBox6" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="DragCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 2.5
+step = 0.01
 
 [node name="Label11" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Coeficiente de sustentación:"
 
-[node name="SpinBox7" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="LiftCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 3.0
+step = 0.01
 
 [node name="Label12" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Coeficiente de amortiguamiento
 angular:"
 
-[node name="SpinBox8" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="AngularDampingCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 1.0
+step = 0.01
 
 [node name="Adicional" type="TabBar" parent="TabContainer"]
 visible = false
@@ -333,26 +375,26 @@ text = "Físicas"
 [node name="HSeparator" type="HSeparator" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="AirContainer" type="HBoxContainer" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/AirContainer"]
 layout_mode = 2
-text = "Resistencia del aire:"
+text = "Resistencia del aire (cuadrática):"
 
-[node name="CheckButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="AirResistanceButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/AirContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="MagnusContainer" type="HBoxContainer" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MagnusContainer"]
 layout_mode = 2
 text = "Efecto Magnus:"
 
-[node name="CheckButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="MagnusEffectButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MagnusContainer"]
 layout_mode = 2
 
 [node name="Label6" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -369,8 +411,12 @@ layout_mode = 2
 layout_mode = 2
 text = "Densidad del aire (kg/m³):"
 
-[node name="SpinBox3" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="AirDensityBox" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+min_value = 0.1
+max_value = 1.5
+step = 0.001
+value = 0.1
 
 [node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -386,14 +432,38 @@ layout_mode = 2
 layout_mode = 2
 text = "Factor de reducción de rotación:"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="RotationReductionFactorBox" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+max_value = 10.0
+step = 0.1
 
 [node name="Label5" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Coeficiente de interpolación:"
 
-[node name="SpinBox2" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="InterpolationCoefficientBox" type="SpinBox" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.001
+
+[node name="Label10" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label9" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Réplica del balón"
+
+[node name="HSeparator4" type="HSeparator" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ShadowBallContainer" type="HBoxContainer" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label10" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ShadowBallContainer"]
+layout_mode = 2
+text = "Mostrar trayectoria precalculada:"
+
+[node name="ShadowBallTrajectoryButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ShadowBallContainer"]
 layout_mode = 2
 
 [node name="Modelo" type="TabBar" parent="TabContainer"]
@@ -427,7 +497,7 @@ layout_mode = 2
 size_flags_vertical = 1
 text = "Patrón:"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="PatternOptionButton" type="OptionButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 item_count = 2
 popup/item_0/text = "Hexágonos y pentágonos"
@@ -438,7 +508,7 @@ popup/item_1/id = 1
 layout_mode = 2
 text = "Primer color:"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="FirstColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
@@ -446,7 +516,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Segundo color:"
 
-[node name="ColorPickerButton2" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="SecondColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
@@ -454,102 +524,27 @@ layout_mode = 2
 layout_mode = 2
 text = "Tercer color:"
 
-[node name="ColorPickerButton3" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="ThirdColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-visible = false
-layout_mode = 2
+[node name="ButtonContainer" type="MarginContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.00868056
-anchor_top = 0.447531
+anchor_top = 0.432099
 anchor_right = 0.293403
-anchor_bottom = 0.530864
-grow_horizontal = 2
-grow_vertical = 2
+anchor_bottom = 0.493827
+offset_top = 20.0
+offset_bottom = 20.0
 metadata/_edit_use_anchors_ = true
 
-[node name="Button2" type="Button" parent="HBoxContainer"]
+[node name="StartSimulationButton" type="Button" parent="ButtonContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Parar y reiniciar
-balón"
-
-[node name="Button" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Aplicar impulso"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.00868056
-anchor_top = 0.447531
-anchor_right = 0.293403
-anchor_bottom = 0.530864
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Button2" type="Button" parent="HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Reiniciar
-parámetros"
-
-[node name="Button" type="Button" parent="HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Aplicar cambios"
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.00868056
-anchor_top = 0.447531
-anchor_right = 0.293403
-anchor_bottom = 0.530864
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Button2" type="Button" parent="HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Reiniciar
-parámetros"
-
-[node name="Button" type="Button" parent="HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Aplicar cambios"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.00868056
-anchor_top = 0.447531
-anchor_right = 0.293403
-anchor_bottom = 0.530864
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Button2" type="Button" parent="HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Reiniciar
-modelo"
-
-[node name="Button" type="Button" parent="HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Aplicar cambios"
+text = "Iniciar simulación
+"
 
 [node name="TabContainer2" type="TabContainer" parent="."]
+visible = false
 layout_mode = 0
 anchor_left = 0.00868056
 anchor_top = 0.0154321
@@ -730,6 +725,7 @@ layout_mode = 2
 
 [node name="HSplitContainer" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer"]
 layout_mode = 2
@@ -743,6 +739,7 @@ text = "0"
 
 [node name="HSplitContainer2" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer2"]
 layout_mode = 2
@@ -756,6 +753,7 @@ text = "0"
 
 [node name="SplitContainer" type="SplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/SplitContainer"]
 layout_mode = 2
@@ -769,6 +767,7 @@ text = "0"
 
 [node name="SplitContainer2" type="SplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/SplitContainer2"]
 layout_mode = 2
@@ -782,6 +781,7 @@ text = "0"
 
 [node name="HSplitContainer3" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer3"]
 layout_mode = 2
@@ -795,6 +795,7 @@ text = "0"
 
 [node name="HSplitContainer4" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer4"]
 layout_mode = 2
@@ -818,6 +819,7 @@ layout_mode = 2
 
 [node name="HSplitContainer5" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer5"]
 layout_mode = 2
@@ -831,6 +833,7 @@ text = "0"
 
 [node name="HSplitContainer6" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer6"]
 layout_mode = 2
@@ -855,6 +858,7 @@ layout_mode = 2
 
 [node name="HSplitContainer7" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer7"]
 layout_mode = 2
@@ -868,6 +872,7 @@ text = "0"
 
 [node name="HSplitContainer13" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer13"]
 layout_mode = 2
@@ -881,6 +886,7 @@ text = "0"
 
 [node name="HSplitContainer12" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer12"]
 layout_mode = 2
@@ -894,6 +900,7 @@ text = "0"
 
 [node name="HSplitContainer16" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer16"]
 layout_mode = 2
@@ -917,6 +924,7 @@ layout_mode = 2
 
 [node name="HSplitContainer8" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer8"]
 layout_mode = 2
@@ -930,6 +938,7 @@ text = "0"
 
 [node name="HSplitContainer9" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer9"]
 layout_mode = 2
@@ -943,6 +952,7 @@ text = "0"
 
 [node name="HSplitContainer10" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer10"]
 layout_mode = 2
@@ -956,6 +966,7 @@ text = "0"
 
 [node name="HSplitContainer11" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer11"]
 layout_mode = 2
@@ -969,6 +980,7 @@ text = "0"
 
 [node name="HSplitContainer14" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer14"]
 layout_mode = 2
@@ -982,6 +994,7 @@ text = "0"
 
 [node name="HSplitContainer15" type="HSplitContainer" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer15"]
 layout_mode = 2
@@ -1027,6 +1040,7 @@ layout_mode = 2
 
 [node name="HSplitContainer" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer"]
 layout_mode = 2
@@ -1040,6 +1054,7 @@ text = "No"
 
 [node name="HSplitContainer2" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer2"]
 layout_mode = 2
@@ -1063,6 +1078,7 @@ layout_mode = 2
 
 [node name="HSplitContainer3" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label3" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer3"]
 layout_mode = 2
@@ -1076,6 +1092,7 @@ text = "0"
 
 [node name="HSplitContainer7" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer7"]
 layout_mode = 2
@@ -1099,6 +1116,7 @@ layout_mode = 2
 
 [node name="HSplitContainer5" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer5"]
 layout_mode = 2
@@ -1112,6 +1130,7 @@ text = "0"
 
 [node name="HSplitContainer6" type="HSplitContainer" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer6"]
 layout_mode = 2
@@ -1149,6 +1168,7 @@ layout_mode = 2
 
 [node name="HSplitContainer" type="HSplitContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer"]
 layout_mode = 2
@@ -1165,6 +1185,7 @@ layout_mode = 2
 
 [node name="HSplitContainer2" type="HSplitContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer2"]
 layout_mode = 2
@@ -1182,6 +1203,7 @@ layout_mode = 2
 
 [node name="HSplitContainer3" type="HSplitContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer3"]
 layout_mode = 2
@@ -1198,6 +1220,7 @@ layout_mode = 2
 
 [node name="HSplitContainer4" type="HSplitContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/HSplitContainer4"]
 layout_mode = 2
