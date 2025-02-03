@@ -281,6 +281,10 @@ public partial class Debug : Control
     }
 
     public void StartSimulationButtonPressed(){
+        TabContainer settingsContainer = (TabContainer) GetNode("TabContainer");
+        Button startSimulationButton = (Button) GetNode("ButtonContainer").GetNode("StartSimulationButton");
+        settingsContainer.Hide();
+        startSimulationButton.Hide();
         _mainBall.ApplyImpulse(
             new Vector3(
                 (float) _xInitialImpulseBox.GetValue(),

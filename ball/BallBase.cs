@@ -211,9 +211,10 @@ public partial class BallBase : CharacterBody3D
                     WasOnFloor(true);
                     if(GetLinearVelocity().Y <= 0.5){
                         CanResetBouncing(true);
+                        CanRoll(true);
                     }
                 }
-                else if(GetLinearVelocity().Y <= 0.1){
+                else if(GetLinearVelocity().Y <= 0.5){
                     CanRoll(true);
                 }
                 ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
