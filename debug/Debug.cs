@@ -5,6 +5,8 @@ public partial class Debug : Control
 {
     private MainBall _mainBall;
     private ShadowBall _shadowBall;
+    private TabContainer _settingsContainer;
+    private TabContainer _infoContainer;
     private SpinBox _yInitialPositionBox;
     private SpinBox _xInitialImpulseBox;
     private SpinBox _yInitialImpulseBox;
@@ -13,6 +15,40 @@ public partial class Debug : Control
     private SpinBox _yInitialImpulsePositionBox;
     private SpinBox _zInitialImpulsePositionBox;
     private SpinBox _impulseFactorBox;
+    private Button _startSimulationButton;
+    private Label _positionLabel;
+    private Label _distanceLabel;
+    private Label _currentHeightLabel;
+    private Label _linearVelocityLabel;
+    private Label _angularVelocityLabel;
+    private Label _linearSpeedLabel;
+    private Label _angularSpeedLabel;
+    private Label _detectedCollisionLabel;
+    private Label _dragLabel;
+    private Label _magnusEffectLabel;
+    private Label _dragForceLabel;
+    private Label _magnusEffectForceLabel;
+    private Label _massLabel;
+    private Label _inertiaLabel;
+    private Label _circumferenceLabel;
+    private Label _diameterLabel;
+    private Label _radiusLabel;
+    private Label _crossSectionalArea;
+    private Label _coefficientOfRestitution;
+    private Label _frictionCoefficientLabel;
+    private Label _normalForceLabel;
+    private Label _frictionForceLabel;
+    private Label _dragCoefficientLabel;
+    private Label _liftCoefficientLabel;
+    private Label _terminalVelocityLabel;
+    private Label _angularDampingCoefficientLabel;
+    private Label _airDensityLabel;
+    private Label _gravityLabel;
+    private Label _shadowBallTrajectoryLabel;
+    private Label _patternLabel;
+    private ColorPickerButton _firstColorButton;
+    private ColorPickerButton _secondColorButton;
+    private ColorPickerButton _thirdColorButton;
 
     public void Create(MainBall mainBall, ShadowBall shadowBall){
         _mainBall = mainBall;
@@ -20,12 +56,18 @@ public partial class Debug : Control
     }
 
     public void SetInitialDebugData(){
-        TabContainer settingsContainer = (TabContainer) GetNode("TabContainer");
-        SetInteraction(settingsContainer);
-        SetParameters(settingsContainer);
-        SetAdditional(settingsContainer);
-        SetModel(settingsContainer);
-        SetStartSimulationButton(); 
+        _settingsContainer = (TabContainer) GetNode("TabContainer");
+        _startSimulationButton = (Button) GetNode("ButtonContainer").GetNode("StartSimulationButton");
+        SetInteraction(_settingsContainer);
+        SetParameters(_settingsContainer);
+        SetAdditional(_settingsContainer);
+        SetModel(_settingsContainer);
+        SetStartSimulationButton();
+        _infoContainer = (TabContainer) GetNode("TabContainer2");
+        SetInteractionInfo(_infoContainer);
+        SetParametersInfo(_infoContainer);
+        SetAdditionalInfo(_infoContainer);
+        SetModelInfo(_infoContainer);
     }
 
     public void SetInteraction(TabContainer settingsContainer){
@@ -138,16 +180,7 @@ public partial class Debug : Control
         Callable airDensityBoxValueChanged = new (this, MethodName.airDensityBoxValueChanged);
         airDensityBox.Connect(SpinBox.SignalName.ValueChanged, airDensityBoxValueChanged);
 
-        SpinBox rotationReductionFactorBox = (SpinBox) additionalContainer.GetNode("RotationReductionFactorBox");
-        rotationReductionFactorBox.SetValueNoSignal(RollingDynamicsHelper.rotationReductionFactorBox);
-        Callable rotationReductionFactorBoxValueChanged = new (this, MethodName.rotationReductionFactorBoxValueChanged);
-        rotationReductionFactorBox.Connect(SpinBox.SignalName.ValueChanged, rotationReductionFactorBoxValueChanged);
-        
-        SpinBox interpolationCoefficientBox = (SpinBox) additionalContainer.GetNode("InterpolationCoefficientBox");
-        interpolationCoefficientBox.SetValueNoSignal(RollingDynamicsHelper.interpolationCoefficient);
-        Callable interpolationCoefficientBoxValueChanged = new (this, MethodName.interpolationCoefficientBoxValueChanged);
-        interpolationCoefficientBox.Connect(SpinBox.SignalName.ValueChanged, interpolationCoefficientBoxValueChanged);
-        
+       
         CheckButton shadowBallTrajectoryButton = (CheckButton) additionalContainer.GetNode("ShadowBallContainer").GetNode("ShadowBallTrajectoryButton");
         shadowBallTrajectoryButton.SetPressedNoSignal(_shadowBall.CanShowItsTrajectory());
         Callable shadowBallTrajectoryButtonValueChanged = new (this, MethodName.shadowBallTrajectoryButtonValueChanged);
@@ -243,14 +276,6 @@ public partial class Debug : Control
         copyPropertiesToShadowBall();
     }
 
-    public void rotationReductionFactorBoxValueChanged(float value){
-        RollingDynamicsHelper.rotationReductionFactorBox = value;
-    }
-
-    public void interpolationCoefficientBoxValueChanged(float value){
-        RollingDynamicsHelper.interpolationCoefficient = value;
-    }
-
     public void shadowBallTrajectoryButtonValueChanged(bool onToggled){
         _shadowBall.CanShowItsTrajectory(onToggled);
     }
@@ -281,10 +306,9 @@ public partial class Debug : Control
     }
 
     public void StartSimulationButtonPressed(){
-        TabContainer settingsContainer = (TabContainer) GetNode("TabContainer");
-        Button startSimulationButton = (Button) GetNode("ButtonContainer").GetNode("StartSimulationButton");
-        settingsContainer.Hide();
-        startSimulationButton.Hide();
+        _settingsContainer.Hide();
+        _startSimulationButton.Hide();
+        _infoContainer.Show();
         _mainBall.ApplyImpulse(
             new Vector3(
                 (float) _xInitialImpulseBox.GetValue(),
@@ -297,5 +321,124 @@ public partial class Debug : Control
                 (float) _zInitialImpulsePositionBox.GetValue()
             ) * (float) _impulseFactorBox.GetValue()
         );
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        UpdateInteractionInfo();
+    }
+
+    public void SetInteractionInfo(TabContainer infoContainer){
+        VBoxContainer interactionContainer = (VBoxContainer) infoContainer.GetNode("Interacción").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
+        _positionLabel = (Label) interactionContainer.GetNode("PositionContainer").GetNode("PositionLabel");
+        _distanceLabel = (Label) interactionContainer.GetNode("DistanceContainer").GetNode("DistanceLabel");
+        _currentHeightLabel = (Label) interactionContainer.GetNode("CurrentHeightContainer").GetNode("CurrentHeightLabel");
+        _linearVelocityLabel = (Label) interactionContainer.GetNode("LinearVelocityContainer").GetNode("LinearVelocityLabel");
+        _angularVelocityLabel = (Label) interactionContainer.GetNode("AngularVelocityContainer").GetNode("AngularVelocityLabel");
+        _linearSpeedLabel = (Label) interactionContainer.GetNode("LinearSpeedContainer").GetNode("LinearSpeedLabel");
+        _angularSpeedLabel = (Label) interactionContainer.GetNode("AngularSpeedContainer").GetNode("AngularSpeedLabel");
+        _detectedCollisionLabel = (Label) interactionContainer.GetNode("DetectedCollisionContainer").GetNode("DetectedCollisionLabel");
+        _dragLabel = (Label) interactionContainer.GetNode("DragContainer").GetNode("DragLabel");
+        _dragLabel.SetText(_mainBall.CanApplyAirResistance() ? "Sí" : "No");
+        _magnusEffectLabel = (Label) interactionContainer.GetNode("MagnusEffectContainer").GetNode("MagnusEffectLabel");
+        _magnusEffectLabel.SetText(_mainBall.CanApplyMagnusEffect() ? "Sí" : "No");
+        _dragForceLabel = (Label) interactionContainer.GetNode("DragForceContainer").GetNode("DragForceLabel");
+        _magnusEffectForceLabel = (Label) interactionContainer.GetNode("MagnusEffectForceContainer").GetNode("MagnusEffectForceLabel");
+    }
+
+    public void UpdateInteractionInfo(){
+        Vector3 globalPosition = _mainBall.GetGlobalPosition();
+        float distance = (float) Math.Truncate(globalPosition.Length() * 100) / 100;
+        globalPosition.X =  (float) Mathf.Abs(Math.Truncate(globalPosition.X));
+        float currentHeight = (float) Math.Truncate((globalPosition.Y - _mainBall.GetMeasurement().GetRadius()) * 10) / 10;
+        globalPosition.Y =  (float) Mathf.Abs(Math.Truncate(globalPosition.Y) * 100) / 100;
+        globalPosition.Z =  (float) Math.Truncate(globalPosition.Z);
+        _positionLabel.SetText(globalPosition.ToString());
+        _distanceLabel.SetText(distance.ToString());
+        _currentHeightLabel.SetText(currentHeight.ToString());
+        Vector3 linearVelocity = _mainBall.GetLinearVelocity();
+        float linearSpeed = (float) Math.Truncate(linearVelocity.Length() * 100) / 100;
+        linearVelocity.X =  (float) Math.Truncate(linearVelocity.X);
+        linearVelocity.Y =  (float) Math.Truncate(linearVelocity.Y);
+        linearVelocity.Z =  (float) Math.Truncate(linearVelocity.Z);
+        _linearVelocityLabel.SetText(linearVelocity.ToString());
+        Vector3 angularVelocity = _mainBall.GetAngularVelocity();
+        float angularSpeed = (float) Math.Truncate(angularVelocity.Length() * 100) / 100;
+        angularVelocity.X =  (float) Math.Truncate(angularVelocity.X);
+        angularVelocity.Y =  (float) Math.Truncate(angularVelocity.Y);
+        angularVelocity.Z =  (float) Math.Truncate(angularVelocity.Z);
+        _angularVelocityLabel.SetText(angularVelocity.ToString());
+        _linearSpeedLabel.SetText(linearSpeed.ToString());
+        _angularSpeedLabel.SetText(angularSpeed.ToString());
+        _detectedCollisionLabel.SetText(_mainBall.IsACollisionDetected() ? "Sí" : "No");
+        Vector3 dragForce = _mainBall.GetPhysicsParameters().GetDragForce();
+        dragForce.X =  (float) Math.Truncate(dragForce.X);
+        dragForce.Y =  (float) Math.Truncate(dragForce.Y);
+        dragForce.Z =  (float) Math.Truncate(dragForce.Z);
+        _dragForceLabel.SetText(dragForce.ToString());
+        Vector3 magnusEffectForce = _mainBall.GetPhysicsParameters().GetMagnusEffectForce();
+        magnusEffectForce.X =  (float) Math.Truncate(magnusEffectForce.X);
+        magnusEffectForce.Y =  (float) Math.Truncate(magnusEffectForce.Y);
+        magnusEffectForce.Z =  (float) Math.Truncate(magnusEffectForce.Z);
+        _magnusEffectForceLabel.SetText(magnusEffectForce.ToString());
+    }
+
+    public void SetParametersInfo(TabContainer infoContainer){
+        VBoxContainer parametersContainer = (VBoxContainer) infoContainer.GetNode("Parámetros").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
+        _massLabel = (Label) parametersContainer.GetNode("MassContainer").GetNode("MassLabel");
+        _massLabel.SetText(_mainBall.GetMeasurement().GetMassInGrams().ToString());
+        _inertiaLabel = (Label) parametersContainer.GetNode("InertiaContainer").GetNode("InertiaLabel");
+        float inertia = (float) Math.Truncate(_mainBall.GetMeasurement().GetInertia() * 10000) / 10000;
+        _inertiaLabel.SetText(inertia.ToString());
+        _circumferenceLabel = (Label) parametersContainer.GetNode("CircumferenceContainer").GetNode("CircumferenceLabel");
+        _circumferenceLabel.SetText(_mainBall.GetMeasurement().GetCircumferenceInCentimeters().ToString());
+        _diameterLabel = (Label) parametersContainer.GetNode("DiameterContainer").GetNode("DiameterLabel");
+        float diameter = (float) Math.Truncate(_mainBall.GetMeasurement().GetDiameterInCentimeters());
+        _diameterLabel.SetText(diameter.ToString());
+        _radiusLabel = (Label) parametersContainer.GetNode("RadiusContainer").GetNode("RadiusLabel");
+        float radius = (float) Math.Truncate(_mainBall.GetMeasurement().GetRadiusInCentimeters());
+        _radiusLabel.SetText(radius.ToString());
+        _crossSectionalArea = (Label) parametersContainer.GetNode("CrossSectionalAreaContainer").GetNode("CrossSectionalAreaLabel");
+        float crossSectionalArea = (float) Math.Truncate(_mainBall.GetMeasurement().GetCrossSectionalArea() * 10000) / 10000;
+        _crossSectionalArea.SetText(crossSectionalArea.ToString());
+        _coefficientOfRestitution = (Label) parametersContainer.GetNode("CoefficientOfRestitutionContainer").GetNode("CoefficientOfRestitutionLabel");
+        _coefficientOfRestitution.SetText(_mainBall.GetPhysicsParameters().GetCoefficientOfRestitution().ToString());
+        _frictionCoefficientLabel = (Label) parametersContainer.GetNode("FrictionCoefficientContainer").GetNode("FrictionCoefficientLabel");
+        _frictionCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetFrictionCoefficient().ToString());
+        _normalForceLabel = (Label) parametersContainer.GetNode("NormalForceContainer").GetNode("NormalForceLabel");
+        _normalForceLabel.SetText(_mainBall.GetPhysicsParameters().GetNormalForce().ToString());
+        _frictionForceLabel = (Label) parametersContainer.GetNode("FrictionForceContainer").GetNode("FrictionForceLabel");
+        _frictionForceLabel.SetText(_mainBall.GetPhysicsParameters().GetFrictionForce().ToString());
+        _dragCoefficientLabel = (Label) parametersContainer.GetNode("DragCoefficientContainer").GetNode("DragCoefficientLabel");
+        _dragCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetDragCoefficient().ToString());
+        _liftCoefficientLabel = (Label) parametersContainer.GetNode("LiftCoefficientContainer").GetNode("LiftCoefficientLabel");
+        _liftCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetLiftCoefficient().ToString());
+        _terminalVelocityLabel = (Label) parametersContainer.GetNode("TerminalVelocityContainer").GetNode("TerminalVelocityLabel");
+        float terminalVelocity = (float) Math.Truncate(_mainBall.GetPhysicsParameters().GetTerminalVelocity() * 10000) / 10000;
+        _terminalVelocityLabel.SetText(terminalVelocity.ToString());
+        _angularDampingCoefficientLabel = (Label) parametersContainer.GetNode("AngularDampingCoefficientContainer").GetNode("AngularDampingCoefficientLabel");
+        _angularDampingCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetAngularDampingCoefficient().ToString());
+    }
+
+    public void SetAdditionalInfo(TabContainer infoContainer){
+        VBoxContainer additionalContainer = (VBoxContainer) infoContainer.GetNode("Adicional").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
+        _airDensityLabel = (Label) additionalContainer.GetNode("AirDensityContainer").GetNode("AirDensityLabel");
+        _airDensityLabel.SetText(_mainBall.GetPhysicsParameters().GetEnvironment().GetDensityOfFluid().ToString());
+        _gravityLabel = (Label) additionalContainer.GetNode("GravityContainer").GetNode("GravityLabel");
+        _gravityLabel.SetText(PhysicsHelper.gravity.ToString());
+        _shadowBallTrajectoryLabel = (Label) additionalContainer.GetNode("ShadowBallTrajectoryContainer").GetNode("ShadowBallTrajectoryLabel");
+        _shadowBallTrajectoryLabel.SetText(_shadowBall.CanShowItsTrajectory() ? "Sí" : "No");
+    }
+
+    public void SetModelInfo(TabContainer infoContainer){
+        VBoxContainer modelContainer = (VBoxContainer) infoContainer.GetNode("Modelo").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
+        _patternLabel = (Label) modelContainer.GetNode("PatternContainer").GetNode("PatternLabel");
+        _patternLabel.SetText(_mainBall.GetModel().GetPattern().ToString() == "hexagon-pentagon" ? "Hexágonos y pentágonos" : "Estrellas");
+        _firstColorButton = (ColorPickerButton) modelContainer.GetNode("FirstColorContainer").GetNode("FirstColorButton");
+        _firstColorButton.SetPickColor(_mainBall.GetModel().GetFirstColor());
+        _secondColorButton = (ColorPickerButton) modelContainer.GetNode("SecondColorContainer").GetNode("SecondColorButton");
+        _secondColorButton.SetPickColor(_mainBall.GetModel().GetSecondColor());
+        _thirdColorButton = (ColorPickerButton) modelContainer.GetNode("ThirdColorContainer").GetNode("ThirdColorButton");
+        _thirdColorButton.SetPickColor(_mainBall.GetModel().GetThirdColor());
     }
 }

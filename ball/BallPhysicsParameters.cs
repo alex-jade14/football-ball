@@ -12,8 +12,9 @@ public partial class BallPhysicsParameters
     private float _angularDampingCoefficient;
     private float _frictionForce;
     private float _normalForce;
-
     private WorldEnvironment _environment;
+    private Vector3 _dragForce;
+    private Vector3 _magnusEffectForce;
 
     public BallPhysicsParameters(float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
@@ -123,5 +124,21 @@ public partial class BallPhysicsParameters
 
     private void CalculateTerminalVelocity(float crossSectionalArea, float mass, float dragCoefficient, float densityOfFluid){
         _terminalVelocity = AerodynamicHelper.CalculateTerminalVelocity(crossSectionalArea, mass, dragCoefficient, densityOfFluid);
+    }
+
+    public Vector3 GetDragForce(){
+        return _dragForce;
+    }
+
+    public void SetDragForce(Vector3 dragForce){
+        _dragForce = dragForce;
+    }
+
+    public Vector3 GetMagnusEffectForce(){
+        return _magnusEffectForce;
+    }
+
+    public void SetMagnusEffectForce(Vector3 magnusEffectForce){
+        _magnusEffectForce = magnusEffectForce;
     }
 }

@@ -15,6 +15,7 @@ public partial class BallBase : CharacterBody3D
     private bool _canRoll;
     private bool _canApplyAirResistance = true;
     private bool _canApplyMagnusEffect = true;
+    private bool _detectedCollision;
     protected BallMeasurement _measurement;
     protected BallPhysicsParameters _physicsParameters;
     protected MeshInstance3D mesh;
@@ -122,6 +123,14 @@ public partial class BallBase : CharacterBody3D
         _canApplyMagnusEffect = canApplyMagnusEffect;
     }
 
+    public bool IsACollisionDetected(){
+        return _detectedCollision;
+    }
+
+    public void IsACollisionDetected(bool detectedCollision){
+        _detectedCollision = detectedCollision;
+    }
+
     public BallMeasurement GetMeasurement(){
         return _measurement;
     }
@@ -185,6 +194,7 @@ public partial class BallBase : CharacterBody3D
 
     private void CollisionResponse(){
         CanRoll(false);
+        IsACollisionDetected(GetSlideCollisionCount() > 0);
         for(int i = 0; i < GetSlideCollisionCount(); i++){
             KinematicCollision3D collision = GetSlideCollision(i);
             GodotObject collider = collision.GetCollider();
@@ -219,8 +229,6 @@ public partial class BallBase : CharacterBody3D
                 }
                 ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
             }
-
-            
         }
     }
 
@@ -249,6 +257,8 @@ public partial class BallBase : CharacterBody3D
         for(int i = 0; i < forcesFromAerodynamicEffects.Length; i++){
             forcesToApply.Add(forcesFromAerodynamicEffects[i]);
         }
+        GetPhysicsParameters().SetDragForce(forcesFromAerodynamicEffects[0]);
+        GetPhysicsParameters().SetMagnusEffectForce(forcesFromAerodynamicEffects[1]);
         Godot.Vector3 forceFromGravity = PhysicsHelper.GetForceFromGravity(GetMeasurement().GetMass());
         if(Mathf.Abs(GetLinearVelocity().Y) > 0){
             forcesToApply.Add(forceFromGravity);
