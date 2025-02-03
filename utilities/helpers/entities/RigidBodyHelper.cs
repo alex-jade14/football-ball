@@ -31,7 +31,7 @@ public partial class RigidBodyHelper
     Vector3 positionWhereImpulseIsApplied, float mass, float inertia, Vector3 linearVelocity, Vector3 angularVelocity){
         Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(impulse, mass);
         linearVelocity += linearAcceleration;
-        Vector3 torque = RotationalMotionHelper.CalculateTorque(positionWhereImpulseIsApplied, impulse);
+        Vector3 torque = RotationalMotionHelper.CalculateTorque(positionWhereImpulseIsApplied * 2, impulse);
         Vector3 angularAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(torque, inertia);
         angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration, PhysicsServerHelper.deltaFromPhysicsProcess);
         return (linearVelocity, angularVelocity);

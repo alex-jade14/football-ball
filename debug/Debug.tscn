@@ -18,10 +18,11 @@ anchor_top = 0.0154321
 anchor_right = 0.293403
 anchor_bottom = 0.439815
 tab_alignment = 1
-current_tab = 0
+current_tab = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="Interacción" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -467,7 +468,6 @@ text = "Mostrar trayectoria precalculada:"
 layout_mode = 2
 
 [node name="Modelo" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 

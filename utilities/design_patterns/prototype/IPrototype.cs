@@ -3,6 +3,6 @@ using System;
 
 public interface IPrototype
 {
-    GodotObject ShallowCopy();
+    GodotObject ShallowCopy(ShadowBall shadowBall);
     GodotObject DeepCopy(ShadowBall shadowBall);
 }

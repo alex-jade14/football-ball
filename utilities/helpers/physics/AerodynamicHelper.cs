@@ -1,25 +1,34 @@
 using Godot;
 using System;
+using System.Numerics;
 using System.Security.Principal;
 
 public partial class AerodynamicHelper : PhysicsHelper
 {
     public static Godot.Vector3[] AerodynamicEffectsOfASphereOnAir(float dragCoefficient, float densityOfFluid, 
-    float liftCoefficient, float crossSectionalArea, Godot.Vector3 linearVelocity, Godot.Vector3 angularVelocity){
-        Godot.Vector3 dragForce = CalculateDragForce(
-            dragCoefficient,
-            densityOfFluid,
-            crossSectionalArea,
-            linearVelocity
-        );
-        Godot.Vector3 magnusEffectForce = CalculateMagnusEffectForce(
-            densityOfFluid,
-            liftCoefficient,
-            crossSectionalArea,
-            linearVelocity,
-            angularVelocity
-        );
-
+    float liftCoefficient, float crossSectionalArea, Godot.Vector3 linearVelocity, Godot.Vector3 angularVelocity,
+    bool canApplyAirResistance, bool canApplyMagnusEffect){
+        Godot.Vector3 dragForce = new Godot.Vector3(0, 0, 0);
+        if(canApplyAirResistance){
+            dragForce = CalculateDragForce(
+                dragCoefficient,
+                densityOfFluid,
+                crossSectionalArea,
+                linearVelocity
+            );
+        }
+         
+        Godot.Vector3 magnusEffectForce = new Godot.Vector3(0, 0, 0); 
+        if(canApplyMagnusEffect){
+            magnusEffectForce = CalculateMagnusEffectForce(
+                densityOfFluid,
+                liftCoefficient,
+                crossSectionalArea,
+                linearVelocity,
+                angularVelocity
+            );
+        }
+    
         return new Godot.Vector3[] {dragForce, magnusEffectForce};
     }
 

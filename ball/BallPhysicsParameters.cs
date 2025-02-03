@@ -108,8 +108,9 @@ public partial class BallPhysicsParameters
         CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
 
-     private void UpdateTerminalVelocity(float crossSectionalArea, float mass){
+    public void UpdateTerminalVelocity(float crossSectionalArea, float mass){
         CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
+
     }
 
     private void UpdateValuesWhenNormalForceIsUpdated(){

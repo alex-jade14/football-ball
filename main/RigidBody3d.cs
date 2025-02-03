@@ -6,7 +6,7 @@ public partial class RigidBody3d : RigidBody3D
 
     public Camera3D camera;
     public override void _Ready(){
-        ApplyImpulse(new Vector3(10,6,-10), new Vector3(0, -0.11f, 0.11f) * 10);
+        ApplyImpulse(new Vector3(-10,5,5), new Vector3(0, -0.11f, 0.11f));
         camera = (Camera3D) GetParent().GetNode("Camera3D2");
     }
 

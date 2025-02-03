@@ -45,8 +45,25 @@ public partial class MainBall : BallBase, IPrototype
 		_model = model;
 	}
 	
-	public GodotObject ShallowCopy(){
-		return (BallBase) this.MemberwiseClone();
+	public GodotObject ShallowCopy(ShadowBall shadowBall){
+		shadowBall.SetGlobalPosition(GetGlobalPosition());
+		shadowBall.GetMeasurement().SetMass(GetMeasurement().GetMass());
+		shadowBall.GetPhysicsParameters().SetNormalForce(GetMeasurement().GetMass());
+		shadowBall.GetPhysicsParameters().UpdateTerminalVelocity(GetMeasurement().GetCrossSectionalArea(), GetMeasurement().GetMass());
+		shadowBall.GetMeasurement().SetCircumference(GetMeasurement().GetCircumference());
+		shadowBall.GetPhysicsParameters().SetCoefficientOfRestitution(GetPhysicsParameters().GetCoefficientOfRestitution());
+		shadowBall.GetPhysicsParameters().SetCoefficientOfRestitution(GetPhysicsParameters().GetCoefficientOfRestitution());
+		shadowBall.GetPhysicsParameters().SetRotationalCoefficientOfRestitution(GetPhysicsParameters().GetRotationalCoefficientOfRestitution());
+		shadowBall.GetPhysicsParameters().SetRotationalCoefficientOfRestitution(GetPhysicsParameters().GetRotationalCoefficientOfRestitution());
+		shadowBall.GetPhysicsParameters().SetFrictionCoefficient(GetPhysicsParameters().GetFrictionCoefficient());
+		shadowBall.GetPhysicsParameters().SetDragCoefficient(GetPhysicsParameters().GetDragCoefficient());
+		shadowBall.GetPhysicsParameters().SetLiftCoefficient(GetPhysicsParameters().GetLiftCoefficient());
+		shadowBall.GetPhysicsParameters().SetAngularDampingCoefficient(GetPhysicsParameters().GetAngularDampingCoefficient());
+		shadowBall.GetPhysicsParameters().SetEnvironment(GetPhysicsParameters().GetEnvironment());
+		shadowBall.CanApplyAirResistance(CanApplyAirResistance());
+		shadowBall.CanApplyMagnusEffect(CanApplyMagnusEffect());
+		shadowBall.ScaleMeshAndCollisionToRadius();
+		return shadowBall;
 	}
 
 	public GodotObject DeepCopy(ShadowBall shadowBall){
@@ -64,7 +81,7 @@ public partial class MainBall : BallBase, IPrototype
 		return shadowBall;
 	}
 
-	private void ChangeColorToMesh(){
+	public void ChangeColorToMesh(){
 		StandardMaterial3D firstMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(0);
 		StandardMaterial3D secondMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(1);
 		StandardMaterial3D thirdMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(2);
