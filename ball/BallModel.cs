@@ -8,13 +8,11 @@ public partial class BallModel
     private String _pattern;
     private Color _firstColor;
     private Color _secondColor;
-    private Color _thirdColor;
 
-    public BallModel(String pattern, Color firstColor, Color secondColor, Color thirdColor){
+    public BallModel(String pattern, Color firstColor, Color secondColor){
         _pattern = pattern;
         _firstColor = firstColor;
         _secondColor = secondColor;
-        _thirdColor = thirdColor;
     }
     
     public String GetPattern(){
@@ -39,13 +37,5 @@ public partial class BallModel
 
     public void SetSecondColor(Color secondColor){
         _secondColor = secondColor;
-    }
-
-    public Color GetThirdColor(){
-        return _thirdColor;
-    }
-
-    public void SetThirdColor(Color thirdColor){
-        _thirdColor = thirdColor;
     }
 }

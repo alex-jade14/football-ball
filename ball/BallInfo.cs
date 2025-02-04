@@ -8,7 +8,7 @@ public partial class BallInfo
     private BallMeasurement _measurement;
     private BallPhysicsParameters _physicsParameters;
 
-    public BallInfo(float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution,
+    public BallInfo(float mass, float circumference, float coefficientOfRestitution,
     float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _measurement = new BallMeasurement(
             mass,
@@ -16,7 +16,6 @@ public partial class BallInfo
         );
         _physicsParameters = new BallPhysicsParameters(
             coefficientOfRestitution,
-            rotationalCoefficientOfRestitution,
             frictionCoefficient,
             dragCoefficient,
             liftCoefficient,

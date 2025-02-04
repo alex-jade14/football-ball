@@ -18,10 +18,11 @@ anchor_top = 0.0154321
 anchor_right = 0.293403
 anchor_bottom = 0.439815
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Interacción" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -203,7 +204,6 @@ step = 0.1
 value = 1.0
 
 [node name="Parámetros" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -240,10 +240,8 @@ text = "Masa (g):"
 
 [node name="MassBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-min_value = 410.0
-max_value = 450.0
-step = 0.001
-value = 410.0
+step = 0.01
+value = 100.0
 
 [node name="Label3" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -251,9 +249,7 @@ text = "Circunferencia (cm):"
 
 [node name="CircumferenceBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-min_value = 68.0
-max_value = 70.0
-step = 0.001
+step = 0.01
 value = 68.0
 
 [node name="Label13" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -268,20 +264,10 @@ layout_mode = 2
 
 [node name="Label5" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Coeficiente de restitución:"
+text = "Coeficiente de restitución del suelo:"
 
 [node name="CoefficientOfRestitutionBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 1.0
-step = 0.01
-
-[node name="Label6" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Coeficiente de restitución rotacional:"
-
-[node name="RotationalCoefficientOfRestitutionBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-max_value = 1.0
 step = 0.01
 
 [node name="Label14" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -300,7 +286,6 @@ text = "Coeficiente de fricción:"
 
 [node name="FrictionCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 1.0
 step = 0.01
 
 [node name="Label15" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -319,7 +304,6 @@ text = "Coeficiente de resistencia:"
 
 [node name="DragCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 2.5
 step = 0.01
 
 [node name="Label11" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -328,7 +312,6 @@ text = "Coeficiente de sustentación:"
 
 [node name="LiftCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 3.0
 step = 0.01
 
 [node name="Label12" type="Label" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -338,7 +321,6 @@ angular:"
 
 [node name="AngularDampingCoefficientBox" type="SpinBox" parent="TabContainer/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 1.0
 step = 0.01
 
 [node name="Adicional" type="TabBar" parent="TabContainer"]
@@ -489,14 +471,6 @@ layout_mode = 2
 text = "Segundo color:"
 
 [node name="SecondColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-
-[node name="Label4" type="Label" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Tercer color:"
-
-[node name="ThirdColorPickerButton" type="ColorPickerButton" parent="TabContainer/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
@@ -885,7 +859,7 @@ dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/CoefficientOfRestitutionContainer"]
 layout_mode = 2
-text = "Coeficiente de restitución:"
+text = "Coeficiente de restitución del suelo:"
 
 [node name="CoefficientOfRestitutionLabel" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/CoefficientOfRestitutionContainer"]
 layout_mode = 2
@@ -989,7 +963,7 @@ dragger_visibility = 2
 
 [node name="Label" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/TerminalVelocityContainer"]
 layout_mode = 2
-text = "Velocidad terminal:"
+text = "Velocidad terminal (m/s):"
 
 [node name="TerminalVelocityLabel" type="Label" parent="TabContainer2/Parámetros/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/TerminalVelocityContainer"]
 layout_mode = 2
@@ -1170,22 +1144,6 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 disabled = true
-
-[node name="BoxContainer3" type="BoxContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ThirdColorContainer" type="HSplitContainer" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-dragger_visibility = 2
-
-[node name="Label" type="Label" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ThirdColorContainer"]
-layout_mode = 2
-text = "Tercer color:"
-
-[node name="ThirdColorButton" type="ColorPickerButton" parent="TabContainer2/Modelo/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ThirdColorContainer"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-size_flags_horizontal = 10
 
 [node name="ButtonContainer2" type="MarginContainer" parent="."]
 visible = false

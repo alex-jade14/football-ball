@@ -4,7 +4,6 @@ using System;
 public partial class BallPhysicsParameters
 {
     private float _coefficientOfRestitution;
-    private float _rotationalCoefficientOfRestitution;
     private float _frictionCoefficient;
     private float _dragCoefficient;
     private float _liftCoefficient;
@@ -16,11 +15,10 @@ public partial class BallPhysicsParameters
     private Vector3 _dragForce;
     private Vector3 _magnusEffectForce;
 
-    public BallPhysicsParameters(float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
+    public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
     WorldEnvironment environment){
         SetCoefficientOfRestitution(coefficientOfRestitution);
-        SetRotationalCoefficientOfRestitution(rotationalCoefficientOfRestitution);
         SetFrictionCoefficient(frictionCoefficient);
         SetDragCoefficient(dragCoefficient);
         SetLiftCoefficient(liftCoefficient);
@@ -35,16 +33,11 @@ public partial class BallPhysicsParameters
     }
 
     public void SetCoefficientOfRestitution(float coefficientOfRestitution){
-        _coefficientOfRestitution = coefficientOfRestitution;
-        UpdateValuesWhenFrictionIsUpdated();
-    }
-
-    public float GetRotationalCoefficientOfRestitution(){
-        return _rotationalCoefficientOfRestitution;
-    }
-
-    public void SetRotationalCoefficientOfRestitution(float rotationalCoefficientOfRestitution){
-        _rotationalCoefficientOfRestitution = rotationalCoefficientOfRestitution;
+        _coefficientOfRestitution = Mathf.Clamp(
+            coefficientOfRestitution,
+            BallParametersRanges.minCoefficientOfRestitutionValue,
+            BallParametersRanges.maxCoefficientOfRestitutionValue
+        );
     }
 
     public float GetFrictionCoefficient(){
@@ -52,8 +45,12 @@ public partial class BallPhysicsParameters
     }
 
     public void SetFrictionCoefficient(float frictionCoefficient){
-        _frictionCoefficient = frictionCoefficient;
-        UpdateValuesWhenFrictionIsUpdated();
+        _frictionCoefficient = Mathf.Clamp(
+            frictionCoefficient,
+            BallParametersRanges.minFrictionCoefficientValue,
+            BallParametersRanges.maxFrictionCoefficientValue
+        );
+        UpdateValuesWhenFrictionCoefficientIsUpdated();
     }
 
     public float GetDragCoefficient(){
@@ -61,7 +58,11 @@ public partial class BallPhysicsParameters
     }
 
     public void SetDragCoefficient(float dragCoefficient){
-        _dragCoefficient = dragCoefficient;
+        _dragCoefficient = Mathf.Clamp(
+            dragCoefficient,
+            BallParametersRanges.minDragCoefficientValue,
+            BallParametersRanges.maxDragCoefficientValue
+        );
     }
 
     public float GetLiftCoefficient(){
@@ -69,7 +70,11 @@ public partial class BallPhysicsParameters
     }
 
     public void SetLiftCoefficient(float liftCoefficient){
-        _liftCoefficient = liftCoefficient;
+        _liftCoefficient = Mathf.Clamp(
+            liftCoefficient,
+            BallParametersRanges.minLiftCoefficientValue,
+            BallParametersRanges.maxLiftCoefficientValue
+        );
     }
 
     public float GetTerminalVelocity(){
@@ -81,7 +86,11 @@ public partial class BallPhysicsParameters
     }
 
     public void SetAngularDampingCoefficient(float angularDampingCoefficient){
-        _angularDampingCoefficient = angularDampingCoefficient;
+        _angularDampingCoefficient = Mathf.Clamp(
+            angularDampingCoefficient,
+            BallParametersRanges.minAngularDampingCoefficientValue,
+            BallParametersRanges.maxAngularDampingCoefficientValue
+        );
     }
 
     public float GetFrictionForce(){
@@ -105,7 +114,7 @@ public partial class BallPhysicsParameters
         _environment = environment;
     }
 
-    private void UpdateValuesWhenFrictionIsUpdated(){
+    private void UpdateValuesWhenFrictionCoefficientIsUpdated(){
         CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
 

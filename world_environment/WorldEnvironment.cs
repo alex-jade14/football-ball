@@ -6,7 +6,11 @@ public class WorldEnvironment
     private float _densityOfFluid;
 
     public WorldEnvironment(float densityOfFluid){
-        _densityOfFluid = densityOfFluid;
+        _densityOfFluid = Mathf.Clamp(
+            densityOfFluid,
+            WorldEnvironmentParametersRanges.minDensityOfFluidValue,
+            WorldEnvironmentParametersRanges.maxDensityOfFluidValue
+        );
     }
 
     public float GetDensityOfFluid(){

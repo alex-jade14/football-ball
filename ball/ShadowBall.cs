@@ -34,29 +34,20 @@ public partial class ShadowBall : BallBase, IObserver
             PhysicsSimulation();
         }
     }
-
+    
     private void PhysicsSimulation()
     {
-        positions = new List<Godot.Vector3>();
-	    velocities = new List<Godot.Vector3>();
-        while (CanSimulatePhysics()){
+        while(CanSimulatePhysics()){
+            Vector3 previousPosition = GetGlobalPosition();
             SimulatePhysics();
-            SetGlobalPosition(
-                GetGlobalPosition() +
-                new Godot.Vector3(
-                    GetLinearVelocity().X * PhysicsServerHelper.deltaFromPhysicsProcess,
-                    GetLinearVelocity().Y * PhysicsServerHelper.deltaFromPhysicsProcess,
-                    GetLinearVelocity().Z * PhysicsServerHelper.deltaFromPhysicsProcess
-                )
-            );
-            positions.Add(GlobalPosition);
-            positions.Add(GetLinearVelocity());
-            if(GetLinearVelocity().Y < GetMeasurement().GetRadius()){
+            MoveAndSlide();
+            if(CanShowItsTrajectory()){
+                DrawHelper.Line(previousPosition, GlobalPosition, Colors.White);
+            }
+            if(GetGlobalPosition().Y <= GetMeasurement().GetRadius()){
                 CanSimulatePhysics(false);
                 break;
             }
         }
     }
-
-    
 }

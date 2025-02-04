@@ -34,11 +34,9 @@ public partial class Main : Node3D
             (String) model["pattern"],
             ColorHelper.GetColor((Dictionary) model["firstColor"]),
             ColorHelper.GetColor((Dictionary) model["secondColor"]),
-            ColorHelper.GetColor((Dictionary) model["thirdColor"]),
             (float) measurement["mass"],
             (float) measurement["circumference"],
             (float) physicsParameters["coefficientOfRestitution"],
-            (float) physicsParameters["rotationalCoefficientOfRestitution"],
             (float) physicsParameters["frictionCoefficient"],
             (float) physicsParameters["dragCoefficient"],
             (float) physicsParameters["liftCoefficient"],
@@ -91,14 +89,6 @@ public partial class Main : Node3D
                                     {"b", 231},
                                     {"a", 255}
                                 }
-                            },
-                            {
-                                "thirdColor", new Dictionary{
-                                    {"r", 35},
-                                    {"g", 35},
-                                    {"b", 35},
-                                    {"a", 255}
-                                }
                             }
                         }
                     },
@@ -111,7 +101,6 @@ public partial class Main : Node3D
                     {
                         "physicsParameters", new Dictionary{
                             {"coefficientOfRestitution", 0.67f},
-                            {"rotationalCoefficientOfRestitution", 0.6f},
                             {"frictionCoefficient", 0.62f},
                             {"dragCoefficient", 0.47f},
                             {"liftCoefficient", 0.25f},
@@ -128,71 +117,4 @@ public partial class Main : Node3D
             {"densityOfFluid", 1.225f}
         };
     }
-
-    // public Dictionary GetInitialDebugData(MainBall mainBall, ShadowBall shadowBall){
-	// 	return new Dictionary{
-	// 		{
-	// 			"interaction", new Dictionary{
-	// 				{"initialPosition", mainBall.GetGlobalPosition()},
-	// 				{"initialImpulse", new Vector3(-10, 6, 10)},
-	// 				{"positionWhereImpulseIsApplied", new Vector3(
-    //                         0,
-    //                         -mainBall.GetMeasurement().GetRadius(),
-    //                         mainBall.GetMeasurement().GetRadius()
-    //                     )
-    //                 },
-	// 				{"impulseFactor", 2}
-	// 			}
-	// 		},
-	// 		{
-	// 			"parameters", new Dictionary{
-	// 				{
-	// 					"measurement", new Dictionary{
-	// 						{"mass", mainBall.GetMeasurement().GetMass()},
-	// 						{"circumference", mainBall.GetMeasurement().GetCircumference()},
-	// 					}
-	// 				},
-	// 				{
-	// 					"physicsParameters", new Dictionary{
-	// 						{"coefficientOfRestitution", mainBall.GetPhysicsParameters().GetCoefficientOfRestitution()},
-    //                         {"rotationalCoefficientOfRestitution", mainBall.GetPhysicsParameters().GetCoefficientOfRestitution()},
-    //                         {"frictionCoefficient", mainBall.GetPhysicsParameters().GetFrictionCoefficient()},
-    //                         {"dragCoefficient", mainBall.GetPhysicsParameters().GetDragCoefficient()},
-    //                         {"liftCoefficient", mainBall.GetPhysicsParameters().GetLiftCoefficient()},
-    //                         {"angularDampingCoefficient", mainBall.GetPhysicsParameters().GetAngularDampingCoefficient()}
-	// 					}
-	// 				}
-	// 			}
-	// 		},
-    //         {
-    //             "additional", new Dictionary{
-    //                 {
-    //                     "physics", new Dictionary{
-    //                         {"airResistance", true},
-    //                         {"magnusEffect", true}
-    //                     }
-    //                 },
-    //                 {
-    //                     "environment", new Dictionary{
-    //                         {"airDensity", mainBall.GetPhysicsParameters().GetEnvironment().GetDensityOfFluid()},
-    //                         {"rotationReductionFactor", 4},
-    //                         {"interpolationCoefficient", 0.1}
-    //                     }
-    //                 },
-    //                 {
-    //                     "shadowBall", new Dictionary{
-    //                         {"shadowBall", false}
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         {
-    //             "model", new Dictionary{
-    //                 "pattern", 
-    //             }
-    //         }
-	// 	};
-	// }
-
-
 }

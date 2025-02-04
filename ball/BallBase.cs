@@ -21,13 +21,12 @@ public partial class BallBase : CharacterBody3D
     protected MeshInstance3D mesh;
     protected CollisionShape3D collisionNode;
 
-    public void Create(float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution, float frictionCoefficient,
+    public void Create(float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
         _info = new BallInfo(
             mass,
             circumference,
             coefficientOfRestitution,
-            rotationalCoefficientOfRestitution,
             frictionCoefficient,
             dragCoefficient,
             liftCoefficient,
@@ -276,7 +275,6 @@ public partial class BallBase : CharacterBody3D
         SetLinearVelocity(
             CollisionHelper.CalculateNewVelocityFromCoefficientOfRestitution(
                 GetPhysicsParameters().GetCoefficientOfRestitution(),
-                GetPhysicsParameters().GetRotationalCoefficientOfRestitution(),
                 GetMeasurement().GetMass(),
                 collisionNormal,
                 GetLinearVelocity()

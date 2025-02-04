@@ -22,7 +22,7 @@ public partial class BallMeasurement
     }
 
     public void SetMass(float mass){
-        _mass = mass;
+        _mass = Mathf.Clamp(mass, BallParametersRanges.minMassValue, BallParametersRanges.maxMassValue);
         UpdateValuesWhenMassIsUpdated();
     }
 
@@ -43,7 +43,7 @@ public partial class BallMeasurement
     }
 
     public void SetRadius(float radius){
-        _radius = radius;
+        _radius = Mathf.Clamp(radius, BallParametersRanges.minRadiusValue, BallParametersRanges.maxRadiusValue);
         UpdateLengthsWhenRadiusIsUpdated();
     }
 
@@ -60,7 +60,7 @@ public partial class BallMeasurement
     }
 
     public void SetDiameter(float diameter){
-        _diameter = diameter;
+        _diameter = Mathf.Clamp(diameter, BallParametersRanges.minDiameterValue, BallParametersRanges.maxDiameterValue);
         UpdateLengthsWhenDiameterIsUpdated();
     }
 
@@ -77,7 +77,7 @@ public partial class BallMeasurement
     }
 
     public void SetCircumference(float circumference){
-        _circumference = circumference;
+        _circumference =  Mathf.Clamp(circumference, BallParametersRanges.minCircumferenceValue, BallParametersRanges.maxCircumferenceValue);
         UpdateLengthsWhenCircumferenceIsUpdated();
     }
 
@@ -91,14 +91,6 @@ public partial class BallMeasurement
 
     public float GetCrossSectionalArea(){
         return _crossSectionalArea;
-    }
-
-    public float GetCrossSectionalAreaInCentimeters(){
-        return UnitsConverterHelper.ConvertMetersToCentimeters(_crossSectionalArea);
-    }
-
-    public void SetCrossSectionalAreaInCentemeters(float crossSectionalArea){
-        _crossSectionalArea = UnitsConverterHelper.ConvertCentimetersToMeters(crossSectionalArea);
     }
 
     private void CalculateInertia(){

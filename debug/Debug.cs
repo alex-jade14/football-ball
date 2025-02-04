@@ -16,6 +16,7 @@ public partial class Debug : Control
     private SpinBox _zInitialImpulsePositionBox;
     private SpinBox _impulseFactorBox;
     private Button _startSimulationButton;
+    private OptionButton _patternOptionButton;
     private Label _positionLabel;
     private Label _distanceLabel;
     private Label _currentHeightLabel;
@@ -33,8 +34,8 @@ public partial class Debug : Control
     private Label _circumferenceLabel;
     private Label _diameterLabel;
     private Label _radiusLabel;
-    private Label _crossSectionalArea;
-    private Label _coefficientOfRestitution;
+    private Label _crossSectionalAreaLabel;
+    private Label _coefficientOfRestitutionLabel;
     private Label _frictionCoefficientLabel;
     private Label _normalForceLabel;
     private Label _frictionForceLabel;
@@ -48,7 +49,6 @@ public partial class Debug : Control
     private Label _patternLabel;
     private ColorPickerButton _firstColorButton;
     private ColorPickerButton _secondColorButton;
-    private ColorPickerButton _thirdColorButton;
 
     public void Create(MainBall mainBall, ShadowBall shadowBall){
         _mainBall = mainBall;
@@ -122,41 +122,50 @@ public partial class Debug : Control
         VBoxContainer parametersContainer = (VBoxContainer) settingsContainer.GetNode("Parámetros").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
         
         SpinBox massBox = (SpinBox) parametersContainer.GetNode("MassBox");
+        massBox.SetMin(UnitsConverterHelper.ConvertKilogramToGram(BallParametersRanges.minMassValue));
+        massBox.SetMax(UnitsConverterHelper.ConvertKilogramToGram(BallParametersRanges.maxMassValue));
         massBox.SetValueNoSignal(_mainBall.GetMeasurement().GetMassInGrams());
         Callable massBoxCallable = new (this, MethodName.MassBoxValueChanged);
         massBox.Connect(SpinBox.SignalName.ValueChanged, massBoxCallable);
+        
         SpinBox circumferenceBox = (SpinBox) parametersContainer.GetNode("CircumferenceBox");
+        circumferenceBox.SetMin(UnitsConverterHelper.ConvertMetersToCentimeters(BallParametersRanges.minCircumferenceValue));
+        circumferenceBox.SetMax(UnitsConverterHelper.ConvertMetersToCentimeters(BallParametersRanges.maxCircumferenceValue));
         circumferenceBox.SetValueNoSignal(_mainBall.GetMeasurement().GetCircumferenceInCentimeters());
         Callable circumferenceBoxCollable = new (this, MethodName.CircumferenceBoxValueChanged);
         circumferenceBox.Connect(SpinBox.SignalName.ValueChanged, circumferenceBoxCollable);
 
         SpinBox coefficientOfRestitutionBox = (SpinBox) parametersContainer.GetNode("CoefficientOfRestitutionBox");
+        coefficientOfRestitutionBox.SetMin(BallParametersRanges.minCoefficientOfRestitutionValue);
+        coefficientOfRestitutionBox.SetMax(BallParametersRanges.maxCoefficientOfRestitutionValue);
         coefficientOfRestitutionBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetCoefficientOfRestitution());
-        Callable coefficientBoxValueChanged = new (this, MethodName.coefficientBoxValueChanged);
-        coefficientOfRestitutionBox.Connect(SpinBox.SignalName.ValueChanged, coefficientBoxValueChanged);
-        
-        SpinBox rotationalCoefficientOfRestitutionBox = (SpinBox) parametersContainer.GetNode("RotationalCoefficientOfRestitutionBox");
-        rotationalCoefficientOfRestitutionBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetRotationalCoefficientOfRestitution());
-        Callable rotationalCoefficientBoxValueChanged = new (this, MethodName.rotationalCoefficientBoxValueChanged);
-        rotationalCoefficientOfRestitutionBox.Connect(SpinBox.SignalName.ValueChanged, rotationalCoefficientBoxValueChanged);
+        Callable coefficientOfRestitutionBoxValueChanged = new (this, MethodName.coefficientOfRestitutionBoxValueChanged);
+        coefficientOfRestitutionBox.Connect(SpinBox.SignalName.ValueChanged, coefficientOfRestitutionBoxValueChanged);
         
         SpinBox frictionCoefficientBox = (SpinBox) parametersContainer.GetNode("FrictionCoefficientBox");
+        frictionCoefficientBox.SetMin(BallParametersRanges.minFrictionCoefficientValue);
+        frictionCoefficientBox.SetMax(BallParametersRanges.maxFrictionCoefficientValue);
         frictionCoefficientBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetFrictionCoefficient());
         Callable frictionCoefficientBoxValueChanged = new (this, MethodName.frictionCoefficientBoxValueChanged);
         frictionCoefficientBox.Connect(SpinBox.SignalName.ValueChanged, frictionCoefficientBoxValueChanged);
 
         SpinBox dragCoefficientBox = (SpinBox) parametersContainer.GetNode("DragCoefficientBox");
+        dragCoefficientBox.SetMin(BallParametersRanges.minDragCoefficientValue);
+        dragCoefficientBox.SetMax(BallParametersRanges.maxDragCoefficientValue);
         dragCoefficientBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetDragCoefficient());
         Callable dragCoefficientBoxValueChanged = new (this, MethodName.dragCoefficientBoxValueChanged);
         dragCoefficientBox.Connect(SpinBox.SignalName.ValueChanged, dragCoefficientBoxValueChanged);
 
-
         SpinBox liftCoefficientBox = (SpinBox) parametersContainer.GetNode("LiftCoefficientBox");
+        liftCoefficientBox.SetMin(BallParametersRanges.minLiftCoefficientValue);
+        liftCoefficientBox.SetMax(BallParametersRanges.maxLiftCoefficientValue);
         liftCoefficientBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetLiftCoefficient());
         Callable liftCoefficientBoxValueChanged = new (this, MethodName.liftCoefficientBoxValueChanged);
         liftCoefficientBox.Connect(SpinBox.SignalName.ValueChanged, liftCoefficientBoxValueChanged);
         
         SpinBox angularDampingCoefficientBox = (SpinBox) parametersContainer.GetNode("AngularDampingCoefficientBox");
+        angularDampingCoefficientBox.SetMin(BallParametersRanges.minAngularDampingCoefficientValue);
+        angularDampingCoefficientBox.SetMax(BallParametersRanges.maxAngularDampingCoefficientValue);
         angularDampingCoefficientBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetAngularDampingCoefficient());
         Callable angularDampingCoefficientBoxValueChanged = new (this, MethodName.angularDampingCoefficientBoxValueChanged);
         angularDampingCoefficientBox.Connect(SpinBox.SignalName.ValueChanged, angularDampingCoefficientBoxValueChanged);
@@ -176,6 +185,8 @@ public partial class Debug : Control
         magnusEffectButton.Connect(CheckBox.SignalName.Toggled, magnusEffectButtonValueChanged);
         
         SpinBox airDensityBox = (SpinBox) additionalContainer.GetNode("AirDensityBox");
+        airDensityBox.SetMin(WorldEnvironmentParametersRanges.minDensityOfFluidValue);
+        airDensityBox.SetMax(WorldEnvironmentParametersRanges.maxDensityOfFluidValue);
         airDensityBox.SetValueNoSignal(_mainBall.GetPhysicsParameters().GetEnvironment().GetDensityOfFluid());
         Callable airDensityBoxValueChanged = new (this, MethodName.airDensityBoxValueChanged);
         airDensityBox.Connect(SpinBox.SignalName.ValueChanged, airDensityBoxValueChanged);
@@ -184,14 +195,16 @@ public partial class Debug : Control
         CheckButton shadowBallTrajectoryButton = (CheckButton) additionalContainer.GetNode("ShadowBallContainer").GetNode("ShadowBallTrajectoryButton");
         shadowBallTrajectoryButton.SetPressedNoSignal(_shadowBall.CanShowItsTrajectory());
         Callable shadowBallTrajectoryButtonValueChanged = new (this, MethodName.shadowBallTrajectoryButtonValueChanged);
-        airResistanceButton.Connect(CheckBox.SignalName.Toggled, shadowBallTrajectoryButtonValueChanged);
+        shadowBallTrajectoryButton.Connect(CheckBox.SignalName.Toggled, shadowBallTrajectoryButtonValueChanged);
     }
 
     public void SetModel(TabContainer settingsContainer){
         BoxContainer modelContainer = (VBoxContainer) settingsContainer.GetNode("Modelo").GetNode("MarginContainer").GetNode("ScrollContainer").GetNode("MarginContainer").GetNode("VBoxContainer");
         
-        OptionButton patternOptionButton = (OptionButton) modelContainer.GetNode("PatternOptionButton");
-        patternOptionButton.Select(0);
+        _patternOptionButton = (OptionButton) modelContainer.GetNode("PatternOptionButton");
+        _patternOptionButton.Select(0);
+        Callable patternOptionItemSelected = new (this, MethodName.patternOptionItemSelected);
+        _patternOptionButton.Connect(OptionButton.SignalName.ItemSelected, patternOptionItemSelected);
 
         
         ColorPickerButton firstColorPickerButton = (ColorPickerButton) modelContainer.GetNode("FirstColorPickerButton");
@@ -203,11 +216,6 @@ public partial class Debug : Control
         secondColorPickerButton.SetPickColor(_mainBall.GetModel().GetSecondColor());
         Callable secondColorPickerButtonValueChaned = new (this, MethodName.secondColorPickerButtonValueChaned);
         secondColorPickerButton.Connect(ColorPickerButton.SignalName.ColorChanged, secondColorPickerButtonValueChaned);
-
-        ColorPickerButton thirdColorPickerButton = (ColorPickerButton) modelContainer.GetNode("ThirdColorPickerButton");
-        thirdColorPickerButton.SetPickColor(_mainBall.GetModel().GetThirdColor());
-        Callable thirdColorPickerButtonValueChaned = new (this, MethodName.thirdColorPickerButtonValueChaned);
-        thirdColorPickerButton.Connect(ColorPickerButton.SignalName.ColorChanged, thirdColorPickerButtonValueChaned);
     }
 
     public void MassBoxValueChanged(float value){
@@ -218,66 +226,135 @@ public partial class Debug : Control
             _mainBall.GetMeasurement().GetMass()
         );
         copyPropertiesToShadowBall();
+        _massLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
+        _inertiaLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetInertia(), 4).ToString()
+        );
+        _normalForceLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetNormalForce(), 2).ToString()
+        );
+        _frictionForceLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetFrictionForce(), 2).ToString()
+        );
+        _terminalVelocityLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetTerminalVelocity(), 2).ToString()
+        );
     }
 
     public void CircumferenceBoxValueChanged(float value){
         _mainBall.GetMeasurement().SetCircumferenceInCentemeters(value);
-        _shadowBall.GetMeasurement().SetCircumferenceInCentemeters(value);
         _mainBall.ScaleMeshAndCollisionToRadius();
         SetMinAndMaxRadiusValueForInitialImpulsePosition();
         SetMinRadiusValueForInitialYImpulseComponent();
         _yInitialPositionBox.SetValue(_mainBall.GetMeasurement().GetRadius());
         copyPropertiesToShadowBall();
+        _circumferenceLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
+        _diameterLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(
+                _mainBall.GetMeasurement().GetDiameterInCentimeters(), 2
+            ).ToString()
+        );
+        _radiusLabel.SetText(
+             PrecisionHelper.ValueWithTruncatedDecimals(
+                _mainBall.GetMeasurement().GetRadiusInCentimeters(), 2
+            ).ToString()
+        );
+        _inertiaLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetInertia(), 4).ToString()
+        );
+        _crossSectionalAreaLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(
+                _mainBall.GetMeasurement().GetCrossSectionalArea(), 4
+            ).ToString()
+        );
     }
 
-    public void coefficientBoxValueChanged(float value){
+    public void coefficientOfRestitutionBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().SetCoefficientOfRestitution(value);
         copyPropertiesToShadowBall();
-    }
-
-    public void rotationalCoefficientBoxValueChanged(float value){
-        GD.Print("Hola");
-        _mainBall.GetPhysicsParameters().SetRotationalCoefficientOfRestitution(value);
-        copyPropertiesToShadowBall();
+        _coefficientOfRestitutionLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
     }
 
     public void frictionCoefficientBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().SetFrictionCoefficient(value);
         copyPropertiesToShadowBall();
+        _frictionCoefficientLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
+        _frictionForceLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetFrictionForce(), 2).ToString()
+        );
     }
 
     public void dragCoefficientBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().SetDragCoefficient(value);
         copyPropertiesToShadowBall();
+        _dragCoefficientLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
+        _mainBall.GetPhysicsParameters().UpdateTerminalVelocity(
+            _mainBall.GetMeasurement().GetCrossSectionalArea(),
+            _mainBall.GetMeasurement().GetMass()
+        );
     }
 
     public void liftCoefficientBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().SetLiftCoefficient(value);
         copyPropertiesToShadowBall();
+        _liftCoefficientLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
     }
 
     public void angularDampingCoefficientBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().SetAngularDampingCoefficient(value);
         copyPropertiesToShadowBall();
+        _angularDampingCoefficientLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
     }
 
     public void airResistanceButtonValueChanged(bool onToggled){
         _mainBall.CanApplyAirResistance(onToggled);
         copyPropertiesToShadowBall();
+        _dragLabel.SetText(_mainBall.CanApplyAirResistance() ? "Sí" : "No");
     }
 
     public void magnusEffectButtonValueChanged(bool onToggled){
         _mainBall.CanApplyMagnusEffect(onToggled);
         copyPropertiesToShadowBall();
+        _magnusEffectLabel.SetText(_mainBall.CanApplyMagnusEffect() ? "Sí" : "No");
     }
 
     public void airDensityBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().GetEnvironment().SetDensityOfFluid(value);
+        _mainBall.GetPhysicsParameters().UpdateTerminalVelocity(
+            _mainBall.GetMeasurement().GetCrossSectionalArea(),
+            _mainBall.GetMeasurement().GetMass()
+        );
         copyPropertiesToShadowBall();
+        _angularDampingCoefficientLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
+        );
+        _terminalVelocityLabel.SetText(
+            PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetTerminalVelocity(), 4).ToString()
+        );
     }
 
     public void shadowBallTrajectoryButtonValueChanged(bool onToggled){
         _shadowBall.CanShowItsTrajectory(onToggled);
+    }
+
+    public void patternOptionItemSelected(int index){
+        _mainBall.GetModel().SetPattern(_patternOptionButton.GetItemText(index) == "Hexágonos y pentágonos" ? "hexagon-pentagon" : "stars");
+        _mainBall.ChangeMesh();
+        _mainBall.ChangeColorToMesh();
     }
 
     public void firstColorPickerButtonValueChaned(Color color){
@@ -286,11 +363,6 @@ public partial class Debug : Control
     }
 
     public void secondColorPickerButtonValueChaned(Color color){
-        _mainBall.GetModel().SetSecondColor(color);
-        _mainBall.ChangeColorToMesh();
-    }
-
-    public void thirdColorPickerButtonValueChaned(Color color){
         _mainBall.GetModel().SetSecondColor(color);
         _mainBall.ChangeColorToMesh();
     }
@@ -348,38 +420,37 @@ public partial class Debug : Control
 
     public void UpdateInteractionInfo(){
         Vector3 globalPosition = _mainBall.GetGlobalPosition();
-        float distance = (float) Math.Truncate(globalPosition.Length() * 100) / 100;
-        globalPosition.X =  (float) Mathf.Abs(Math.Truncate(globalPosition.X));
-        float currentHeight = (float) Math.Truncate((globalPosition.Y - _mainBall.GetMeasurement().GetRadius()) * 10) / 10;
-        globalPosition.Y =  (float) Mathf.Abs(Math.Truncate(globalPosition.Y) * 100) / 100;
-        globalPosition.Z =  (float) Math.Truncate(globalPosition.Z);
+        globalPosition.X =  PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.X, 0);
+        float currentHeight = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y - _mainBall.GetMeasurement().GetRadius(), 10);
+        globalPosition.Y = Mathf.Abs(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y, 2));
+        globalPosition.Z = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Z, 0);
         _positionLabel.SetText(globalPosition.ToString());
-        _distanceLabel.SetText(distance.ToString());
+        _distanceLabel.SetText(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Length(), 2).ToString());
         _currentHeightLabel.SetText(currentHeight.ToString());
         Vector3 linearVelocity = _mainBall.GetLinearVelocity();
-        float linearSpeed = (float) Math.Truncate(linearVelocity.Length() * 100) / 100;
-        linearVelocity.X =  (float) Math.Truncate(linearVelocity.X);
-        linearVelocity.Y =  (float) Math.Truncate(linearVelocity.Y);
-        linearVelocity.Z =  (float) Math.Truncate(linearVelocity.Z);
+        float linearSpeed = PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.Length(), 2);
+        linearVelocity.X =  PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.X, 0);
+        linearVelocity.Y =  PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.Y, 0);
+        linearVelocity.Z =  PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.Z, 0);
         _linearVelocityLabel.SetText(linearVelocity.ToString());
         Vector3 angularVelocity = _mainBall.GetAngularVelocity();
-        float angularSpeed = (float) Math.Truncate(angularVelocity.Length() * 100) / 100;
-        angularVelocity.X =  (float) Math.Truncate(angularVelocity.X);
-        angularVelocity.Y =  (float) Math.Truncate(angularVelocity.Y);
-        angularVelocity.Z =  (float) Math.Truncate(angularVelocity.Z);
+        float angularSpeed = PrecisionHelper.ValueWithTruncatedDecimals(angularVelocity.Length(), 2);
+        angularVelocity.X =  PrecisionHelper.ValueWithTruncatedDecimals(angularVelocity.X, 0);
+        angularVelocity.Y =  PrecisionHelper.ValueWithTruncatedDecimals(angularVelocity.Y, 0);
+        angularVelocity.Z =  PrecisionHelper.ValueWithTruncatedDecimals(angularVelocity.Z, 0);
         _angularVelocityLabel.SetText(angularVelocity.ToString());
         _linearSpeedLabel.SetText(linearSpeed.ToString());
         _angularSpeedLabel.SetText(angularSpeed.ToString());
         _detectedCollisionLabel.SetText(_mainBall.IsACollisionDetected() ? "Sí" : "No");
         Vector3 dragForce = _mainBall.GetPhysicsParameters().GetDragForce();
-        dragForce.X =  (float) Math.Truncate(dragForce.X);
-        dragForce.Y =  (float) Math.Truncate(dragForce.Y);
-        dragForce.Z =  (float) Math.Truncate(dragForce.Z);
+        dragForce.X =  PrecisionHelper.ValueWithTruncatedDecimals(dragForce.X, 0);
+        dragForce.Y =  PrecisionHelper.ValueWithTruncatedDecimals(dragForce.Y, 0);
+        dragForce.Z =  PrecisionHelper.ValueWithTruncatedDecimals(dragForce.Z, 0);
         _dragForceLabel.SetText(dragForce.ToString());
         Vector3 magnusEffectForce = _mainBall.GetPhysicsParameters().GetMagnusEffectForce();
-        magnusEffectForce.X =  (float) Math.Truncate(magnusEffectForce.X);
-        magnusEffectForce.Y =  (float) Math.Truncate(magnusEffectForce.Y);
-        magnusEffectForce.Z =  (float) Math.Truncate(magnusEffectForce.Z);
+        magnusEffectForce.X =  PrecisionHelper.ValueWithTruncatedDecimals(magnusEffectForce.X, 0);
+        magnusEffectForce.Y =  PrecisionHelper.ValueWithTruncatedDecimals(magnusEffectForce.Y, 0);
+        magnusEffectForce.Z =  PrecisionHelper.ValueWithTruncatedDecimals(magnusEffectForce.Z, 0);
         _magnusEffectForceLabel.SetText(magnusEffectForce.ToString());
     }
 
@@ -388,21 +459,21 @@ public partial class Debug : Control
         _massLabel = (Label) parametersContainer.GetNode("MassContainer").GetNode("MassLabel");
         _massLabel.SetText(_mainBall.GetMeasurement().GetMassInGrams().ToString());
         _inertiaLabel = (Label) parametersContainer.GetNode("InertiaContainer").GetNode("InertiaLabel");
-        float inertia = (float) Math.Truncate(_mainBall.GetMeasurement().GetInertia() * 10000) / 10000;
+        float inertia = PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetInertia(), 4);
         _inertiaLabel.SetText(inertia.ToString());
         _circumferenceLabel = (Label) parametersContainer.GetNode("CircumferenceContainer").GetNode("CircumferenceLabel");
         _circumferenceLabel.SetText(_mainBall.GetMeasurement().GetCircumferenceInCentimeters().ToString());
         _diameterLabel = (Label) parametersContainer.GetNode("DiameterContainer").GetNode("DiameterLabel");
-        float diameter = (float) Math.Truncate(_mainBall.GetMeasurement().GetDiameterInCentimeters());
+        float diameter = PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetDiameterInCentimeters(), 2);
         _diameterLabel.SetText(diameter.ToString());
         _radiusLabel = (Label) parametersContainer.GetNode("RadiusContainer").GetNode("RadiusLabel");
-        float radius = (float) Math.Truncate(_mainBall.GetMeasurement().GetRadiusInCentimeters());
+        float radius = PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetRadiusInCentimeters(), 2);
         _radiusLabel.SetText(radius.ToString());
-        _crossSectionalArea = (Label) parametersContainer.GetNode("CrossSectionalAreaContainer").GetNode("CrossSectionalAreaLabel");
-        float crossSectionalArea = (float) Math.Truncate(_mainBall.GetMeasurement().GetCrossSectionalArea() * 10000) / 10000;
-        _crossSectionalArea.SetText(crossSectionalArea.ToString());
-        _coefficientOfRestitution = (Label) parametersContainer.GetNode("CoefficientOfRestitutionContainer").GetNode("CoefficientOfRestitutionLabel");
-        _coefficientOfRestitution.SetText(_mainBall.GetPhysicsParameters().GetCoefficientOfRestitution().ToString());
+        _crossSectionalAreaLabel = (Label) parametersContainer.GetNode("CrossSectionalAreaContainer").GetNode("CrossSectionalAreaLabel");
+        float crossSectionalArea = PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetCrossSectionalArea(), 4);
+        _crossSectionalAreaLabel.SetText(crossSectionalArea.ToString());
+        _coefficientOfRestitutionLabel = (Label) parametersContainer.GetNode("CoefficientOfRestitutionContainer").GetNode("CoefficientOfRestitutionLabel");
+        _coefficientOfRestitutionLabel.SetText(_mainBall.GetPhysicsParameters().GetCoefficientOfRestitution().ToString());
         _frictionCoefficientLabel = (Label) parametersContainer.GetNode("FrictionCoefficientContainer").GetNode("FrictionCoefficientLabel");
         _frictionCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetFrictionCoefficient().ToString());
         _normalForceLabel = (Label) parametersContainer.GetNode("NormalForceContainer").GetNode("NormalForceLabel");
@@ -414,7 +485,7 @@ public partial class Debug : Control
         _liftCoefficientLabel = (Label) parametersContainer.GetNode("LiftCoefficientContainer").GetNode("LiftCoefficientLabel");
         _liftCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetLiftCoefficient().ToString());
         _terminalVelocityLabel = (Label) parametersContainer.GetNode("TerminalVelocityContainer").GetNode("TerminalVelocityLabel");
-        float terminalVelocity = (float) Math.Truncate(_mainBall.GetPhysicsParameters().GetTerminalVelocity() * 10000) / 10000;
+        float terminalVelocity = PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetPhysicsParameters().GetTerminalVelocity(), 4);
         _terminalVelocityLabel.SetText(terminalVelocity.ToString());
         _angularDampingCoefficientLabel = (Label) parametersContainer.GetNode("AngularDampingCoefficientContainer").GetNode("AngularDampingCoefficientLabel");
         _angularDampingCoefficientLabel.SetText(_mainBall.GetPhysicsParameters().GetAngularDampingCoefficient().ToString());
@@ -438,7 +509,5 @@ public partial class Debug : Control
         _firstColorButton.SetPickColor(_mainBall.GetModel().GetFirstColor());
         _secondColorButton = (ColorPickerButton) modelContainer.GetNode("SecondColorContainer").GetNode("SecondColorButton");
         _secondColorButton.SetPickColor(_mainBall.GetModel().GetSecondColor());
-        _thirdColorButton = (ColorPickerButton) modelContainer.GetNode("ThirdColorContainer").GetNode("ThirdColorButton");
-        _thirdColorButton.SetPickColor(_mainBall.GetModel().GetThirdColor());
     }
 }

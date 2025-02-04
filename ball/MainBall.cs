@@ -9,19 +9,12 @@ public partial class MainBall : BallBase, IPrototype
 	protected BallModel _model;
 	
 
-	public override void _Ready(){
-		base._Ready();
-		ChangeColorToMesh();
-	}
-
-	public void Create(String pattern, Color firstColor, Color secondColor, Color thirdColor,
-	float mass, float circumference, float coefficientOfRestitution, float rotationalCoefficientOfRestitution,
+	public void Create(String pattern, Color firstColor, Color secondColor, float mass, float circumference, float coefficientOfRestitution,
 	float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
 		base.Create(
 			mass,
 			circumference,
 			coefficientOfRestitution,
-			rotationalCoefficientOfRestitution,
 			frictionCoefficient,
 			dragCoefficient,
 			liftCoefficient,
@@ -31,10 +24,15 @@ public partial class MainBall : BallBase, IPrototype
 		_model = new BallModel(
 			pattern,
 			firstColor,
-			secondColor,
-			thirdColor
+			secondColor
 		);
 		events = new EventManager();
+	}
+
+	public override void _Ready(){
+		base._Ready();
+		ChangeMesh();
+		ChangeColorToMesh();
 	}
 
 	public BallModel GetModel(){
@@ -52,9 +50,6 @@ public partial class MainBall : BallBase, IPrototype
 		shadowBall.GetPhysicsParameters().UpdateTerminalVelocity(GetMeasurement().GetCrossSectionalArea(), GetMeasurement().GetMass());
 		shadowBall.GetMeasurement().SetCircumference(GetMeasurement().GetCircumference());
 		shadowBall.GetPhysicsParameters().SetCoefficientOfRestitution(GetPhysicsParameters().GetCoefficientOfRestitution());
-		shadowBall.GetPhysicsParameters().SetCoefficientOfRestitution(GetPhysicsParameters().GetCoefficientOfRestitution());
-		shadowBall.GetPhysicsParameters().SetRotationalCoefficientOfRestitution(GetPhysicsParameters().GetRotationalCoefficientOfRestitution());
-		shadowBall.GetPhysicsParameters().SetRotationalCoefficientOfRestitution(GetPhysicsParameters().GetRotationalCoefficientOfRestitution());
 		shadowBall.GetPhysicsParameters().SetFrictionCoefficient(GetPhysicsParameters().GetFrictionCoefficient());
 		shadowBall.GetPhysicsParameters().SetDragCoefficient(GetPhysicsParameters().GetDragCoefficient());
 		shadowBall.GetPhysicsParameters().SetLiftCoefficient(GetPhysicsParameters().GetLiftCoefficient());
@@ -71,7 +66,6 @@ public partial class MainBall : BallBase, IPrototype
 			GetMeasurement().GetMassInGrams(),
 			GetMeasurement().GetCircumferenceInCentimeters(),
 			GetPhysicsParameters().GetCoefficientOfRestitution(),
-			GetPhysicsParameters().GetRotationalCoefficientOfRestitution(),
 			GetPhysicsParameters().GetFrictionCoefficient(),
 			GetPhysicsParameters().GetDragCoefficient(),
 			GetPhysicsParameters().GetLiftCoefficient(),
@@ -81,13 +75,20 @@ public partial class MainBall : BallBase, IPrototype
 		return shadowBall;
 	}
 
+	public void ChangeMesh(){
+		if(GetModel().GetPattern() == "hexagon-pentagon"){
+			mesh.SetMesh(GD.Load<Mesh>("res://ball/ball_model.res"));
+		}
+		else{
+			mesh.SetMesh(GD.Load<Mesh>("res://ball/stars_ball_model.res"));
+		}
+	}
+
 	public void ChangeColorToMesh(){
 		StandardMaterial3D firstMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(0);
 		StandardMaterial3D secondMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(1);
-		StandardMaterial3D thirdMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(2);
 		firstMaterial.SetAlbedo(GetModel().GetFirstColor());
 		secondMaterial.SetAlbedo(GetModel().GetSecondColor());
-		thirdMaterial.SetAlbedo(GetModel().GetThirdColor());
 	}
 
 	public override void _PhysicsProcess(double delta)

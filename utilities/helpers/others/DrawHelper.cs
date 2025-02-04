@@ -1,26 +1,30 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Threading.Tasks;
 
 public partial class DrawHelper
-{   
-    public static void drawPoint(Vector3 position, float radius, Color color, float persist_ms = 0){
-        MeshInstance3D meshInstance = new MeshInstance3D();
-        SphereMesh sphereMesh = new SphereMesh();
-        OrmMaterial3D material = new OrmMaterial3D();
+{
+    public static MeshInstance3D Line(Vector3 pos1, Vector3 pos2, Color? color = null)
+    {
+        var meshInstance = new MeshInstance3D();
+        var immediateMesh = new ImmediateMesh();
+        var material = new StandardMaterial3D();
 
-        meshInstance.SetMesh(sphereMesh);
-        meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting;
-        meshInstance.SetPosition(position);
+        meshInstance.Mesh = immediateMesh;
+        meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
 
-        sphereMesh.SetRadius(radius);
-        sphereMesh.SetHeight(radius*2);
-        sphereMesh.SetMaterial(material);
+        immediateMesh.SurfaceBegin(Mesh.PrimitiveType.Lines, material);
+        immediateMesh.SurfaceAddVertex(pos1);
+        immediateMesh.SurfaceAddVertex(pos2);
+        immediateMesh.SurfaceEnd();
 
-        material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-        material.albedo_color = color
+        material.ShadingMode = StandardMaterial3D.ShadingModeEnum.Unshaded;
+        material.AlbedoColor = color ?? Colors.WhiteSmoke;
 
-        return await final_cleanup(mesh_instance, persist_ms)
+        (Engine.GetMainLoop() as SceneTree).Root.AddChild(meshInstance);
+
+        return meshInstance;
     }
 	
 }

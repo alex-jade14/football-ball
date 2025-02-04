@@ -53,7 +53,7 @@ environment = SubResource("Environment_6ux2y")
 transform = Transform3D(1, 0, 0, 0, 0.176518, 0.984297, 0, -0.984297, 0.176518, 0, 283.493, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.191084, 0, 0.981574, 0, 1, 0, -0.981574, 0, -0.191084, 5.85762, 4.39964, 6.49663)
+transform = Transform3D(-0.0644287, 0, 0.997922, 0, 1, 0, -0.997922, 0, -0.0644287, 6.20152, 3.75517, -0.0972972)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.8725, 0.5, 43.6664)
