@@ -55,7 +55,8 @@ public partial class Main : Node3D
     }
 
     public void SubscribeShadowBallToEvents(MainBall mainBall, ShadowBall shadowBall){
-        mainBall.events.Attach(shadowBall);
+        mainBall.events.Attach("impulse", shadowBall);
+        mainBall.events.Attach("detectedCollision", shadowBall);
     }
 
     public Debug GetDebugScreen(MainBall mainBall, ShadowBall shadowBall){

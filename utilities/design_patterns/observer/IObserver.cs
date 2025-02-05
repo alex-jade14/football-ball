@@ -4,5 +4,6 @@ using System;
 
 public interface IObserver
 {
-    void Update(EventManager manager);
+    void UpdateByImpulse(Dictionary data);
+    void UpdateByDetectedCollision(Dictionary data);
 }

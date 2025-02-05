@@ -7,6 +7,9 @@ public partial class MainBall : BallBase, IPrototype
 {
 	public EventManager events;
 	protected BallModel _model;
+	private MeshInstance3D _mesh;
+	private bool _isApplyingImpulse;
+	private bool _canSimulatePhysics;
 	
 
 	public void Create(String pattern, Color firstColor, Color secondColor, float mass, float circumference, float coefficientOfRestitution,
@@ -31,8 +34,10 @@ public partial class MainBall : BallBase, IPrototype
 
 	public override void _Ready(){
 		base._Ready();
+		ScaleMeshToRadius();
 		ChangeMesh();
 		ChangeColorToMesh();
+		_canDetectCollisions = true;
 	}
 
 	public BallModel GetModel(){
@@ -57,7 +62,7 @@ public partial class MainBall : BallBase, IPrototype
 		shadowBall.GetPhysicsParameters().SetEnvironment(GetPhysicsParameters().GetEnvironment());
 		shadowBall.CanApplyAirResistance(CanApplyAirResistance());
 		shadowBall.CanApplyMagnusEffect(CanApplyMagnusEffect());
-		shadowBall.ScaleMeshAndCollisionToRadius();
+		shadowBall.ScaleCollisionToRadius();
 		return shadowBall;
 	}
 
@@ -77,16 +82,16 @@ public partial class MainBall : BallBase, IPrototype
 
 	public void ChangeMesh(){
 		if(GetModel().GetPattern() == "hexagon-pentagon"){
-			mesh.SetMesh(GD.Load<Mesh>("res://ball/ball_model.res"));
+			_mesh.SetMesh(GD.Load<Mesh>("res://ball/ball_model.res"));
 		}
 		else{
-			mesh.SetMesh(GD.Load<Mesh>("res://ball/stars_ball_model.res"));
+			_mesh.SetMesh(GD.Load<Mesh>("res://ball/stars_ball_model.res"));
 		}
 	}
 
 	public void ChangeColorToMesh(){
-		StandardMaterial3D firstMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(0);
-		StandardMaterial3D secondMaterial = (StandardMaterial3D) mesh.GetActiveMaterial(1);
+		StandardMaterial3D firstMaterial = (StandardMaterial3D) _mesh.GetActiveMaterial(0);
+		StandardMaterial3D secondMaterial = (StandardMaterial3D) _mesh.GetActiveMaterial(1);
 		firstMaterial.SetAlbedo(GetModel().GetFirstColor());
 		secondMaterial.SetAlbedo(GetModel().GetSecondColor());
 	}
@@ -99,20 +104,37 @@ public partial class MainBall : BallBase, IPrototype
 	}
 
 	private void ApplyAngularRotation(){
-		mesh.SetGlobalTransform(
+		_mesh.SetGlobalTransform(
 			RigidBodyHelper.CalculateAngularRotation(
 				GetAngularVelocity(),
-				mesh.GetGlobalTransform()
+				_mesh.GetGlobalTransform()
 			)
 		);
-		ScaleMeshAndCollisionToRadius();
+		ScaleCollisionToRadius();
+		ScaleMeshToRadius();
 	}
 
-	public override void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
+	public override void ApplyImpulse(Vector3 impulse, Vector3 positionWhereImpulseIsApplied){
 		base.ApplyImpulse(impulse, positionWhereImpulseIsApplied);
-		events.Notify(new Godot.Collections.Dictionary{
+		events.Notify("impulse", new Dictionary{
 			{"impulse", impulse},
-			{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied}
+			{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied},
 		});
-	}	
+	}
+
+	public void ScaleMeshToRadius(){
+		_mesh = (MeshInstance3D) GetNode("MeshInstance3D");
+        _mesh.SetScale(new Vector3(1,1,1) * GetMeasurement().GetRadius());
+	}
+
+	public override void CollisionResponse(){
+		base.CollisionResponse();
+		if(IsACollisionDetected() && WasOnFloor() && Mathf.Abs(GetLinearVelocity().Y) > 3){
+			events.Notify("detectedCollision", new Dictionary{
+				{"globalPosition", GetGlobalPosition()},
+				{"linearVelocity", GetLinearVelocity()},
+				{"angularVelocity", GetAngularVelocity()}
+			});
+		}
+	}
 }

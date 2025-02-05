@@ -8,8 +8,9 @@ public partial class ShadowBall : BallBase, IObserver
     public List<Godot.Vector3> positions;
     public  List<Godot.Vector3> velocities;
     private bool _canSimulatePhysics;
-
+    
     public bool _canShowItsTrajectory;
+    private Decal _positionMarker;
 
     public bool CanSimulatePhysics(){
         return _canSimulatePhysics;
@@ -26,13 +27,35 @@ public partial class ShadowBall : BallBase, IObserver
     public void CanShowItsTrajectory(bool canShowItsTrajectory){
         _canShowItsTrajectory = canShowItsTrajectory;
     }
+
+    public override void _Ready()
+    {
+        base._Ready();
+        _positionMarker = (Decal) GetNode("PositionMarker");
+        ScalePositionMarker();
+        _canDetectCollisions = false;
+    }
+
     
-    public void Update(EventManager manager){
-        if (manager.state == 1){
-            ApplyImpulse((Godot.Vector3) manager.data["impulse"], (Godot.Vector3) manager.data["positionWhereImpulseIsApplied"]);
-            CanSimulatePhysics(true);
-            PhysicsSimulation();
+    public void UpdateByImpulse(Dictionary data){
+        if(data.ContainsKey("impulse") && data.ContainsKey("positionWhereImpulseIsApplied")){
+            //ApplyImpulse((Vector3) data["impulse"], (Vector3) data["positionWhereImpulseIsApplied"]);
+            EnablePhysicsSimulation();
         }
+    }
+
+    public void UpdateByDetectedCollision(Dictionary data){
+        if(data.ContainsKey("globalPosition") && data.ContainsKey("linearVelocity") && data.ContainsKey("angularVelocity")){
+            SetGlobalPosition((Vector3) data["globalPosition"]);
+            SetLinearVelocity((Vector3) data["linearVelocity"]);
+            SetAngularVelocity((Vector3) data["angularVelocity"]);
+            EnablePhysicsSimulation();
+        }
+    }
+
+    private void EnablePhysicsSimulation(){
+        CanSimulatePhysics(true);
+        PhysicsSimulation();
     }
     
     private void PhysicsSimulation()
@@ -49,5 +72,27 @@ public partial class ShadowBall : BallBase, IObserver
                 break;
             }
         }
+        ShowPositionMarker();
+    }
+
+    public void ShowPositionMarker(){
+        _positionMarker.SetGlobalPosition(
+            new Vector3(
+                GetGlobalPosition().X,
+                _positionMarker.GetPosition().Y,
+                GetGlobalPosition().Z
+            )
+        );
+        _positionMarker.Show();
+    }
+
+    private void ScalePositionMarker(){
+        _positionMarker.SetScale(
+            new Vector3(
+                GetMeasurement().GetRadius() * 2,
+                _positionMarker.GetScale().Y, 
+                GetMeasurement().GetRadius() * 2
+            )
+        );
     }
 }

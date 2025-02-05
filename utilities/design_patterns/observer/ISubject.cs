@@ -3,9 +3,9 @@ using System;
 
 public interface ISubject
 {
-    void Attach(IObserver observer);
-    void Detach(IObserver observer);
-    void Notify(Godot.Collections.Dictionary data);
+    void Attach(String eventType, IObserver observer);
+    void Detach(String eventType, IObserver observer);
+    void Notify(String eventType, Godot.Collections.Dictionary data);
 
     
 }

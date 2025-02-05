@@ -4,24 +4,30 @@ using System.Collections.Generic;
 
 public partial class EventManager : ISubject
 {
-    public int state { get; set; } = 1;
     public Godot.Collections.Dictionary data { get; set; }
-    private List<IObserver> _observers = new List<IObserver>();
+    public List<Tuple<String, IObserver>> _observers = new();
 
-    public EventManager(){}
+    public EventManager(){
 
-    public void Attach(IObserver observer){
-        _observers.Add(observer);
     }
 
-    public void Detach(IObserver observer){
-        _observers.Remove(observer);
+    public void Attach(String eventType, IObserver observer){
+        _observers.Add(new Tuple<String, IObserver>(eventType, observer));
     }
 
-    public void Notify(Godot.Collections.Dictionary data){
+    public void Detach(String eventType, IObserver observer){
+        _observers.Remove(new Tuple<String, IObserver>(eventType, observer));
+    }
+
+    public void Notify(String eventType, Godot.Collections.Dictionary data){
         this.data = data;
-        foreach(IObserver observer in _observers){
-            observer.Update(this);
+        foreach(Tuple<String, IObserver> observer in _observers){
+            if(observer.Item1 == "impulse"){
+                observer.Item2.UpdateByImpulse(data);
+            }
+            else if(observer.Item1 == "detectedCollision"){
+                observer.Item2.UpdateByDetectedCollision(data);
+            }
         }
     }
 

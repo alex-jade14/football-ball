@@ -18,8 +18,8 @@ public partial class BallBase : CharacterBody3D
     private bool _detectedCollision;
     protected BallMeasurement _measurement;
     protected BallPhysicsParameters _physicsParameters;
-    protected MeshInstance3D mesh;
-    protected CollisionShape3D collisionNode;
+    protected CollisionShape3D _collisionNode;
+    protected bool _canDetectCollisions;
 
     public void Create(float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
@@ -38,7 +38,7 @@ public partial class BallBase : CharacterBody3D
     }
     
     public override void _Ready(){
-        ScaleMeshAndCollisionToRadius();
+        ScaleCollisionToRadius();
         PlaceBallOverFloor();
     }
 
@@ -191,42 +191,36 @@ public partial class BallBase : CharacterBody3D
         ApplyAngularVelocity();
     }
 
-    private void CollisionResponse(){
-        CanRoll(false);
+    public virtual void CollisionResponse(){
         IsACollisionDetected(GetSlideCollisionCount() > 0);
-        for(int i = 0; i < GetSlideCollisionCount(); i++){
-            KinematicCollision3D collision = GetSlideCollision(i);
-            GodotObject collider = collision.GetCollider();
-            if (
-                !collision.GetNormal().IsEqualApprox(UpDirection) && 
-                GetGlobalPosition().Y > GetMeasurement().GetRadius()
-            ){
-                // Ball collides with an object that is not the floor
-                SetLinearVelocity(
-                    CollisionHelper.BounceVelocity(
-                        GetLinearVelocity(),
-                        collider.HasMethod("GetCoefficientOfRestitution") ? (float) collider.Get("coefficientOfRestitution") : 0.8f,
-                        collision.GetNormal()
-                    )
-                );
-            }
-            else if (IsOnFloor()){
-                // Ball collides with the floor
-                if(!WasOnFloor() && !CanResetBouncing()){
-                    CanRoll(false);
-                    ApplyCoefficientOfRestitution(
-                        collision.GetNormal()
-                    );
-                    WasOnFloor(true);
-                    if(GetLinearVelocity().Y <= 0.5){
-                        CanResetBouncing(true);
+        if(_canDetectCollisions){
+            CanRoll(false);
+            for(int i = 0; i < GetSlideCollisionCount(); i++){
+                KinematicCollision3D collision = GetSlideCollision(i);
+                if (!collision.GetNormal().IsEqualApprox(UpDirection) && 
+                    GetGlobalPosition().Y > GetMeasurement().GetRadius()
+                ){
+                    // Ball collides with an object that is not the floor
+                    // This is not implemented yet
+                }
+                else if (IsOnFloor()){
+                    // Ball collides with the floor
+                    if(!WasOnFloor() && !CanResetBouncing()){
+                        CanRoll(false);
+                        ApplyCoefficientOfRestitution(
+                            collision.GetNormal()
+                        );
+                        WasOnFloor(true);
+                        if(GetLinearVelocity().Y <= 0.5){
+                            CanResetBouncing(true);
+                            CanRoll(true);
+                        }
+                    }
+                    else if(GetLinearVelocity().Y <= 0.5){
                         CanRoll(true);
                     }
+                    ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
                 }
-                else if(GetLinearVelocity().Y <= 0.5){
-                    CanRoll(true);
-                }
-                ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
             }
         }
     }
@@ -345,11 +339,9 @@ public partial class BallBase : CharacterBody3D
         );
     }
 
-    public void ScaleMeshAndCollisionToRadius(){
-        mesh = (MeshInstance3D) GetNode("MeshInstance3D");
-        mesh.SetScale(new Vector3(1,1,1) * GetMeasurement().GetRadius());
-        collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
-        SphereShape3D collisionShape = (SphereShape3D) collisionNode.GetShape();
+    public void ScaleCollisionToRadius(){
+        _collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
+        SphereShape3D collisionShape = (SphereShape3D) _collisionNode.GetShape();
         collisionShape.SetRadius(GetMeasurement().GetRadius());
     }
 

@@ -23,7 +23,6 @@ public partial class DrawHelper
         material.AlbedoColor = color ?? Colors.WhiteSmoke;
 
         (Engine.GetMainLoop() as SceneTree).Root.AddChild(meshInstance);
-
         return meshInstance;
     }
 	

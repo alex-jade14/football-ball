@@ -245,7 +245,8 @@ public partial class Debug : Control
 
     public void CircumferenceBoxValueChanged(float value){
         _mainBall.GetMeasurement().SetCircumferenceInCentemeters(value);
-        _mainBall.ScaleMeshAndCollisionToRadius();
+        _mainBall.ScaleCollisionToRadius();
+        _mainBall.ScaleMeshToRadius();
         SetMinAndMaxRadiusValueForInitialImpulsePosition();
         SetMinRadiusValueForInitialYImpulseComponent();
         _yInitialPositionBox.SetValue(_mainBall.GetMeasurement().GetRadius());
@@ -425,7 +426,7 @@ public partial class Debug : Control
         globalPosition.Y = Mathf.Abs(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y, 2));
         globalPosition.Z = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Z, 0);
         _positionLabel.SetText(globalPosition.ToString());
-        _distanceLabel.SetText(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Length(), 2).ToString());
+        _distanceLabel.SetText(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.DistanceTo(new Vector3(0,0,0)), 2).ToString());
         _currentHeightLabel.SetText(currentHeight.ToString());
         Vector3 linearVelocity = _mainBall.GetLinearVelocity();
         float linearSpeed = PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.Length(), 2);
