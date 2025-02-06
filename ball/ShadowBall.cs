@@ -86,10 +86,10 @@ public partial class ShadowBall : BallBase, IObserver
             }
             if(GetGlobalPosition().Y <= GetMeasurement().GetRadius()){
                 CanSimulatePhysics(false);
+                ShowPositionMarker();
                 break;
             }
         }
-        ShowPositionMarker();
     }
 
     public void ShowPositionMarker(){

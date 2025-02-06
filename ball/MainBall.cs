@@ -10,6 +10,11 @@ public partial class MainBall : BallBase, IPrototype
 	private MeshInstance3D _mesh;
 	private bool _isApplyingImpulse;
 	private bool _canSimulatePhysics;
+	private Camera3D _mainCamera;
+	private Control _subViewportCameraControl;
+	private Camera3D _subViewportCameraGuide;
+	private Camera3D _subViewportCamera;
+	private bool _canFollowViewportCameraGuide;
 	
 
 	public void Create(String pattern, Color firstColor, Color secondColor, float mass, float circumference, float coefficientOfRestitution,
@@ -38,6 +43,10 @@ public partial class MainBall : BallBase, IPrototype
 		ChangeMesh();
 		ChangeColorToMesh();
 		_canDetectCollisions = true;
+		_mainCamera = (Camera3D) GetNode("MainCamera");
+		_subViewportCameraGuide = (Camera3D) GetNode("SubViewportCameraGuide");
+		_subViewportCameraControl = (Control) GetNode("Control");
+		_subViewportCamera = (Camera3D) _subViewportCameraControl.GetNode("SubViewportContainer").GetNode("SubViewport").GetNode("SubViewportCamera");
 	}
 
 	public BallModel GetModel(){
@@ -46,6 +55,30 @@ public partial class MainBall : BallBase, IPrototype
 
 	public void SetModel(BallModel model){
 		_model = model;
+	}
+
+	public MeshInstance3D GetMesh(){
+		return _mesh;
+	}
+
+	public void SetMesh(MeshInstance3D mesh){
+		_mesh = mesh;
+	}
+
+	public Camera3D GetMainCamera(){
+		return _mainCamera;
+	}
+
+	public Camera3D GetViewportCamera(){
+		return _subViewportCamera;
+	}
+
+	public Control GetViewportCameraControl(){
+		return _subViewportCameraControl;
+	}
+
+	public void CanFollowViewportCameraGuide(bool canFollowViewportCameraGuide){
+		_canFollowViewportCameraGuide = canFollowViewportCameraGuide;
 	}
 	
 	public GodotObject ShallowCopy(ShadowBall shadowBall){
@@ -103,6 +136,9 @@ public partial class MainBall : BallBase, IPrototype
 		SimulatePhysics();
         MoveAndSlide();
 		ApplyAngularRotation();
+		if(_canFollowViewportCameraGuide){
+			_subViewportCamera.SetGlobalPosition(_subViewportCameraGuide.GetGlobalPosition());
+		}
 	}
 
 	private void ApplyAngularRotation(){

@@ -1,8 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://bbhv0vcsrljqa"]
+[gd_scene load_steps=9 format=3 uid="uid://bbhv0vcsrljqa"]
 
 [ext_resource type="Script" path="res://main/Main.cs" id="1_36iw2"]
-[ext_resource type="ArrayMesh" uid="uid://bcm16awrm7fib" path="res://ball/ball_model.res" id="2_2jml1"]
-[ext_resource type="Script" path="res://main/RigidBody3d.cs" id="2_bgvbb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_p25v1"]
 size = Vector3(500, 1, 500)
@@ -24,25 +22,18 @@ sky = SubResource("Sky_dy8yq")
 
 [sub_resource type="BoxMesh" id="BoxMesh_icj7p"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7bkys"]
-friction = 0.5
-bounce = 0.8
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_afe2r"]
-radius = 0.11
-
 [node name="Main" type="Node3D"]
 script = ExtResource("1_36iw2")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_layer = 3
 collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("BoxShape3D_p25v1")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
 material_override = SubResource("StandardMaterial3D_077lq")
 mesh = SubResource("BoxMesh_s4l27")
 
@@ -53,34 +44,8 @@ environment = SubResource("Environment_6ux2y")
 transform = Transform3D(1, 0, 0, 0, 0.176518, 0.984297, 0, -0.984297, 0.176518, 0, 283.493, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.0644287, 0, 0.997922, 0, 1, 0, -0.997922, 0, -0.0644287, 6.20152, 3.75517, -0.0972972)
+transform = Transform3D(-0.0644286, 0, 0.997922, 0, 1, 0, -0.997922, 0, -0.0644286, 6.20152, 3.75517, -0.0972972)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.8725, 0.5, 43.6664)
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.7097, 0.5, 43.6664)
 mesh = SubResource("BoxMesh_icj7p")
-
-[node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 1)
-
-[node name="RigidBody3D" type="RigidBody3D" parent="Node3D"]
-collision_layer = 2
-collision_mask = 2
-mass = 0.45
-physics_material_override = SubResource("PhysicsMaterial_7bkys")
-linear_damp_mode = 1
-linear_damp = 1.0
-script = ExtResource("2_bgvbb")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/RigidBody3D"]
-shape = SubResource("SphereShape3D_afe2r")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/RigidBody3D"]
-transform = Transform3D(0.11, 0, 0, 0, 0.11, 0, 0, 0, 0.11, 0, 0, 0)
-mesh = ExtResource("2_2jml1")
-
-[node name="Camera3D2" type="Camera3D" parent="Node3D"]
-transform = Transform3D(-1, -2.26267e-08, 8.44439e-08, 0, 0.965926, 0.258819, -8.74228e-08, 0.258819, -0.965926, 0, 1.61, -3.60923)
-
-[node name="Label3D" type="Label3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.669996, -0.609225)
-text = "Hola"

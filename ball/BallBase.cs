@@ -21,6 +21,7 @@ public partial class BallBase : CharacterBody3D
     protected BallPhysicsParameters _physicsParameters;
     protected CollisionShape3D _collisionNode;
     protected bool _canDetectCollisions;
+    private bool _isApplyingImpulse;
 
     public void Create(float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
@@ -190,6 +191,7 @@ public partial class BallBase : CharacterBody3D
             GetLinearVelocity(),
             GetAngularVelocity()
         );
+        _isApplyingImpulse = true;
     }
 
     protected void SimulatePhysics(){
@@ -212,7 +214,8 @@ public partial class BallBase : CharacterBody3D
                     // Ball collides with an object that is not the floor
                     // This is not implemented yet
                 }
-                else if (IsOnFloor()){
+                else if (IsOnFloor() && !_isApplyingImpulse){
+                   
                     // Ball collides with the floor
                     if(!WasOnFloor() && !CanResetBouncing()){
                         ApplyCoefficientOfRestitution(
@@ -229,6 +232,9 @@ public partial class BallBase : CharacterBody3D
                     }
                     ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
                     break;
+                }
+                else{
+                    _isApplyingImpulse = false;
                 }
             }
         }
@@ -278,7 +284,6 @@ public partial class BallBase : CharacterBody3D
         SetLinearVelocity(
             CollisionHelper.CalculateNewVelocityFromCoefficientOfRestitution(
                 GetPhysicsParameters().GetCoefficientOfRestitution(),
-                GetMeasurement().GetMass(),
                 collisionNormal,
                 GetLinearVelocity()
             )
@@ -320,11 +325,7 @@ public partial class BallBase : CharacterBody3D
     }
 
     private void ApplyFloorEffect(Vector3 collisionPosition, Vector3 collisionNormal){
-        Godot.Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
-        ApplyFrictionWhenBouncing(frictionForce, ToLocal(collisionPosition), collisionNormal);
-        if(CanRoll()){
-            ApplyFrictionWhenRolling(frictionForce);
-        }
+        DecreaseVelocityFromFriction(collisionPosition, collisionNormal);
         Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
         if (Mathf.Abs(GetLinearVelocity().X) < 0.1){
             auxLinearVelocity.X = 0;
@@ -335,9 +336,17 @@ public partial class BallBase : CharacterBody3D
         SetLinearVelocity(auxLinearVelocity);
     }
 
-    private void ApplyFrictionWhenBouncing(Godot.Vector3 force, Godot.Vector3 collisionPosition, Godot.Vector3 collisionNormal){
-        (_linearVelocity, _angularVelocity, _canRoll) = CollisionHelper.CalculateNewVelocityFromFrictionWhenBouncing(
-            force, 
+    private void DecreaseVelocityFromFriction(Vector3 collisionPosition, Vector3 collisionNormal){
+        Godot.Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
+        _linearVelocity = FrictionHelper.CalculateLinearVelocityFromFriction(_linearVelocity, frictionForce, GetMeasurement().GetMass());
+        ApplyFrictionToAngularVelocityWhenBouncing(ToLocal(collisionPosition), collisionNormal);
+        if(CanRoll()){
+            ApplyFrictionToAngularVelocityWhenRolling();
+        }
+    }
+
+    private void ApplyFrictionToAngularVelocityWhenBouncing(Godot.Vector3 collisionPosition, Godot.Vector3 collisionNormal){
+        (_angularVelocity, _canRoll) = CollisionHelper.CalculateNewAngularVelocityFromFrictionWhenBouncing(
             GetUpDirection(), 
             GetMeasurement().GetMass(),
             GetLinearVelocity(), GetAngularVelocity(),
@@ -351,12 +360,10 @@ public partial class BallBase : CharacterBody3D
         );
     }
 
-    private void ApplyFrictionWhenRolling(Vector3 frictionForce){
-        (_linearVelocity, _angularVelocity) = RollingDynamicsHelper.CalculateRollingWithoutSlipping(
+    private void ApplyFrictionToAngularVelocityWhenRolling(){
+        _angularVelocity = RollingDynamicsHelper.CalculateAngularVelocityFromRollingWithoutSlipping(
             GetLinearVelocity(),
-            frictionForce,
             GetUpDirection(),
-            GetMeasurement().GetMass(),
             GetMeasurement().GetRadius()
         );
     }

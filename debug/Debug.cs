@@ -19,6 +19,7 @@ public partial class Debug : Control
     private SpinBox _impulseFactorBox;
     private Button _startSimulationButton;
     private OptionButton _patternOptionButton;
+    private OptionButton _cameraOptionButton;
     private Label _positionLabel;
     private Label _distanceLabel;
     private Label _currentHeightLabel;
@@ -201,6 +202,11 @@ public partial class Debug : Control
         shadowBallTrajectoryButton.SetPressedNoSignal(_shadowBall.CanShowItsTrajectory());
         Callable shadowBallTrajectoryButtonValueChanged = new (this, MethodName.shadowBallTrajectoryButtonValueChanged);
         shadowBallTrajectoryButton.Connect(CheckBox.SignalName.Toggled, shadowBallTrajectoryButtonValueChanged);
+
+        _cameraOptionButton = (OptionButton) additionalContainer.GetNode("CameraOptionButton");
+        _cameraOptionButton.SetPressedNoSignal(_shadowBall.CanShowItsTrajectory());
+        Callable cameraOptionButtonItemSelected = new (this, MethodName.cameraOptionButtonItemSelected);
+        _cameraOptionButton.Connect(OptionButton.SignalName.ItemSelected, cameraOptionButtonItemSelected);
     }
 
     public void SetModel(TabContainer settingsContainer){
@@ -357,8 +363,37 @@ public partial class Debug : Control
         _shadowBall.CanShowItsTrajectory(onToggled);
     }
 
+    public void cameraOptionButtonItemSelected(int index){
+        switch(index){
+            case 0:
+                _mainBall.GetViewportCameraControl().Hide();
+                _mainBall.GetMainCamera().SetCurrent(true);
+                break;
+            case 1:
+                _mainBall.GetViewportCameraControl().Show();
+                _mainBall.CanFollowViewportCameraGuide(false);
+                _mainBall.GetViewportCamera().SetGlobalPosition(new Vector3(3, 1.5f, 0f));
+                _mainBall.GetViewportCamera().SetGlobalRotation(new Vector3(0, Mathf.DegToRad(93.7f), 0));
+                GD.Print(_mainBall.GetViewportCamera().GetGlobalPosition());
+                _mainBall.GetMainCamera().SetCurrent(true);
+                break;
+            case 2:
+                _mainBall.GetViewportCameraControl().Hide();
+                _mainBall.GetMainCamera().SetCurrent(false);
+                break;
+            case 3:
+                _mainBall.GetViewportCameraControl().Show();
+                _mainBall.GetViewportCamera().SetGlobalPosition(new Vector3(1, 1, -1.5f));
+                _mainBall.GetViewportCamera().SetGlobalRotation(new Vector3(Mathf.DegToRad(-25), Mathf.DegToRad(150), 0));
+                _mainBall.CanFollowViewportCameraGuide(true);
+                _mainBall.GetMainCamera().SetCurrent(false);
+                break;
+        }
+    }
+
     public void patternOptionItemSelected(int index){
-        _mainBall.GetModel().SetPattern(_patternOptionButton.GetItemText(index) == "Hexágonos y pentágonos" ? "hexagon-pentagon" : "stars");
+        _mainBall.GetModel().SetPattern(index == 0 ? "hexagon-pentagon" : "stars");
+        _patternLabel.SetText(_patternOptionButton.GetItemText(index));
         _mainBall.ChangeMesh();
         _mainBall.ChangeColorToMesh();
     }
@@ -427,11 +462,11 @@ public partial class Debug : Control
     public void UpdateInteractionInfo(){
         Vector3 globalPosition = _mainBall.GetGlobalPosition();
         globalPosition.X =  PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.X, 0);
-        float currentHeight = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y - _mainBall.GetMeasurement().GetRadius(), 10);
+        float currentHeight = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y - _mainBall.GetMeasurement().GetRadius(), 1);
         globalPosition.Y = Mathf.Abs(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Y, 2));
         globalPosition.Z = PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.Z, 0);
         _positionLabel.SetText(globalPosition.ToString());
-        _distanceLabel.SetText(PrecisionHelper.ValueWithTruncatedDecimals(globalPosition.DistanceTo(new Vector3(0,0,0)), 2).ToString());
+        _distanceLabel.SetText(PrecisionHelper.ValueWithTruncatedDecimals(new Vector3(globalPosition.X, 0, globalPosition.Z).DistanceTo(new Vector3(0,0,0)), 2).ToString());
         _currentHeightLabel.SetText(currentHeight.ToString());
         Vector3 linearVelocity = _mainBall.GetLinearVelocity();
         float linearSpeed = PrecisionHelper.ValueWithTruncatedDecimals(linearVelocity.Length(), 2);
@@ -525,7 +560,7 @@ public partial class Debug : Control
         _mainBall.SetLinearVelocity(new Vector3(0,0,0));
         _mainBall.SetAngularVelocity(new Vector3(0,0,0));
         _mainBall.SetGlobalPosition(new Vector3(0, _mainBall.GetMeasurement().GetRadius(), 0));
-        _mainBall.SetGlobalRotation(new Vector3(0,0,0));
+        _mainBall.GetMesh().SetGlobalRotation(new Vector3(0,0,0));
         _shadowBall._positionMarker.Hide();
         _shadowBall.GetDrawer().ClearMeshInstances();
         copyPropertiesToShadowBall();

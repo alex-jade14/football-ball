@@ -420,6 +420,32 @@ text = "Mostrar trayectoria precalculada:"
 [node name="ShadowBallTrajectoryButton" type="CheckButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/ShadowBallContainer"]
 layout_mode = 2
 
+[node name="Label2" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Visual"
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Cámara:"
+
+[node name="CameraOptionButton" type="OptionButton" parent="TabContainer/Adicional/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "Balón"
+popup/item_1/text = "Balón + trayectoria"
+popup/item_1/id = 1
+popup/item_2/text = "Trayectoria"
+popup/item_2/id = 2
+popup/item_3/text = "Trayectoria + balón"
+popup/item_3/id = 3
+
 [node name="Modelo" type="TabBar" parent="TabContainer"]
 visible = false
 layout_mode = 2
