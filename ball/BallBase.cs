@@ -12,6 +12,7 @@ public partial class BallBase : CharacterBody3D
     private Godot.Vector3 _angularVelocity;
     private bool _wasOnFloor;
     private bool _canResetBouncing;
+    private bool _couldNotBeBouncing;
     private bool _canRoll;
     private bool _canApplyAirResistance = true;
     private bool _canApplyMagnusEffect = true;
@@ -105,6 +106,14 @@ public partial class BallBase : CharacterBody3D
     protected void CanRoll(bool canRoll){
         _canRoll = canRoll;
     }
+
+    protected bool CouldNotBeBouncing(){
+        return _couldNotBeBouncing;
+    }
+
+    protected void CouldNotBeBouncing(bool couldBeBouncing){
+        _couldNotBeBouncing = couldBeBouncing;
+    }
     
     public bool CanApplyAirResistance(){
         return _canApplyAirResistance;
@@ -192,9 +201,9 @@ public partial class BallBase : CharacterBody3D
     }
 
     public virtual void CollisionResponse(){
-        IsACollisionDetected(GetSlideCollisionCount() > 0);
         if(_canDetectCollisions){
-            CanRoll(false);
+            IsACollisionDetected(GetSlideCollisionCount() > 0);
+            CouldNotBeBouncing(false);
             for(int i = 0; i < GetSlideCollisionCount(); i++){
                 KinematicCollision3D collision = GetSlideCollision(i);
                 if (!collision.GetNormal().IsEqualApprox(UpDirection) && 
@@ -206,20 +215,20 @@ public partial class BallBase : CharacterBody3D
                 else if (IsOnFloor()){
                     // Ball collides with the floor
                     if(!WasOnFloor() && !CanResetBouncing()){
-                        CanRoll(false);
                         ApplyCoefficientOfRestitution(
                             collision.GetNormal()
                         );
                         WasOnFloor(true);
-                        if(GetLinearVelocity().Y <= 0.5){
+                        if(GetLinearVelocity().Y <= 0.5f){
                             CanResetBouncing(true);
-                            CanRoll(true);
+                            CouldNotBeBouncing(true);
                         }
                     }
-                    else if(GetLinearVelocity().Y <= 0.5){
-                        CanRoll(true);
+                    else if(GetLinearVelocity().Y <= 0.5f){
+                        CouldNotBeBouncing(true);
                     }
                     ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
+                    break;
                 }
             }
         }
@@ -312,7 +321,10 @@ public partial class BallBase : CharacterBody3D
 
     private void ApplyFloorEffect(Vector3 collisionPosition, Vector3 collisionNormal){
         Godot.Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
-        ApplyRollingWithoutSlipping(frictionForce, ToLocal(collisionPosition), collisionNormal);
+        ApplyFrictionWhenBouncing(frictionForce, ToLocal(collisionPosition), collisionNormal);
+        if(CanRoll()){
+            ApplyFrictionWhenRolling(frictionForce);
+        }
         Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
         if (Mathf.Abs(GetLinearVelocity().X) < 0.1){
             auxLinearVelocity.X = 0;
@@ -323,19 +335,29 @@ public partial class BallBase : CharacterBody3D
         SetLinearVelocity(auxLinearVelocity);
     }
 
-    private void ApplyRollingWithoutSlipping(Godot.Vector3 force, Godot.Vector3 collisionPosition, Godot.Vector3 collisionNormal){
-        (_linearVelocity, _angularVelocity) = RollingDynamicsHelper.CalculateRollingWithoutSlipping(
+    private void ApplyFrictionWhenBouncing(Godot.Vector3 force, Godot.Vector3 collisionPosition, Godot.Vector3 collisionNormal){
+        (_linearVelocity, _angularVelocity, _canRoll) = CollisionHelper.CalculateNewVelocityFromFrictionWhenBouncing(
             force, 
             GetUpDirection(), 
             GetMeasurement().GetMass(),
             GetLinearVelocity(), GetAngularVelocity(),
-            CanRoll(),
+            CouldNotBeBouncing(),
             GetMeasurement().GetRadius(),
             collisionPosition,
             GetMeasurement().GetInertia(),
             GetPhysicsParameters().GetFrictionCoefficient(),
             collisionNormal,
-            GetPhysicsParameters().GetFrictionForce()
+            CanRoll()
+        );
+    }
+
+    private void ApplyFrictionWhenRolling(Vector3 frictionForce){
+        (_linearVelocity, _angularVelocity) = RollingDynamicsHelper.CalculateRollingWithoutSlipping(
+            GetLinearVelocity(),
+            frictionForce,
+            GetUpDirection(),
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetRadius()
         );
     }
 

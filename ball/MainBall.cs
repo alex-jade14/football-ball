@@ -63,6 +63,8 @@ public partial class MainBall : BallBase, IPrototype
 		shadowBall.CanApplyAirResistance(CanApplyAirResistance());
 		shadowBall.CanApplyMagnusEffect(CanApplyMagnusEffect());
 		shadowBall.ScaleCollisionToRadius();
+		shadowBall.SetLinearVelocity(GetLinearVelocity());
+		shadowBall.SetLinearVelocity(GetAngularVelocity());
 		return shadowBall;
 	}
 
@@ -129,12 +131,15 @@ public partial class MainBall : BallBase, IPrototype
 
 	public override void CollisionResponse(){
 		base.CollisionResponse();
-		if(IsACollisionDetected() && WasOnFloor() && Mathf.Abs(GetLinearVelocity().Y) > 3){
-			events.Notify("detectedCollision", new Dictionary{
-				{"globalPosition", GetGlobalPosition()},
-				{"linearVelocity", GetLinearVelocity()},
-				{"angularVelocity", GetAngularVelocity()}
-			});
+		if(IsACollisionDetected() && WasOnFloor()){
+			events.Notify("updateMarker", new Dictionary {{"hide", true}});
+			if(Mathf.Abs(GetLinearVelocity().Y) > 3){
+				events.Notify("detectedCollision", new Dictionary{
+					{"globalPosition", GetGlobalPosition()},
+					{"linearVelocity", GetLinearVelocity()},
+					{"angularVelocity", GetAngularVelocity()}
+				});
+			}
 		}
 	}
 }

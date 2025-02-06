@@ -7,6 +7,8 @@ public partial class Debug : Control
     private ShadowBall _shadowBall;
     private TabContainer _settingsContainer;
     private TabContainer _infoContainer;
+    private MarginContainer _resetSimulationContainer;
+    private Button _resetSimulationButton;
     private SpinBox _yInitialPositionBox;
     private SpinBox _xInitialImpulseBox;
     private SpinBox _yInitialImpulseBox;
@@ -64,10 +66,13 @@ public partial class Debug : Control
         SetModel(_settingsContainer);
         SetStartSimulationButton();
         _infoContainer = (TabContainer) GetNode("TabContainer2");
+        _resetSimulationContainer = (MarginContainer) GetNode("ButtonContainer2");
+        _resetSimulationButton = (Button) GetNode("ButtonContainer2").GetNode("ResetSimulationButton");
         SetInteractionInfo(_infoContainer);
         SetParametersInfo(_infoContainer);
         SetAdditionalInfo(_infoContainer);
         SetModelInfo(_infoContainer);
+        SetResetSimulationButton();
     }
 
     public void SetInteraction(TabContainer settingsContainer){
@@ -374,14 +379,14 @@ public partial class Debug : Control
     }
 
     public void SetStartSimulationButton(){
-        Button startSimulationButton = (Button) GetNode("ButtonContainer").GetNode("StartSimulationButton");
-        startSimulationButton.Connect(Button.SignalName.Pressed, Callable.From(StartSimulationButtonPressed), (uint)GodotObject.ConnectFlags.OneShot);
+        _startSimulationButton.Connect(Button.SignalName.Pressed, Callable.From(StartSimulationButtonPressed));
     }
 
     public void StartSimulationButtonPressed(){
         _settingsContainer.Hide();
         _startSimulationButton.Hide();
         _infoContainer.Show();
+        _resetSimulationContainer.Show();
         _mainBall.ApplyImpulse(
             new Vector3(
                 (float) _xInitialImpulseBox.GetValue(),
@@ -511,4 +516,24 @@ public partial class Debug : Control
         _secondColorButton = (ColorPickerButton) modelContainer.GetNode("SecondColorContainer").GetNode("SecondColorButton");
         _secondColorButton.SetPickColor(_mainBall.GetModel().GetSecondColor());
     }
+
+    public void SetResetSimulationButton(){
+        _resetSimulationButton.Connect(Button.SignalName.Pressed, Callable.From(ResetSimulationButtonPressed));
+    }
+
+    public void ResetSimulationButtonPressed(){
+        _mainBall.SetLinearVelocity(new Vector3(0,0,0));
+        _mainBall.SetAngularVelocity(new Vector3(0,0,0));
+        _mainBall.SetGlobalPosition(new Vector3(0, _mainBall.GetMeasurement().GetRadius(), 0));
+        _mainBall.SetGlobalRotation(new Vector3(0,0,0));
+        _shadowBall._positionMarker.Hide();
+        _shadowBall.GetDrawer().ClearMeshInstances();
+        copyPropertiesToShadowBall();
+        _infoContainer.Hide();
+        _resetSimulationContainer.Hide();
+        _settingsContainer.Show();
+        _startSimulationButton.Show();
+    }
+
+
 }

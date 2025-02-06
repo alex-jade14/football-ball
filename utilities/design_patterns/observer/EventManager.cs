@@ -28,6 +28,9 @@ public partial class EventManager : ISubject
             else if(observer.Item1 == "detectedCollision"){
                 observer.Item2.UpdateByDetectedCollision(data);
             }
+            else if(observer.Item1 == "updateMarker"){
+                observer.Item2.UpdateShadowBallMarker(data);
+            }
         }
     }
 

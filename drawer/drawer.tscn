@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cped4wswufjp8"]
+
+[ext_resource type="Script" path="res://drawer/Drawer.cs" id="1_lqsr7"]
+
+[node name="Drawer" type="Node3D"]
+script = ExtResource("1_lqsr7")

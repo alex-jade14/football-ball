@@ -8,10 +8,12 @@ public partial class Main : Node3D
     public override void _Ready(){
         WorldEnvironment environment = GetWorldEnvironment();
         MainBall mainBall = GetMainBall(environment);
-		ShadowBall shadowBall = GetShadowBall(mainBall);
+        Drawer drawer = GetDrawer();
+		ShadowBall shadowBall = GetShadowBall(mainBall, drawer);
         SubscribeShadowBallToEvents(mainBall, shadowBall);
         Debug debug = GetDebugScreen(mainBall, shadowBall);
         debug.SetInitialDebugData();
+        
     }
 
     public WorldEnvironment GetWorldEnvironment(){
@@ -46,25 +48,34 @@ public partial class Main : Node3D
         AddChild(mainBall);
         return mainBall;
     }
-    public ShadowBall GetShadowBall(MainBall mainBall){
+    public ShadowBall GetShadowBall(MainBall mainBall, Drawer drawer){
         PackedScene shadowBallScene = (PackedScene) GD.Load("res://ball/shadow_ball.tscn");
         ShadowBall shadowBall = (ShadowBall) shadowBallScene.Instantiate();
         shadowBall = (ShadowBall) mainBall.DeepCopy(shadowBall);
         AddChild(shadowBall);
+        shadowBall.SetDrawer(drawer);
         return shadowBall;
     }
 
     public void SubscribeShadowBallToEvents(MainBall mainBall, ShadowBall shadowBall){
         mainBall.events.Attach("impulse", shadowBall);
         mainBall.events.Attach("detectedCollision", shadowBall);
+        mainBall.events.Attach("updateMarker", shadowBall);
     }
 
     public Debug GetDebugScreen(MainBall mainBall, ShadowBall shadowBall){
-        PackedScene debugScene = (PackedScene) GD.Load("res://debug/Debug.tscn");
+        PackedScene debugScene = (PackedScene) GD.Load("res://debug/debug.tscn");
         Debug debug = (Debug) debugScene.Instantiate();
         debug.Create(mainBall, shadowBall);
         AddChild(debug);
         return debug;
+    }
+
+    public Drawer GetDrawer(){
+        PackedScene drawerScene = (PackedScene) GD.Load("res://drawer/drawer.tscn");
+        Drawer drawer = (Drawer) drawerScene.Instantiate();
+        AddChild(drawer);
+        return drawer;
     }
 
     public Dictionary GetBallData(){

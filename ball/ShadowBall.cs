@@ -8,9 +8,10 @@ public partial class ShadowBall : BallBase, IObserver
     public List<Godot.Vector3> positions;
     public  List<Godot.Vector3> velocities;
     private bool _canSimulatePhysics;
+    private Drawer _drawer;
     
     public bool _canShowItsTrajectory;
-    private Decal _positionMarker;
+    public Decal _positionMarker;
 
     public bool CanSimulatePhysics(){
         return _canSimulatePhysics;
@@ -26,6 +27,14 @@ public partial class ShadowBall : BallBase, IObserver
 
     public void CanShowItsTrajectory(bool canShowItsTrajectory){
         _canShowItsTrajectory = canShowItsTrajectory;
+    }
+
+    public Drawer GetDrawer(){
+        return _drawer;
+    }
+
+    public void SetDrawer(Drawer drawer){
+        _drawer = drawer;
     }
 
     public override void _Ready()
@@ -53,6 +62,14 @@ public partial class ShadowBall : BallBase, IObserver
         }
     }
 
+    public void UpdateShadowBallMarker(Dictionary data){
+        if(data.ContainsKey("hide")){
+            if((bool) data["hide"]){
+                _positionMarker.Hide();
+            }
+        }
+    }
+
     private void EnablePhysicsSimulation(){
         CanSimulatePhysics(true);
         PhysicsSimulation();
@@ -65,7 +82,7 @@ public partial class ShadowBall : BallBase, IObserver
             SimulatePhysics();
             MoveAndSlide();
             if(CanShowItsTrajectory()){
-                DrawHelper.Line(previousPosition, GlobalPosition, Colors.White);
+                _drawer.Line(previousPosition, GlobalPosition, Colors.LightGray);
             }
             if(GetGlobalPosition().Y <= GetMeasurement().GetRadius()){
                 CanSimulatePhysics(false);
@@ -79,7 +96,7 @@ public partial class ShadowBall : BallBase, IObserver
         _positionMarker.SetGlobalPosition(
             new Vector3(
                 GetGlobalPosition().X,
-                _positionMarker.GetPosition().Y,
+                0,
                 GetGlobalPosition().Z
             )
         );
