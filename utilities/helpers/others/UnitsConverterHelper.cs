@@ -1,6 +1,3 @@
-using Godot;
-using System;
-
 public static class UnitsConverterHelper
 {
     public static float ConvertMSToKMH(float valueInMS){

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class BallPhysicsParameters
 {
@@ -15,9 +14,8 @@ public partial class BallPhysicsParameters
     private Vector3 _dragForce;
     private Vector3 _magnusEffectForce;
 
-    public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient,
-    float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, float mass, float crossSectionalArea,
-    WorldEnvironment environment){
+    public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient, float dragCoefficient, float liftCoefficient,
+    float angularDampingCoefficient, float mass, float crossSectionalArea, WorldEnvironment environment){
         SetCoefficientOfRestitution(coefficientOfRestitution);
         SetFrictionCoefficient(frictionCoefficient);
         SetDragCoefficient(dragCoefficient);
@@ -32,49 +30,16 @@ public partial class BallPhysicsParameters
         return _coefficientOfRestitution;
     }
 
-    public void SetCoefficientOfRestitution(float coefficientOfRestitution){
-        _coefficientOfRestitution = Mathf.Clamp(
-            coefficientOfRestitution,
-            BallParametersRanges.minCoefficientOfRestitutionValue,
-            BallParametersRanges.maxCoefficientOfRestitutionValue
-        );
-    }
-
     public float GetFrictionCoefficient(){
         return _frictionCoefficient;
-    }
-
-    public void SetFrictionCoefficient(float frictionCoefficient){
-        _frictionCoefficient = Mathf.Clamp(
-            frictionCoefficient,
-            BallParametersRanges.minFrictionCoefficientValue,
-            BallParametersRanges.maxFrictionCoefficientValue
-        );
-        UpdateValuesWhenFrictionCoefficientIsUpdated();
     }
 
     public float GetDragCoefficient(){
         return _dragCoefficient;
     }
 
-    public void SetDragCoefficient(float dragCoefficient){
-        _dragCoefficient = Mathf.Clamp(
-            dragCoefficient,
-            BallParametersRanges.minDragCoefficientValue,
-            BallParametersRanges.maxDragCoefficientValue
-        );
-    }
-
     public float GetLiftCoefficient(){
         return _liftCoefficient;
-    }
-
-    public void SetLiftCoefficient(float liftCoefficient){
-        _liftCoefficient = Mathf.Clamp(
-            liftCoefficient,
-            BallParametersRanges.minLiftCoefficientValue,
-            BallParametersRanges.maxLiftCoefficientValue
-        );
     }
 
     public float GetTerminalVelocity(){
@@ -85,14 +50,6 @@ public partial class BallPhysicsParameters
         return _angularDampingCoefficient;
     }
 
-    public void SetAngularDampingCoefficient(float angularDampingCoefficient){
-        _angularDampingCoefficient = Mathf.Clamp(
-            angularDampingCoefficient,
-            BallParametersRanges.minAngularDampingCoefficientValue,
-            BallParametersRanges.maxAngularDampingCoefficientValue
-        );
-    }
-
     public float GetFrictionForce(){
         return _frictionForce;
     }
@@ -101,30 +58,74 @@ public partial class BallPhysicsParameters
         return _normalForce;
     }
 
+    public WorldEnvironment GetEnvironment(){
+        return _environment;
+    }
+
+    public Vector3 GetDragForce(){
+        return _dragForce;
+    }
+
+    public Vector3 GetMagnusEffectForce(){
+        return _magnusEffectForce;
+    }
+
+    public void SetCoefficientOfRestitution(float coefficientOfRestitution){
+        _coefficientOfRestitution = Mathf.Clamp(
+            coefficientOfRestitution,
+            BallParametersRanges.MinCoefficientOfRestitutionValue,
+            BallParametersRanges.MaxCoefficientOfRestitutionValue
+        );
+    }
+
+    public void SetFrictionCoefficient(float frictionCoefficient){
+        _frictionCoefficient = Mathf.Clamp(
+            frictionCoefficient,
+            BallParametersRanges.MinFrictionCoefficientValue,
+            BallParametersRanges.MaxFrictionCoefficientValue
+        );
+        UpdateValuesWhenFrictionCoefficientIsUpdated();
+    }
+
+    public void SetDragCoefficient(float dragCoefficient){
+        _dragCoefficient = Mathf.Clamp(
+            dragCoefficient,
+            BallParametersRanges.MinDragCoefficientValue,
+            BallParametersRanges.MaxDragCoefficientValue
+        );
+    }
+
+    public void SetLiftCoefficient(float liftCoefficient){
+        _liftCoefficient = Mathf.Clamp(
+            liftCoefficient,
+            BallParametersRanges.MinLiftCoefficientValue,
+            BallParametersRanges.MaxLiftCoefficientValue
+        );
+    }
+
+    public void SetAngularDampingCoefficient(float angularDampingCoefficient){
+        _angularDampingCoefficient = Mathf.Clamp(
+            angularDampingCoefficient,
+            BallParametersRanges.MinAngularDampingCoefficientValue,
+            BallParametersRanges.MaxAngularDampingCoefficientValue
+        );
+    }
+
     public void SetNormalForce(float mass){  
         _normalForce = NewtonsFirstLawHelper.CalculateNormalForce(mass);
         UpdateValuesWhenNormalForceIsUpdated();
-    }
-
-    public WorldEnvironment GetEnvironment(){
-        return _environment;
     }
 
     public void SetEnvironment(WorldEnvironment environment){
         _environment = environment;
     }
 
-    private void UpdateValuesWhenFrictionCoefficientIsUpdated(){
-        CalculateFrictionForce(_frictionCoefficient, _normalForce);
+    public void SetDragForce(Vector3 dragForce){
+        _dragForce = dragForce;
     }
 
-    public void UpdateTerminalVelocity(float crossSectionalArea, float mass){
-        CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
-
-    }
-
-    private void UpdateValuesWhenNormalForceIsUpdated(){
-        CalculateFrictionForce(_frictionCoefficient, _normalForce);
+    public void SetMagnusEffectForce(Vector3 magnusEffectForce){
+        _magnusEffectForce = magnusEffectForce;
     }
 
     private void CalculateFrictionForce(float frictionCoefficient, float normalForce){
@@ -135,19 +136,15 @@ public partial class BallPhysicsParameters
         _terminalVelocity = AerodynamicHelper.CalculateTerminalVelocity(crossSectionalArea, mass, dragCoefficient, densityOfFluid);
     }
 
-    public Vector3 GetDragForce(){
-        return _dragForce;
+    private void UpdateValuesWhenFrictionCoefficientIsUpdated(){
+        CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
 
-    public void SetDragForce(Vector3 dragForce){
-        _dragForce = dragForce;
+    public void UpdateTerminalVelocity(float crossSectionalArea, float mass){
+        CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
     }
 
-    public Vector3 GetMagnusEffectForce(){
-        return _magnusEffectForce;
-    }
-
-    public void SetMagnusEffectForce(Vector3 magnusEffectForce){
-        _magnusEffectForce = magnusEffectForce;
+    private void UpdateValuesWhenNormalForceIsUpdated(){
+        CalculateFrictionForce(_frictionCoefficient, _normalForce);
     }
 }

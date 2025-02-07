@@ -1,7 +1,4 @@
 using Godot;
-using System;
-using System.ComponentModel;
-using System.Data;
 
 public partial class BallMeasurement
 {
@@ -21,100 +18,108 @@ public partial class BallMeasurement
         return _mass;
     }
 
-    public void SetMass(float mass){
-        _mass = Mathf.Clamp(mass, BallParametersRanges.minMassValue, BallParametersRanges.maxMassValue);
-        UpdateValuesWhenMassIsUpdated();
-    }
-
     public float GetMassInGrams(){
         return UnitsConverterHelper.ConvertKilogramToGram(_mass);
-    }
-
-    public void SetMassInGrams(float mass){
-        SetMass(UnitsConverterHelper.ConvertGramToKilogram(mass));
     }
 
     public float GetInertia(){
         return _inertia;
     }
-
+    
     public float GetRadius(){
         return _radius;
-    }
-
-    public void SetRadius(float radius){
-        _radius = Mathf.Clamp(radius, BallParametersRanges.minRadiusValue, BallParametersRanges.maxRadiusValue);
-        UpdateLengthsWhenRadiusIsUpdated();
     }
 
     public float GetRadiusInCentimeters(){
         return UnitsConverterHelper.ConvertMetersToCentimeters(_radius);
     }
 
-    public void SetRadiusInCentemeters(float radius){
-        SetRadius(UnitsConverterHelper.ConvertCentimetersToMeters(radius));
-    }
-
     public float GetDiameter(){
         return _diameter;
-    }
-
-    public void SetDiameter(float diameter){
-        _diameter = Mathf.Clamp(diameter, BallParametersRanges.minDiameterValue, BallParametersRanges.maxDiameterValue);
-        UpdateLengthsWhenDiameterIsUpdated();
     }
 
     public float GetDiameterInCentimeters(){
         return UnitsConverterHelper.ConvertMetersToCentimeters(_diameter);
     }
 
-    public void SetDiameterInCentemeters(float diameter){
-        SetDiameter(UnitsConverterHelper.ConvertCentimetersToMeters(diameter));
-    }
-
     public float GetCircumference(){
         return _circumference;
-    }
-
-    public void SetCircumference(float circumference){
-        _circumference =  Mathf.Clamp(circumference, BallParametersRanges.minCircumferenceValue, BallParametersRanges.maxCircumferenceValue);
-        UpdateLengthsWhenCircumferenceIsUpdated();
     }
 
     public float GetCircumferenceInCentimeters(){
         return UnitsConverterHelper.ConvertMetersToCentimeters(_circumference);
     }
 
-    public void SetCircumferenceInCentemeters(float circumference){
-        SetCircumference(UnitsConverterHelper.ConvertCentimetersToMeters(circumference));
-    }
-
     public float GetCrossSectionalArea(){
         return _crossSectionalArea;
     }
 
+    public void SetMass(float mass){
+        _mass = Mathf.Clamp(mass, BallParametersRanges.MinMassValue, BallParametersRanges.MaxMassValue);
+        UpdateValuesWhenMassIsUpdated();
+    }
+
+    public void SetMassInGrams(float mass){
+        SetMass(UnitsConverterHelper.ConvertGramToKilogram(mass));
+    }
+
+    public void SetRadius(float radius){
+        _radius = Mathf.Clamp(radius, BallParametersRanges.MinRadiusValue, BallParametersRanges.MaxRadiusValue);
+        UpdateLengthsWhenRadiusIsUpdated();
+    }
+
+    public void SetRadiusInCentemeters(float radius){
+        SetRadius(UnitsConverterHelper.ConvertCentimetersToMeters(radius));
+    }
+
+    public void SetDiameter(float diameter){
+        _diameter = Mathf.Clamp(
+            diameter,
+            BallParametersRanges.MinDiameterValue,
+            BallParametersRanges.MaxDiameterValue
+        );
+        UpdateLengthsWhenDiameterIsUpdated();
+    }
+
+    public void SetDiameterInCentemeters(float diameter){
+        SetDiameter(UnitsConverterHelper.ConvertCentimetersToMeters(diameter));
+    }
+
+    public void SetCircumference(float circumference){
+        _circumference =  Mathf.Clamp(
+            circumference,
+            BallParametersRanges.MinCircumferenceValue,
+            BallParametersRanges.MaxCircumferenceValue
+        );
+        UpdateLengthsWhenCircumferenceIsUpdated();
+    }
+
+    public void SetCircumferenceInCentemeters(float circumference){
+        SetCircumference(UnitsConverterHelper.ConvertCentimetersToMeters(circumference));
+    }
+
     private void CalculateInertia(){
-        _inertia = SphereHelper.CalculateInertiaFromSphere(_mass, _radius);
+        _inertia = SphereHelper.CalculateInertiaFromThinSphere(_mass, _radius);
     }
 
     private void CalculateDiameterFromRadius(){
-        _diameter = SphereHelper.CalculateDiameterFromRadius(_radius);
+        _diameter = CircleHelper.CalculateDiameterFromRadius(_radius);
     }
 
     private void CalculateCircumferenceFromRadius(){
-        _circumference = SphereHelper.CalculateCircumferenceFromRadius(_radius);
+        _circumference = CircleHelper.CalculateCircumferenceFromRadius(_radius);
     }
 
     private void CalculateCrossSectionalArea(){
-        _crossSectionalArea = SphereHelper.CalculateCrossSectionalArea(_radius);
+        _crossSectionalArea = CircleHelper.CalculateCrossSectionalArea(_radius);
     }
 
     private void CalculateRadiusFromDiameter(){
-        SetRadius(SphereHelper.CalculateRadiusFromDiameter(_diameter));
+        SetRadius(CircleHelper.CalculateRadiusFromDiameter(_diameter));
     }
 
     private void CalculateRadiusFromCircumference(){
-        SetRadius(SphereHelper.CalculateRadiusFromCircumference(_circumference));
+        SetRadius(CircleHelper.CalculateRadiusFromCircumference(_circumference));
     }
 
     private void UpdateValuesWhenMassIsUpdated(){

@@ -1,11 +1,6 @@
-using Godot;
-using System;
-
 public interface ISubject
 {
-    void Attach(String eventType, IObserver observer);
-    void Detach(String eventType, IObserver observer);
-    void Notify(String eventType, Godot.Collections.Dictionary data);
-
-    
+    void Attach(string eventType, IObserver observer);
+    void Detach(string eventType, IObserver observer);
+    void Notify(string eventType, Godot.Collections.Dictionary data);
 }

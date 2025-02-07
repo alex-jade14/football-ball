@@ -1,27 +1,20 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 
 public partial class EventManager : ISubject
 {
-    public Godot.Collections.Dictionary data { get; set; }
-    public List<Tuple<String, IObserver>> _observers = new();
+    public List<Tuple<string, IObserver>> Observers = new();
 
-    public EventManager(){
-
+    public void Attach(string eventType, IObserver observer){
+        Observers.Add(new Tuple<string, IObserver>(eventType, observer));
     }
 
-    public void Attach(String eventType, IObserver observer){
-        _observers.Add(new Tuple<String, IObserver>(eventType, observer));
+    public void Detach(string eventType, IObserver observer){
+        Observers.Remove(new Tuple<string, IObserver>(eventType, observer));
     }
 
-    public void Detach(String eventType, IObserver observer){
-        _observers.Remove(new Tuple<String, IObserver>(eventType, observer));
-    }
-
-    public void Notify(String eventType, Godot.Collections.Dictionary data){
-        this.data = data;
-        foreach(Tuple<String, IObserver> observer in _observers){
+    public void Notify(string eventType, Godot.Collections.Dictionary data){
+        foreach(Tuple<string, IObserver> observer in Observers){
             if(observer.Item1 == "impulse"){
                 observer.Item2.UpdateByImpulse(data);
             }

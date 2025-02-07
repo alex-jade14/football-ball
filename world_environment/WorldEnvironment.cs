@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class WorldEnvironment
 {
@@ -8,8 +7,8 @@ public class WorldEnvironment
     public WorldEnvironment(float densityOfFluid){
         _densityOfFluid = Mathf.Clamp(
             densityOfFluid,
-            WorldEnvironmentParametersRanges.minDensityOfFluidValue,
-            WorldEnvironmentParametersRanges.maxDensityOfFluidValue
+            WorldEnvironmentParametersRanges.MinDensityOfFluidValue,
+            WorldEnvironmentParametersRanges.MaxDensityOfFluidValue
         );
     }
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b2fk3tundub7o"
-path="res://.godot/imported/stars_ball.glb-c721c92bedb63c742987bcf8dedb294b.scn"
+path="res://.godot/imported/stars_ball_model.glb-b74976c2d2f300d2c3632ac6ef3c98b4.scn"
 
 [deps]
 
-source_file="res://ball/stars_ball.glb"
-dest_files=["res://.godot/imported/stars_ball.glb-c721c92bedb63c742987bcf8dedb294b.scn"]
+source_file="res://ball/main_ball/stars_ball_model.glb"
+dest_files=["res://.godot/imported/stars_ball_model.glb-b74976c2d2f300d2c3632ac6ef3c98b4.scn"]
 
 [params]
 

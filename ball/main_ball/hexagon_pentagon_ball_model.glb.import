@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bf0m8ac0skkor"
-path="res://.godot/imported/ball_model.glb-b83d2608d15aa08758cf31e655edbe41.scn"
+path="res://.godot/imported/hexagon_pentagon_ball_model.glb-92fe2ee1772706b45d4581d6eb8b4908.scn"
 
 [deps]
 
-source_file="res://ball/ball_model.glb"
-dest_files=["res://.godot/imported/ball_model.glb-b83d2608d15aa08758cf31e655edbe41.scn"]
+source_file="res://ball/main_ball/hexagon_pentagon_ball_model.glb"
+dest_files=["res://.godot/imported/hexagon_pentagon_ball_model.glb-92fe2ee1772706b45d4581d6eb8b4908.scn"]
 
 [params]
 

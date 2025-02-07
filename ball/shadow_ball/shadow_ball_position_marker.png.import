@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dghw0fqlyw08y"
-path.s3tc="res://.godot/imported/position_marker.png-59146527205b2f3fa34b3b480eff40c0.s3tc.ctex"
+path.s3tc="res://.godot/imported/shadow_ball_position_marker.png-dbaf6050d4b6b25433cea0fb1e4858af.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://ball/position_marker.png"
-dest_files=["res://.godot/imported/position_marker.png-59146527205b2f3fa34b3b480eff40c0.s3tc.ctex"]
+source_file="res://ball/shadow_ball/shadow_ball_position_marker.png"
+dest_files=["res://.godot/imported/shadow_ball_position_marker.png-dbaf6050d4b6b25433cea0fb1e4858af.s3tc.ctex"]
 
 [params]
 

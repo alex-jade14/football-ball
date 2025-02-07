@@ -1,25 +1,22 @@
 using Godot;
-using Godot.Collections;
-using System;
-using System.Collections.Generic;
 
-public partial class BallModel
+public partial class MainBallModel
 {
-    private String _pattern;
+    private string _pattern;
     private Color _firstColor;
     private Color _secondColor;
 
-    public BallModel(String pattern, Color firstColor, Color secondColor){
+    public MainBallModel(string pattern, Color firstColor, Color secondColor){
         _pattern = pattern;
         _firstColor = firstColor;
         _secondColor = secondColor;
     }
     
-    public String GetPattern(){
+    public string GetPattern(){
         return _pattern;
     }
 
-    public void SetPattern(String pattern){
+    public void SetPattern(string pattern){
         _pattern = pattern;
     }
     

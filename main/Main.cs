@@ -1,7 +1,6 @@
 using Godot;
 using Godot.Collections;
 using System;
-using System.IO;
 
 public partial class Main : Node3D
 {
@@ -30,7 +29,7 @@ public partial class Main : Node3D
         Dictionary model = (Dictionary) info["model"];
         Dictionary measurement = (Dictionary) info["measurement"];
         Dictionary physicsParameters = (Dictionary) info["physicsParameters"];
-        PackedScene mainBallScene = (PackedScene) GD.Load("res://ball/main_ball.tscn");
+        PackedScene mainBallScene = (PackedScene) GD.Load("res://ball/main_ball/main_ball.tscn");
         MainBall mainBall = (MainBall) mainBallScene.Instantiate();
         mainBall.Create(
             (String) model["pattern"],
@@ -49,7 +48,7 @@ public partial class Main : Node3D
         return mainBall;
     }
     public ShadowBall GetShadowBall(MainBall mainBall, Drawer drawer){
-        PackedScene shadowBallScene = (PackedScene) GD.Load("res://ball/shadow_ball.tscn");
+        PackedScene shadowBallScene = (PackedScene) GD.Load("res://ball/shadow_ball/shadow_ball.tscn");
         ShadowBall shadowBall = (ShadowBall) shadowBallScene.Instantiate();
         shadowBall = (ShadowBall) mainBall.DeepCopy(shadowBall);
         AddChild(shadowBall);
@@ -58,9 +57,9 @@ public partial class Main : Node3D
     }
 
     public void SubscribeShadowBallToEvents(MainBall mainBall, ShadowBall shadowBall){
-        mainBall.events.Attach("impulse", shadowBall);
-        mainBall.events.Attach("detectedCollision", shadowBall);
-        mainBall.events.Attach("updateMarker", shadowBall);
+        mainBall.Events.Attach("impulse", shadowBall);
+        mainBall.Events.Attach("detectedCollision", shadowBall);
+        mainBall.Events.Attach("updateMarker", shadowBall);
     }
 
     public Debug GetDebugScreen(MainBall mainBall, ShadowBall shadowBall){

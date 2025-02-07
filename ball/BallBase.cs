@@ -1,31 +1,26 @@
 using Godot;
-using Godot.NativeInterop;
-using Microsoft.VisualBasic;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 
 public partial class BallBase : CharacterBody3D
 {
-    protected BallInfo _info;
-    private Godot.Vector3 _linearVelocity;
-    private Godot.Vector3 _angularVelocity;
+    protected BallInfo Info;
+    protected BallMeasurement Measurement;
+    protected BallPhysicsParameters PhysicsParameters;
+    protected CollisionShape3D CollisionNode;
+    protected bool CanDetectCollisions;
+    private Vector3 _linearVelocity;
+    private Vector3 _angularVelocity;
     private bool _wasOnFloor;
     private bool _canResetBouncing;
-    private bool _couldNotBeBouncing;
+    private bool _isBouncing;
     private bool _canRoll;
-    private bool _canApplyAirResistance = true;
-    private bool _canApplyMagnusEffect = true;
     private bool _detectedCollision;
-    protected BallMeasurement _measurement;
-    protected BallPhysicsParameters _physicsParameters;
-    protected CollisionShape3D _collisionNode;
-    protected bool _canDetectCollisions;
-    private bool _isApplyingImpulse;
+    private bool _canApplyAirResistance;
+    private bool _canApplyMagnusEffect;
 
     public void Create(float mass, float circumference, float coefficientOfRestitution, float frictionCoefficient,
     float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
-        _info = new BallInfo(
+        Info = new BallInfo(
             mass,
             circumference,
             coefficientOfRestitution,
@@ -35,163 +30,156 @@ public partial class BallBase : CharacterBody3D
             angularDampingCoefficient,
             environment
         );
-        _measurement = _info.GetMeasurement();
-        _physicsParameters = _info.GetPhysicsParameters();
+        _canApplyAirResistance = true;
+        _canApplyMagnusEffect = true;
+        Measurement = Info.GetMeasurement();
+        PhysicsParameters = Info.GetPhysicsParameters();
     }
-    
+
     public override void _Ready(){
         ScaleCollisionToRadius();
         PlaceBallOverFloor();
     }
 
-
     public BallInfo GetInfo(){
-        return _info;
+        return Info;
     }
 
-    public void SetInfo(BallInfo info){
-        _info = info;
+    public BallMeasurement GetMeasurement(){
+        return Measurement;
     }
 
-    public Godot.Vector3 GetLinearVelocity(){
+    public BallPhysicsParameters GetPhysicsParameters(){
+        return PhysicsParameters;
+    }
+
+    public Vector3 GetLinearVelocity(){
         return _linearVelocity;
     }
 
-    public void SetLinearVelocity(Godot.Vector3 linearVelocity){
-        _linearVelocity = linearVelocity;
-    }
-    
-    public Godot.Vector3 GetLinearVelocityInKMH(){
-        return new Godot.Vector3(
+    public Vector3 GetLinearVelocityInKMH(){
+        return new Vector3(
             UnitsConverterHelper.ConvertMSToKMH(_linearVelocity.X),
             UnitsConverterHelper.ConvertMSToKMH(_linearVelocity.Y),
             UnitsConverterHelper.ConvertMSToKMH(_linearVelocity.Z)
         );
     }
 
-    public void SetLinearVelocityInKMH(Godot.Vector3 linearVelocity){
-        _linearVelocity = new Godot.Vector3(
-            UnitsConverterHelper.ConvertKMHToMS(_linearVelocity.X),
-            UnitsConverterHelper.ConvertKMHToMS(_linearVelocity.Y),
-            UnitsConverterHelper.ConvertKMHToMS(_linearVelocity.Z)
-        );
-    }
-
-    public Godot.Vector3 GetAngularVelocity(){
+    public Vector3 GetAngularVelocity(){
         return _angularVelocity;
-    }
-
-    public void SetAngularVelocity(Godot.Vector3 angularVelocity){
-        _angularVelocity = angularVelocity;
     }
 
     protected bool WasOnFloor(){
         return _wasOnFloor;
     }
 
-    protected void WasOnFloor(bool wasOnFloor){
-        _wasOnFloor = wasOnFloor;
-    }
     protected bool CanResetBouncing(){
         return _canResetBouncing;
     }
 
-    protected void CanResetBouncing(bool canResetBouncing){
-        _canResetBouncing = canResetBouncing;
+    protected bool IsBouncing(){
+        return _isBouncing;
     }
 
     protected bool CanRoll(){
         return _canRoll;
     }
 
-    protected void CanRoll(bool canRoll){
-        _canRoll = canRoll;
+    public bool IsACollisionDetected(){
+        return _detectedCollision;
     }
 
-    protected bool CouldNotBeBouncing(){
-        return _couldNotBeBouncing;
-    }
-
-    protected void CouldNotBeBouncing(bool couldBeBouncing){
-        _couldNotBeBouncing = couldBeBouncing;
-    }
-    
     public bool CanApplyAirResistance(){
         return _canApplyAirResistance;
-    }
-
-    public void CanApplyAirResistance(bool canApplyAirResistance){
-        _canApplyAirResistance = canApplyAirResistance;
     }
 
     public bool CanApplyMagnusEffect(){
         return _canApplyMagnusEffect;
     }
 
-    public void CanApplyMagnusEffect(bool canApplyMagnusEffect){
-        _canApplyMagnusEffect = canApplyMagnusEffect;
+    public void SetInfo(BallInfo info){
+        Info = info;
     }
 
-    public bool IsACollisionDetected(){
-        return _detectedCollision;
+    public void SetLinearVelocity(Vector3 linearVelocity){
+        _linearVelocity = linearVelocity;
+    }
+
+    public void SetLinearVelocityInKMH(Vector3 linearVelocity){
+        _linearVelocity = new Vector3(
+            UnitsConverterHelper.ConvertKMHToMS(linearVelocity.X),
+            UnitsConverterHelper.ConvertKMHToMS(linearVelocity.Y),
+            UnitsConverterHelper.ConvertKMHToMS(linearVelocity.Z)
+        );
+    }
+
+    public void SetAngularVelocity(Vector3 angularVelocity){
+        _angularVelocity = angularVelocity;
+    }
+
+    protected void WasOnFloor(bool wasOnFloor){
+        _wasOnFloor = wasOnFloor;
+    }
+
+    protected void CanResetBouncing(bool canResetBouncing){
+        _canResetBouncing = canResetBouncing;
+    }
+
+    protected void IsBouncing(bool isBouncing){
+        _isBouncing = isBouncing;
+    }
+
+    protected void CanRoll(bool canRoll){
+        _canRoll = canRoll;
     }
 
     public void IsACollisionDetected(bool detectedCollision){
         _detectedCollision = detectedCollision;
     }
 
-    public BallMeasurement GetMeasurement(){
-        return _measurement;
+    public void CanApplyAirResistance(bool canApplyAirResistance){
+        _canApplyAirResistance = canApplyAirResistance;
     }
 
-    public BallPhysicsParameters GetPhysicsParameters(){
-        return _physicsParameters;
+    public void CanApplyMagnusEffect(bool canApplyMagnusEffect){
+        _canApplyMagnusEffect = canApplyMagnusEffect;
     }
 
-    
-
-    public void ApplyCentralForces(Godot.Vector3[] forcesToApply){
-        SetLinearVelocity(
-            RigidBodyHelper.CalculateCentralForces(
-                forcesToApply,
-                GetMeasurement().GetMass(),
-                GetLinearVelocity()
-            )
+    public void ApplyCentralForces(Vector3[] forcesToApply){
+        _linearVelocity = RigidBodyHelper.CalculateCentralForces(
+            forcesToApply,
+            GetMeasurement().GetMass(),
+            _linearVelocity
         );
     }
 
-    public void ApplyForces(Godot.Vector3[] forcesToApply, Godot.Vector3 positionWhereForcesAreApplied){
-        SetLinearVelocity(
-            RigidBodyHelper.CalculateForces(
-                forcesToApply,
-                positionWhereForcesAreApplied,
-                GetMeasurement().GetMass(),
-                GetMeasurement().GetInertia(),
-                GetLinearVelocity()
-            )
+    public void ApplyForces(Vector3[] forcesToApply, Vector3 positionWhereForcesAreApplied){
+        _linearVelocity =  RigidBodyHelper.CalculateForces(
+            forcesToApply,
+            positionWhereForcesAreApplied,
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetInertia(),
+            _linearVelocity
         );
     }
 
-    public void ApplyCentralImpulse(Godot.Vector3 impulse){
-        SetLinearVelocity(
-            RigidBodyHelper.CalculateCentralImpulse(
-                impulse, 
-                GetMeasurement().GetMass(),
-                GetLinearVelocity()
-            )
+    public void ApplyCentralImpulse(Vector3 impulse){
+        _linearVelocity = RigidBodyHelper.CalculateCentralImpulse(
+            impulse,
+            GetMeasurement().GetMass(),
+            _linearVelocity
         );
     }
 
-    public virtual void ApplyImpulse(Godot.Vector3 impulse, Godot.Vector3 positionWhereImpulseIsApplied){
+    public virtual void ApplyImpulse(Vector3 impulse, Vector3 positionWhereImpulseIsApplied){
         (_linearVelocity, _angularVelocity) = RigidBodyHelper.CalculateImpulse(
             impulse,
             positionWhereImpulseIsApplied,
             GetMeasurement().GetMass(),
             GetMeasurement().GetInertia(),
-            GetLinearVelocity(),
-            GetAngularVelocity()
+            _linearVelocity,
+            _angularVelocity
         );
-        _isApplyingImpulse = true;
     }
 
     protected void SimulatePhysics(){
@@ -203,38 +191,32 @@ public partial class BallBase : CharacterBody3D
     }
 
     public virtual void CollisionResponse(){
-        if(_canDetectCollisions){
-            IsACollisionDetected(GetSlideCollisionCount() > 0);
-            CouldNotBeBouncing(false);
+        if(CanDetectCollisions){
+            _detectedCollision = GetSlideCollisionCount() > 0;
+            _isBouncing = false;
             for(int i = 0; i < GetSlideCollisionCount(); i++){
                 KinematicCollision3D collision = GetSlideCollision(i);
-                if (!collision.GetNormal().IsEqualApprox(UpDirection) && 
-                    GetGlobalPosition().Y > GetMeasurement().GetRadius()
-                ){
+                if (!collision.GetNormal().IsEqualApprox(UpDirection) &&
+                    GetGlobalPosition().Y > GetMeasurement().GetRadius()){
                     // Ball collides with an object that is not the floor
                     // This is not implemented yet
                 }
-                else if (IsOnFloor() && !_isApplyingImpulse){
-                   
+                else if (IsOnFloor()){
                     // Ball collides with the floor
-                    if(!WasOnFloor() && !CanResetBouncing()){
+                    if(!_wasOnFloor && !_canResetBouncing){
                         ApplyCoefficientOfRestitution(
                             collision.GetNormal()
                         );
-                        WasOnFloor(true);
-                        if(GetLinearVelocity().Y <= 0.5f){
-                            CanResetBouncing(true);
-                            CouldNotBeBouncing(true);
+                        if(GetLinearVelocity().Y > 0.5f){
+                            _wasOnFloor = true;
+                            _isBouncing = true;
+                        }
+                        else{
+                            _canResetBouncing = true;
                         }
                     }
-                    else if(GetLinearVelocity().Y <= 0.5f){
-                        CouldNotBeBouncing(true);
-                    }
-                    ApplyFloorEffect(collision.GetPosition(), collision.GetNormal());
+                    ApplyFloorEffect(collision);
                     break;
-                }
-                else{
-                    _isApplyingImpulse = false;
                 }
             }
         }
@@ -243,138 +225,146 @@ public partial class BallBase : CharacterBody3D
     private void AirConditions(){
         if(!IsOnFloor()){
             ApplyAirEffects();
-            WasOnFloor(false);
+            _wasOnFloor = false;
         }
-        else if(CanResetBouncing()){
+        else if(_canResetBouncing){
             ResetBouncing();
         }
     }
 
     private void ApplyAirEffects(){
-        List<Godot.Vector3> forcesToApply = new List<Godot.Vector3>();
-        Godot.Vector3[] forcesFromAerodynamicEffects = AerodynamicHelper.AerodynamicEffectsOfASphereOnAir(
+        List<Vector3> forcesToApply = new();
+        AddForcesToApplyFromAerodynamicEffects(forcesToApply);
+        AddForceToApplyFromGravity(forcesToApply);
+        ApplyCentralForces(forcesToApply.ToArray());
+        LimitToTerminalVelocity();
+    }
+
+    private void AddForcesToApplyFromAerodynamicEffects(List<Vector3> forcesToApply){
+        Vector3[] forcesFromAerodynamicEffects = AerodynamicHelper.AerodynamicEffectsOfASphereOnAir(
             GetPhysicsParameters().GetDragCoefficient(),
             GetPhysicsParameters().GetEnvironment().GetDensityOfFluid(),
             GetPhysicsParameters().GetLiftCoefficient(),
             GetMeasurement().GetCrossSectionalArea(),
-            GetLinearVelocity(),
-            GetAngularVelocity(),
-            CanApplyAirResistance(),
-            CanApplyMagnusEffect()
+            _linearVelocity,
+            _angularVelocity,
+            _canApplyAirResistance,
+            _canApplyMagnusEffect
         );
         for(int i = 0; i < forcesFromAerodynamicEffects.Length; i++){
             forcesToApply.Add(forcesFromAerodynamicEffects[i]);
         }
         GetPhysicsParameters().SetDragForce(forcesFromAerodynamicEffects[0]);
         GetPhysicsParameters().SetMagnusEffectForce(forcesFromAerodynamicEffects[1]);
-        Godot.Vector3 forceFromGravity = PhysicsHelper.GetForceFromGravity(GetMeasurement().GetMass());
+    }
+
+    private void AddForceToApplyFromGravity(List<Vector3> forcesToApply){
+        Vector3 forceFromGravity = PhysicsHelper.GetForceFromGravity(GetMeasurement().GetMass());
         if(Mathf.Abs(GetLinearVelocity().Y) > 0){
             forcesToApply.Add(forceFromGravity);
         }
-        ApplyCentralForces(forcesToApply.ToArray());
-        Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
-        auxLinearVelocity.Y = AerodynamicHelper.limitToTerminalVelocity(
-            GetPhysicsParameters().GetTerminalVelocity(),
-            auxLinearVelocity.Y
-        );
-        SetLinearVelocity(auxLinearVelocity);
     }
 
-    private void ApplyCoefficientOfRestitution(Godot.Vector3 collisionNormal){
-        SetLinearVelocity(
-            CollisionHelper.CalculateNewVelocityFromCoefficientOfRestitution(
-                GetPhysicsParameters().GetCoefficientOfRestitution(),
-                collisionNormal,
-                GetLinearVelocity()
-            )
+    private void LimitToTerminalVelocity(){
+        _linearVelocity.Y = AerodynamicHelper.LimitToTerminalVelocity(
+            GetPhysicsParameters().GetTerminalVelocity(),
+            _linearVelocity.Y
         );
+    }
 
+    private void ApplyCoefficientOfRestitution(Vector3 collisionNormal){
+        _linearVelocity = CollisionHelper.CalculateNewVelocityFromCoefficientOfRestitution(
+            GetPhysicsParameters().GetCoefficientOfRestitution(),
+            collisionNormal,
+            GetLinearVelocity()
+        );
     }
 
     private void ResetBouncing(){
-        Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
-        auxLinearVelocity.Y = 0;
-        SetLinearVelocity(auxLinearVelocity);
-        WasOnFloor(true);
-        CanResetBouncing(false);
+        _linearVelocity.Y = 0;
+        _wasOnFloor = true;
+        _canResetBouncing = false;
+        _isBouncing = false;
     }
 
     private void AvoidCrossingTheFloor(){
-        Godot.Vector3 auxGlobalPosition = GetGlobalPosition();
-        if(auxGlobalPosition.Y < GetMeasurement().GetRadius()){
-            auxGlobalPosition.Y = GetMeasurement().GetRadius();
+        if(GetGlobalPosition().Y < GetMeasurement().GetRadius()){
+            SetGlobalPosition(new Vector3(GetGlobalPosition().X, GetMeasurement().GetRadius(), GetGlobalPosition().Z));
         }
-        SetGlobalPosition(auxGlobalPosition);
     }
 
     private void ApplyLinearVelocity(){
-        Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
-        if (Velocity.Y == -(auxLinearVelocity.Y)){
-            auxLinearVelocity.Y = -auxLinearVelocity.Y;
+        if (Velocity.Y == -_linearVelocity.Y){
+            _linearVelocity.Y = -_linearVelocity.Y;
         }
-        SetVelocity(auxLinearVelocity);
+        SetVelocity(_linearVelocity);
     }
 
     private void ApplyAngularVelocity(){
-        SetAngularVelocity(
-            RigidBodyHelper.CalculateAngularDamping(
-                GetPhysicsParameters().GetAngularDampingCoefficient(),
-                GetAngularVelocity()
-            )
+        _angularVelocity = RigidBodyHelper.CalculateAngularDamping(
+            GetPhysicsParameters().GetAngularDampingCoefficient(),
+            _angularVelocity
         );
     }
 
-    private void ApplyFloorEffect(Vector3 collisionPosition, Vector3 collisionNormal){
-        DecreaseVelocityFromFriction(collisionPosition, collisionNormal);
-        Godot.Vector3 auxLinearVelocity = GetLinearVelocity();
-        if (Mathf.Abs(GetLinearVelocity().X) < 0.1){
-            auxLinearVelocity.X = 0;
+    private void ApplyFloorEffect(KinematicCollision3D collision){
+        DecreaseVelocityFromFriction(collision.GetPosition(), collision.GetNormal());
+        if (Mathf.Abs(_linearVelocity.X) < 0.1){
+            _linearVelocity.X = 0;
         }
-        if (Mathf.Abs(GetLinearVelocity().Z) < 0.1){
-            auxLinearVelocity.Z = 0;
+        if (Mathf.Abs(_linearVelocity.Z) < 0.1){
+            _linearVelocity.Z = 0;
         }
-        SetLinearVelocity(auxLinearVelocity);
     }
 
     private void DecreaseVelocityFromFriction(Vector3 collisionPosition, Vector3 collisionNormal){
-        Godot.Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
+        Vector3 frictionForce = -GetPhysicsParameters().GetFrictionForce() * GetLinearVelocity().Normalized();
+        Vector3 previousLinearVelocity = _linearVelocity;
         _linearVelocity = FrictionHelper.CalculateLinearVelocityFromFriction(_linearVelocity, frictionForce, GetMeasurement().GetMass());
-        ApplyFrictionToAngularVelocityWhenBouncing(ToLocal(collisionPosition), collisionNormal);
-        if(CanRoll()){
-            ApplyFrictionToAngularVelocityWhenRolling();
+        if(_isBouncing){
+            ApplyFrictionToAngularVelocityWhenBouncing(previousLinearVelocity, ToLocal(collisionPosition), collisionNormal);
+            _canRoll = false;
+        }
+        else{
+            if(_linearVelocity.Length() - (_linearVelocity.Length() * GetMeasurement().GetRadius()) < 0.01f){
+                _angularVelocity = _angularVelocity.Lerp(ApplyFrictionToAngularVelocityWhenRolling(), 0.25f);
+                _canRoll = true;
+            }
+            else if(_canRoll && _linearVelocity.Y == 0){
+                _angularVelocity = ApplyFrictionToAngularVelocityWhenRolling();
+            }
         }
     }
 
-    private void ApplyFrictionToAngularVelocityWhenBouncing(Godot.Vector3 collisionPosition, Godot.Vector3 collisionNormal){
-        (_angularVelocity, _canRoll) = CollisionHelper.CalculateNewAngularVelocityFromFrictionWhenBouncing(
-            GetUpDirection(), 
-            GetMeasurement().GetMass(),
-            GetLinearVelocity(), GetAngularVelocity(),
-            CouldNotBeBouncing(),
-            GetMeasurement().GetRadius(),
+    private void ApplyFrictionToAngularVelocityWhenBouncing(Vector3 previousLinearVelocity, Vector3 collisionPosition, Vector3 collisionNormal){
+        _angularVelocity = CollisionHelper.CalculateNewAngularVelocityFromFrictionWhenBouncing(
+            _linearVelocity,
+            previousLinearVelocity,
+            _angularVelocity,
             collisionPosition,
-            GetMeasurement().GetInertia(),
-            GetPhysicsParameters().GetFrictionCoefficient(),
             collisionNormal,
-            CanRoll()
+            GetMeasurement().GetRadius(),
+            GetMeasurement().GetMass(),
+            GetMeasurement().GetInertia(),
+            GetPhysicsParameters().GetFrictionCoefficient()
         );
     }
 
-    private void ApplyFrictionToAngularVelocityWhenRolling(){
-        _angularVelocity = RollingDynamicsHelper.CalculateAngularVelocityFromRollingWithoutSlipping(
-            GetLinearVelocity(),
+    private Vector3 ApplyFrictionToAngularVelocityWhenRolling(){
+        return FrictionHelper.CalculateAngularVelocityFromFriction(
+            _linearVelocity,
             GetUpDirection(),
             GetMeasurement().GetRadius()
         );
     }
 
     public void ScaleCollisionToRadius(){
-        _collisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
-        SphereShape3D collisionShape = (SphereShape3D) _collisionNode.GetShape();
+        CollisionNode = (CollisionShape3D) GetNode("CollisionShape3D");
+        SphereShape3D collisionShape = (SphereShape3D) CollisionNode.GetShape();
         collisionShape.SetRadius(GetMeasurement().GetRadius());
     }
 
     private void PlaceBallOverFloor(){
-        SetGlobalPosition(new Vector3(GlobalPosition.X, GetMeasurement().GetRadius(), GlobalPosition.Z));
+        SetGlobalPosition(new Vector3(GetGlobalPosition().X, GetMeasurement().GetRadius(), GetGlobalPosition().Z));
     }
 }

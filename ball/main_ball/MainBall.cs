@@ -1,23 +1,19 @@
 using Godot;
 using Godot.Collections;
-using System;
-using System.Collections.Generic;
 
 public partial class MainBall : BallBase, IPrototype
 {
-	public EventManager events;
-	protected BallModel _model;
+	public EventManager Events;
+	protected MainBallModel _model;
 	private MeshInstance3D _mesh;
 	private bool _isApplyingImpulse;
 	private bool _canSimulatePhysics;
-	private Camera3D _mainCamera;
 	private Control _subViewportCameraControl;
-	private Camera3D _subViewportCameraGuide;
+	private Camera3D _mainCamera;
 	private Camera3D _subViewportCamera;
-	private bool _canFollowViewportCameraGuide;
+	private bool _canFollowMainCamera;
 	
-
-	public void Create(String pattern, Color firstColor, Color secondColor, float mass, float circumference, float coefficientOfRestitution,
+	public void Create(string pattern, Color firstColor, Color secondColor, float mass, float circumference, float coefficientOfRestitution,
 	float frictionCoefficient, float dragCoefficient, float liftCoefficient, float angularDampingCoefficient, WorldEnvironment environment){
 		base.Create(
 			mass,
@@ -29,12 +25,12 @@ public partial class MainBall : BallBase, IPrototype
 			angularDampingCoefficient,
 			environment
 		);
-		_model = new BallModel(
+		_model = new MainBallModel(
 			pattern,
 			firstColor,
 			secondColor
 		);
-		events = new EventManager();
+		Events = new EventManager();
 	}
 
 	public override void _Ready(){
@@ -42,43 +38,40 @@ public partial class MainBall : BallBase, IPrototype
 		ScaleMeshToRadius();
 		ChangeMesh();
 		ChangeColorToMesh();
-		_canDetectCollisions = true;
-		_mainCamera = (Camera3D) GetNode("MainCamera");
-		_subViewportCameraGuide = (Camera3D) GetNode("SubViewportCameraGuide");
-		_subViewportCameraControl = (Control) GetNode("Control");
-		_subViewportCamera = (Camera3D) _subViewportCameraControl.GetNode("SubViewportContainer").GetNode("SubViewport").GetNode("SubViewportCamera");
+		CanDetectCollisions = true;
+		GetCameraNodes();
 	}
 
-	public BallModel GetModel(){
+	public MainBallModel GetModel(){
 		return _model;
-	}
-
-	public void SetModel(BallModel model){
-		_model = model;
 	}
 
 	public MeshInstance3D GetMesh(){
 		return _mesh;
 	}
 
-	public void SetMesh(MeshInstance3D mesh){
-		_mesh = mesh;
-	}
-
 	public Camera3D GetMainCamera(){
 		return _mainCamera;
 	}
 
-	public Camera3D GetViewportCamera(){
+	public Camera3D GetSubViewportCamera(){
 		return _subViewportCamera;
 	}
 
-	public Control GetViewportCameraControl(){
+	public Control GetSubViewportCameraControl(){
 		return _subViewportCameraControl;
 	}
 
-	public void CanFollowViewportCameraGuide(bool canFollowViewportCameraGuide){
-		_canFollowViewportCameraGuide = canFollowViewportCameraGuide;
+	public void SetModel(MainBallModel model){
+		_model = model;
+	}
+
+	public void SetMesh(MeshInstance3D mesh){
+		_mesh = mesh;
+	}
+
+	public void CanFollowMainCamera(bool canFollowMainCamera){
+		_canFollowMainCamera = canFollowMainCamera;
 	}
 	
 	public GodotObject ShallowCopy(ShadowBall shadowBall){
@@ -117,7 +110,7 @@ public partial class MainBall : BallBase, IPrototype
 
 	public void ChangeMesh(){
 		if(GetModel().GetPattern() == "hexagon-pentagon"){
-			_mesh.SetMesh(GD.Load<Mesh>("res://ball/ball_model.res"));
+			_mesh.SetMesh(GD.Load<Mesh>("res://ball/main_ball/hexagon_pentagon_ball_model.res"));
 		}
 		else{
 			_mesh.SetMesh(GD.Load<Mesh>("res://ball/stars_ball_model.res"));
@@ -131,13 +124,19 @@ public partial class MainBall : BallBase, IPrototype
 		secondMaterial.SetAlbedo(GetModel().GetSecondColor());
 	}
 
+	private void GetCameraNodes(){
+		_mainCamera = (Camera3D) GetNode("MainCamera");
+		_subViewportCameraControl = (Control) GetNode("Control");
+		_subViewportCamera = (Camera3D) _subViewportCameraControl.GetNode("SubViewportContainer").GetNode("SubViewport").GetNode("SubViewportCamera");
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 		SimulatePhysics();
         MoveAndSlide();
 		ApplyAngularRotation();
-		if(_canFollowViewportCameraGuide){
-			_subViewportCamera.SetGlobalPosition(_subViewportCameraGuide.GetGlobalPosition());
+		if(_canFollowMainCamera){
+			_subViewportCamera.SetGlobalPosition(_mainCamera.GetGlobalPosition());
 		}
 	}
 
@@ -154,10 +153,10 @@ public partial class MainBall : BallBase, IPrototype
 
 	public override void ApplyImpulse(Vector3 impulse, Vector3 positionWhereImpulseIsApplied){
 		base.ApplyImpulse(impulse, positionWhereImpulseIsApplied);
-		events.Notify("impulse", new Dictionary{
-			{"impulse", impulse},
-			{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied},
-		});
+		// Events.Notify("impulse", new Dictionary{
+		// 	{"impulse", impulse},
+		// 	{"positionWhereImpulseIsApplied", positionWhereImpulseIsApplied},
+		// });
 	}
 
 	public void ScaleMeshToRadius(){
@@ -168,9 +167,9 @@ public partial class MainBall : BallBase, IPrototype
 	public override void CollisionResponse(){
 		base.CollisionResponse();
 		if(IsACollisionDetected() && WasOnFloor()){
-			events.Notify("updateMarker", new Dictionary {{"hide", true}});
+			Events.Notify("updateMarker", new Dictionary {{"hide", true}});
 			if(Mathf.Abs(GetLinearVelocity().Y) > 3){
-				events.Notify("detectedCollision", new Dictionary{
+				Events.Notify("detectedCollision", new Dictionary{
 					{"globalPosition", GetGlobalPosition()},
 					{"linearVelocity", GetLinearVelocity()},
 					{"angularVelocity", GetAngularVelocity()}
