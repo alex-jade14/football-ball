@@ -102,24 +102,24 @@ public partial class BallMeasurement
         _inertia = SphereHelper.CalculateInertiaFromThinSphere(_mass, _radius);
     }
 
-    private void CalculateDiameterFromRadius(){
-        _diameter = CircleHelper.CalculateDiameterFromRadius(_radius);
-    }
-
-    private void CalculateCircumferenceFromRadius(){
-        _circumference = CircleHelper.CalculateCircumferenceFromRadius(_radius);
-    }
-
-    private void CalculateCrossSectionalArea(){
-        _crossSectionalArea = CircleHelper.CalculateCrossSectionalArea(_radius);
-    }
-
     private void CalculateRadiusFromDiameter(){
-        SetRadius(CircleHelper.CalculateRadiusFromDiameter(_diameter));
+        SetRadius(SphereHelper.CalculateRadiusFromDiameter(_diameter));
     }
 
     private void CalculateRadiusFromCircumference(){
-        SetRadius(CircleHelper.CalculateRadiusFromCircumference(_circumference));
+        SetRadius(SphereHelper.CalculateRadiusFromCircumference(_circumference));
+    }
+
+    private void CalculateDiameterFromRadius(){
+        _diameter = SphereHelper.CalculateDiameterFromRadius(_radius);
+    }
+
+    private void CalculateCircumferenceFromRadius(){
+        _circumference = SphereHelper.CalculateCircumferenceFromRadius(_radius);
+    }
+
+    private void CalculateCrossSectionalArea(){
+        _crossSectionalArea = SphereHelper.CalculateCrossSectionalArea(_radius);
     }
 
     private void UpdateValuesWhenMassIsUpdated(){

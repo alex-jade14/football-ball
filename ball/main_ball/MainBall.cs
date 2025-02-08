@@ -78,7 +78,7 @@ public partial class MainBall : BallBase, IPrototype
 		shadowBall.SetGlobalPosition(GetGlobalPosition());
 		shadowBall.GetMeasurement().SetMass(GetMeasurement().GetMass());
 		shadowBall.GetPhysicsParameters().SetNormalForce(GetMeasurement().GetMass());
-		shadowBall.GetPhysicsParameters().UpdateTerminalVelocity(GetMeasurement().GetCrossSectionalArea(), GetMeasurement().GetMass());
+		shadowBall.GetPhysicsParameters().SetTerminalVelocity(GetMeasurement().GetCrossSectionalArea(), GetMeasurement().GetMass());
 		shadowBall.GetMeasurement().SetCircumference(GetMeasurement().GetCircumference());
 		shadowBall.GetPhysicsParameters().SetCoefficientOfRestitution(GetPhysicsParameters().GetCoefficientOfRestitution());
 		shadowBall.GetPhysicsParameters().SetFrictionCoefficient(GetPhysicsParameters().GetFrictionCoefficient());

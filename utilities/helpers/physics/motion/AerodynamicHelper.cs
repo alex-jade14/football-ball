@@ -29,8 +29,8 @@ public partial class AerodynamicHelper
         return new Vector3[] {dragForce, magnusEffectForce};
     }
 
-    public static Vector3 CalculateDragForce(float dragCoefficient, float densityOfFluid,
-    float crossSectionalArea, Vector3 linearVelocity){
+    public static Vector3 CalculateDragForce(float dragCoefficient, float densityOfFluid, float crossSectionalArea,
+    Vector3 linearVelocity){
         Vector3 dragForce = -(0.5f * dragCoefficient * densityOfFluid * crossSectionalArea * linearVelocity.Length() * linearVelocity);
         return dragForce;
     }

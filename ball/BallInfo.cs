@@ -15,10 +15,10 @@ public partial class BallInfo
             dragCoefficient,
             liftCoefficient,
             angularDampingCoefficient,
-            GetMeasurement().GetMass(),
-            GetMeasurement().GetCrossSectionalArea(),
             environment
         );
+        UpdateNormalForce();
+        UpdateTerminalVelocity();
     }
 
     public BallMeasurement GetMeasurement(){
@@ -35,5 +35,13 @@ public partial class BallInfo
 
     public void SetPhysicsParameters(BallPhysicsParameters physicsParameters){
         _physicsParameters = physicsParameters;
+    }
+    
+    public void UpdateNormalForce(){
+        _physicsParameters.SetNormalForce(_measurement.GetMass());
+    }
+
+    public void UpdateTerminalVelocity(){
+        _physicsParameters.SetTerminalVelocity(_measurement.GetCrossSectionalArea(), _measurement.GetMass());
     }
 }

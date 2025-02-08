@@ -117,7 +117,7 @@ public partial class Debug : Control
 
         HBoxContainer impulseFactorontainer = (HBoxContainer) interactionContainer.GetNode("ImpulseFactorContainer");
         _impulseFactorBox = (SpinBox) impulseFactorontainer.GetNode("ImpulseFactorBox");
-        _impulseFactorBox.SetValueNoSignal(3);
+        _impulseFactorBox.SetValueNoSignal(4);
     }
 
     private void XInitialPositionValueChanged(float value){
@@ -259,10 +259,7 @@ public partial class Debug : Control
     private void MassBoxValueChanged(float value){
         _mainBall.GetMeasurement().SetMassInGrams(value);
         _mainBall.GetPhysicsParameters().SetNormalForce(_mainBall.GetMeasurement().GetMass());
-        _mainBall.GetPhysicsParameters().UpdateTerminalVelocity(
-            _mainBall.GetMeasurement().GetCrossSectionalArea(),
-            _mainBall.GetMeasurement().GetMass()
-        );
+        _mainBall.GetInfo().UpdateTerminalVelocity();
         CopyPropertiesToShadowBall();
         _massLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
@@ -294,21 +291,18 @@ public partial class Debug : Control
         );
         _diameterLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(
-                _mainBall.GetMeasurement().GetDiameterInCentimeters(), 2
-            ).ToString()
+                _mainBall.GetMeasurement().GetDiameterInCentimeters(), 2).ToString()
         );
         _radiusLabel.SetText(
              PrecisionHelper.ValueWithTruncatedDecimals(
-                _mainBall.GetMeasurement().GetRadiusInCentimeters(), 2
-            ).ToString()
+                _mainBall.GetMeasurement().GetRadiusInCentimeters(), 2).ToString()
         );
         _inertiaLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(_mainBall.GetMeasurement().GetInertia(), 4).ToString()
         );
         _crossSectionalAreaLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(
-                _mainBall.GetMeasurement().GetCrossSectionalArea(), 4
-            ).ToString()
+                _mainBall.GetMeasurement().GetCrossSectionalArea(), 4).ToString()
         );
     }
 
@@ -337,10 +331,7 @@ public partial class Debug : Control
         _dragCoefficientLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()
         );
-        _mainBall.GetPhysicsParameters().UpdateTerminalVelocity(
-            _mainBall.GetMeasurement().GetCrossSectionalArea(),
-            _mainBall.GetMeasurement().GetMass()
-        );
+        _mainBall.GetInfo().UpdateTerminalVelocity();
     }
 
     private void LiftCoefficientBoxValueChanged(float value){
@@ -373,10 +364,7 @@ public partial class Debug : Control
 
     private void AirDensityBoxValueChanged(float value){
         _mainBall.GetPhysicsParameters().GetEnvironment().SetDensityOfFluid(value);
-        _mainBall.GetPhysicsParameters().UpdateTerminalVelocity(
-            _mainBall.GetMeasurement().GetCrossSectionalArea(),
-            _mainBall.GetMeasurement().GetMass()
-        );
+        _mainBall.GetInfo().UpdateTerminalVelocity();
         CopyPropertiesToShadowBall();
         _angularDampingCoefficientLabel.SetText(
             PrecisionHelper.ValueWithTruncatedDecimals(value, 2).ToString()

@@ -15,15 +15,13 @@ public partial class BallPhysicsParameters
     private Vector3 _magnusEffectForce;
 
     public BallPhysicsParameters(float coefficientOfRestitution, float frictionCoefficient, float dragCoefficient, float liftCoefficient,
-    float angularDampingCoefficient, float mass, float crossSectionalArea, WorldEnvironment environment){
+    float angularDampingCoefficient, WorldEnvironment environment){
         SetCoefficientOfRestitution(coefficientOfRestitution);
         SetFrictionCoefficient(frictionCoefficient);
         SetDragCoefficient(dragCoefficient);
         SetLiftCoefficient(liftCoefficient);
         SetAngularDampingCoefficient(angularDampingCoefficient);
-        SetNormalForce(mass);
         SetEnvironment(environment);
-        UpdateTerminalVelocity(crossSectionalArea, mass);
     }
 
     public float GetCoefficientOfRestitution(){
@@ -103,6 +101,10 @@ public partial class BallPhysicsParameters
         );
     }
 
+    public void SetTerminalVelocity(float crossSectionalArea, float mass){
+        CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
+    }
+
     public void SetAngularDampingCoefficient(float angularDampingCoefficient){
         _angularDampingCoefficient = Mathf.Clamp(
             angularDampingCoefficient,
@@ -111,7 +113,7 @@ public partial class BallPhysicsParameters
         );
     }
 
-    public void SetNormalForce(float mass){  
+    public void SetNormalForce(float mass){
         _normalForce = NewtonsFirstLawHelper.CalculateNormalForce(mass);
         UpdateValuesWhenNormalForceIsUpdated();
     }
@@ -138,10 +140,6 @@ public partial class BallPhysicsParameters
 
     private void UpdateValuesWhenFrictionCoefficientIsUpdated(){
         CalculateFrictionForce(_frictionCoefficient, _normalForce);
-    }
-
-    public void UpdateTerminalVelocity(float crossSectionalArea, float mass){
-        CalculateTerminalVelocity(crossSectionalArea, mass, _dragCoefficient, _environment.GetDensityOfFluid());
     }
 
     private void UpdateValuesWhenNormalForceIsUpdated(){

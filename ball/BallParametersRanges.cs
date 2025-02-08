@@ -12,9 +12,9 @@ public partial class BallParametersRanges
     public const float MaxCoefficientOfRestitutionValue = 1f;
     public const float MinFrictionCoefficientValue = 0.1f;
     public const float MaxFrictionCoefficientValue = 1f;
-    public const float MinDragCoefficientValue = 0f;
+    public const float MinDragCoefficientValue = 0.1f;
     public const float MaxDragCoefficientValue = 2.5f;
-    public const float MinLiftCoefficientValue = 0f;
+    public const float MinLiftCoefficientValue = 0.1f;
     public const float MaxLiftCoefficientValue = 2.5f;
     public const float MinAngularDampingCoefficientValue = 0.1f;
     public const float MaxAngularDampingCoefficientValue = 1f;
