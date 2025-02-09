@@ -7,7 +7,7 @@ public partial class RigidBodyHelper
             forcesToApply,
             mass
         );
-        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(acceleration, PhysicsServerHelper.DeltaFromPhysicsProcess);
+        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(acceleration);
         return linearVelocity;
     }
 
@@ -15,7 +15,7 @@ public partial class RigidBodyHelper
     float inertia, Vector3 linearVelocity){
         //Not complete yet
         Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForcesInVectorForm(forcesToApply, mass);
-        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(linearAcceleration, PhysicsServerHelper.DeltaFromPhysicsProcess);
+        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(linearAcceleration);
         return linearVelocity;
     }
 
@@ -29,9 +29,9 @@ public partial class RigidBodyHelper
     float inertia, Vector3 linearVelocity, Vector3 angularVelocity){
         Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(impulse, mass);
         linearVelocity += linearAcceleration;
-        Vector3 torque = RotationalMotionHelper.CalculateTorque(positionWhereImpulseIsApplied, impulse);
+        Vector3 torque = AngularNewtonsSecondLawHelper.CalculateTorque(positionWhereImpulseIsApplied, impulse);
         Vector3 angularAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(torque, inertia);
-        angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration, PhysicsServerHelper.DeltaFromPhysicsProcess);
+        angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration);
         return (linearVelocity, angularVelocity);
     }
 

@@ -10,7 +10,7 @@ public partial class ShadowBall : BallBase, IObserver
     private Drawer _drawer;
     private bool _canSimulatePhysics;
     private bool _canShowItsTrajectory;
-
+    
     public override void _Ready(){
         base._Ready();
         _positionMarker = (Decal) GetNode("PositionMarker");

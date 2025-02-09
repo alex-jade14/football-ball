@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class RotationalMotionHelper
+public partial class AngularNewtonsSecondLawHelper
 {
 
     public static Vector3 CalculateTorque(Vector3 position, Vector3 force){

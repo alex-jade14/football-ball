@@ -5,11 +5,7 @@ public class WorldEnvironment
     private float _densityOfFluid;
 
     public WorldEnvironment(float densityOfFluid){
-        _densityOfFluid = Mathf.Clamp(
-            densityOfFluid,
-            WorldEnvironmentParametersRanges.MinDensityOfFluidValue,
-            WorldEnvironmentParametersRanges.MaxDensityOfFluidValue
-        );
+        SetDensityOfFluid(densityOfFluid);
     }
 
     public float GetDensityOfFluid(){
@@ -17,7 +13,11 @@ public class WorldEnvironment
     }
 
     public void SetDensityOfFluid(float densityOfFluid){
-        _densityOfFluid = densityOfFluid;
+        _densityOfFluid = Mathf.Clamp(
+            densityOfFluid,
+            WorldEnvironmentParametersRanges.MinDensityOfFluidValue,
+            WorldEnvironmentParametersRanges.MaxDensityOfFluidValue
+        );
     }
 
 }

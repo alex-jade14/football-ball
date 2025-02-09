@@ -10,7 +10,7 @@ public partial class FrictionHelper
     public static Vector3 CalculateLinearVelocityFromFriction(Vector3 linearVelocity, Vector3 frictionForce, float mass){
         frictionForce.Y = 0;
         Vector3 acceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(frictionForce, mass);
-        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(acceleration, PhysicsServerHelper.DeltaFromPhysicsProcess);
+        linearVelocity += MotionHelper.CalculateVelocityFromAcceleration(acceleration);
         return linearVelocity;
     }
 

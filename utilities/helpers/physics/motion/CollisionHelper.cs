@@ -20,7 +20,8 @@ public partial class CollisionHelper
         }
         float Fn = 2 * mass * (previouslinearVelocity.Normalized().Length() / time);
         Vector3 Ft = frictionCoefficient * Fn * e;
-        angularVelocity +=  f * ((Ft.Length() * radius) / inertia) * PhysicsServerHelper.DeltaFromPhysicsProcess;
+        Vector3 angularAcceleration = f * ((Ft.Length() * radius) / inertia);
+        angularVelocity +=  MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration);
         return angularVelocity;
     }
 }
