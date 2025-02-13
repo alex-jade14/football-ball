@@ -94,7 +94,7 @@ step = 0.001
 
 [node name="Label4" type="Label" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Impulso inicial (N):"
+text = "Impulso inicial (N·s):"
 
 [node name="ImpulseContainer" type="HBoxContainer" parent="TabContainer/Interacción/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

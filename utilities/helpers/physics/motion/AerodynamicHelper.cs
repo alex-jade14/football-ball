@@ -29,6 +29,8 @@ public partial class AerodynamicHelper
         return new Vector3[] {dragForce, magnusEffectForce};
     }
 
+    // Reference: https://es.wikipedia.org/wiki/Resistencia_(fluidos)
+    // Reference: https://math.stackexchange.com/questions/3415023/how-to-calculate-drag-force-vector
     public static Vector3 CalculateDragForce(float dragCoefficient, float densityOfFluid, float crossSectionalArea,
     Vector3 linearVelocity){
         Vector3 dragForce = -(0.5f * dragCoefficient * densityOfFluid * crossSectionalArea * linearVelocity.Length() * linearVelocity);

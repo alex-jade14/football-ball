@@ -112,8 +112,8 @@ public partial class Main : Node3D
                     {
                         "physicsParameters", new Dictionary{
                             {"coefficientOfRestitution", 0.67f},
-                            {"frictionCoefficient", 0.62f},
-                            {"dragCoefficient", 0.47f},
+                            {"frictionCoefficient", 0.62f}, // Reference: https://www.mdpi.com/2504-3900/49/1/92
+                            {"dragCoefficient", 0.47f}, // https://es.wikipedia.org/wiki/Coeficiente_de_resistencia
                             {"liftCoefficient", 0.25f},
                             {"angularDampingCoefficient", 0.25f}
                         }
@@ -125,7 +125,7 @@ public partial class Main : Node3D
 
     public Dictionary GetEnvironmentData(){
         return new Dictionary{
-            {"densityOfFluid", 1.225f}
+            {"densityOfFluid", 1.225f} // Reference: https://es.wikipedia.org/wiki/Densidad_del_aire
         };
     }
 }

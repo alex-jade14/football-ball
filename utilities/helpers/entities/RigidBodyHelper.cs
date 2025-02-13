@@ -20,19 +20,22 @@ public partial class RigidBodyHelper
     }
 
     public static Vector3 CalculateCentralImpulse(Vector3 impulse, float mass, Vector3 linearVelocity){
-        Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(impulse, mass);
-        linearVelocity += linearAcceleration;
+        linearVelocity += MotionHelper.CalculateVelocityFromImpulse(impulse, mass);
         return linearVelocity;
     }
 
     public static (Vector3 linearVelocity, Vector3 angularVelocity) CalculateImpulse(Vector3 impulse, Vector3 positionWhereImpulseIsApplied, float mass,
     float inertia, Vector3 linearVelocity, Vector3 angularVelocity){
-        Vector3 linearAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(impulse, mass);
-        linearVelocity += linearAcceleration;
+        linearVelocity = CalculateCentralImpulse(impulse, mass, linearVelocity);
+        angularVelocity = CalculateTorque(impulse, positionWhereImpulseIsApplied, inertia, angularVelocity);
+        return (linearVelocity, angularVelocity);
+    }
+
+    public static Vector3 CalculateTorque(Vector3 impulse, Vector3 positionWhereImpulseIsApplied, float inertia, Vector3 angularVelocity){
         Vector3 torque = AngularNewtonsSecondLawHelper.CalculateTorque(positionWhereImpulseIsApplied, impulse);
         Vector3 angularAcceleration = NewtonsSecondLawHelper.CalculateAccelerationWithForceInVectorForm(torque, inertia);
         angularVelocity += MotionHelper.CalculateVelocityFromAcceleration(angularAcceleration);
-        return (linearVelocity, angularVelocity);
+        return angularVelocity;
     }
 
     public static Vector3 CalculateAngularDamping(float angularDampingCoefficient, Vector3 angularVelocity){

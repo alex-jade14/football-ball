@@ -113,7 +113,7 @@ public partial class MainBall : BallBase, IPrototype
 			_mesh.SetMesh(GD.Load<Mesh>("res://ball/main_ball/hexagon_pentagon_ball_model.res"));
 		}
 		else{
-			_mesh.SetMesh(GD.Load<Mesh>("res://ball/stars_ball_model.res"));
+			_mesh.SetMesh(GD.Load<Mesh>("res://ball/main_ball/stars_ball_model.res"));
 		}
 	}
 
